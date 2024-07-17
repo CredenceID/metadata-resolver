@@ -13,6 +13,7 @@ public class UniversalResolverApiDelegateImpl implements UniversalResolverApiDel
 
     @Autowired
     ResolverService resolverService;
+
     @Override
     public ResponseEntity<Object> resolve(String identifier, String accept) {
         logger.info("Resolving did:web {}", identifier);

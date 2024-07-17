@@ -25,7 +25,11 @@ public class IssuerDIDWebClient {
             HttpResponse<String> response =
                     client.send(request, HttpResponse.BodyHandlers.ofString());
 
+            if(response == null || response.body() == null)
+                return null;
+
             logger.info("DID Document downloaded! {}", response.body());
+
             return response.body();
         }catch (IOException e){
             logger.error("Error occurred while downloading DID Document", e);
