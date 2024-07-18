@@ -2,12 +2,15 @@ package com.credenceid.resolver.service;
 
 import com.credenceid.resolver.client.IssuerDIDWebClient;
 import com.credenceid.resolver.exception.BadRequestException;
+import com.credenceid.resolver.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+
+import static com.credenceid.resolver.util.Constants.DID_WEB;
 
 
 /**
@@ -17,7 +20,6 @@ import java.io.IOException;
 @Service
 public class ResolverService {
     private static final Logger logger = LoggerFactory.getLogger(ResolverService.class);
-    private static final String DID_WEB = "did:web";
     @Autowired
     IssuerDIDWebClient issuerDIDWebClient;
 
@@ -67,6 +69,6 @@ public class ResolverService {
      * @throws BadRequestException Validation fails
      */
     private void validateDIDString(final String didIdentifier) throws BadRequestException {
-        if (!didIdentifier.startsWith(DID_WEB)) throw new BadRequestException("This is not a did:web string!!");
+        if (!didIdentifier.startsWith(DID_WEB)) throw new BadRequestException(Constants.BAD_DID_ERROR_MESSAGE);
     }
 }
