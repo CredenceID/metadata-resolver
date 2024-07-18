@@ -1,5 +1,6 @@
 package com.credenceid.resolver.client;
 
+import com.credenceid.resolver.exception.ServerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -11,32 +12,36 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 
+/**
+ * This class implements the HTTP client to download DID document from an Issuer DID WEB Endpoint
+ * Java HTTP client is used for implementation.
+ */
 @Service
 public class IssuerDIDWebClient {
     private static final Logger logger = LoggerFactory.getLogger(IssuerDIDWebClient.class);
 
-    public Object downloadDIDDocument(final String url) {
-        try{
-            HttpClient client = HttpClient.newBuilder().build();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .build();
+    /**
+     * Makes an HTTP call to Issuer DID WEB endpoint to return a DID Document.
+     *
+     * @param url Issuer DID WEB Endpoint URL
+     * @return DID Document
+     */
+    public Object downloadDIDDocument(final String url) throws IOException, InterruptedException {
+        logger.trace("Downloading DID Document from {}", url);
+        HttpClient client = HttpClient.newBuilder().build();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .build();
 
-            HttpResponse<String> response =
-                    client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response =
+                client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            if(response == null || response.body() == null)
-                return null;
+        String didDocument;
+        if (response == null || response.body() == null)
+            throw new ServerException("Unable to download DID document from Issuer endpoint " + url);
+        didDocument = response.body();
+        logger.debug("DID Document downloaded successfully! {}", didDocument);
 
-            logger.info("DID Document downloaded! {}", response.body());
-
-            return response.body();
-        }catch (IOException e){
-            logger.error("Error occurred while downloading DID Document", e);
-        }catch (InterruptedException e){
-            Thread.currentThread().interrupt();
-            logger.error("Error occurred while downloading DID Document", e);
-        }
-        return null;
+        return response.body();
     }
 }

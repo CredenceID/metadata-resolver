@@ -4,3 +4,7 @@ server:
 openapi:
   universalResolver:
     base-path: /did-web-resolver
+
+resolver:
+  logging:
+    level: debug
