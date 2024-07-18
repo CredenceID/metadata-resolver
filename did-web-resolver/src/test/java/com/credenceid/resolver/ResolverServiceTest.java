@@ -22,7 +22,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class ResolverServiceTest {
+class ResolverServiceTest {
 
     @Mock
     private IssuerDIDWebClient issuerDIDWebClient;
@@ -31,7 +31,7 @@ public class ResolverServiceTest {
     private ResolverService resolverService;
 
     @Test
-    public void testResolveDIDWeb_Danubetech_Success() throws IOException {
+    void testResolveDIDWeb_Danubetech_Success() throws IOException {
         String resourceName = "test_data/danubetech.json";
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(Objects.requireNonNull(classLoader.getResource(resourceName)).getFile());
@@ -45,7 +45,7 @@ public class ResolverServiceTest {
     }
 
     @Test
-    public void testResolveDIDWeb_IncorrectDID_Fail() {
+    void testResolveDIDWeb_IncorrectDID_Fail() {
         assertThrows(BadRequestException.class, () -> resolverService.resolveDIDWeb("did:eth:danubetech.com"), BAD_DID_ERROR_MESSAGE);
     }
 }
