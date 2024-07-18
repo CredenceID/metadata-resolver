@@ -26,22 +26,27 @@ public class IssuerDIDWebClient {
      * @param url Issuer DID WEB Endpoint URL
      * @return DID Document
      */
-    public Object downloadDIDDocument(final String url) throws IOException, InterruptedException {
-        logger.trace("Downloading DID Document from {}", url);
-        HttpClient client = HttpClient.newBuilder().build();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .build();
+    public Object downloadDIDDocument(final String url) throws IOException {
+        try {
+            logger.trace("Downloading DID Document from {}", url);
+            HttpClient client = HttpClient.newBuilder().build();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .build();
 
-        HttpResponse<String> response =
-                client.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response =
+                    client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        String didDocument;
-        if (response == null || response.body() == null)
+            String didDocument;
+            if (response == null || response.body() == null)
+                throw new ServerException("Unable to download DID document from Issuer endpoint " + url);
+            didDocument = response.body();
+            logger.debug("DID Document downloaded successfully! {}", didDocument);
+
+            return response.body();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new ServerException("Unable to download DID document from Issuer endpoint " + url);
-        didDocument = response.body();
-        logger.debug("DID Document downloaded successfully! {}", didDocument);
-
-        return response.body();
+        }
     }
 }

@@ -29,7 +29,7 @@ public class ResolverService {
      * @param didIdentifier did:web string
      * @return DID document
      */
-    public Object resolveDIDWeb(final String didIdentifier) throws IOException, InterruptedException {
+    public Object resolveDIDWeb(final String didIdentifier) throws IOException {
         validateDIDString(didIdentifier);
         String url = convertDIDToURL(didIdentifier);
         return issuerDIDWebClient.downloadDIDDocument(url);
