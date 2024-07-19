@@ -2,6 +2,7 @@ package com.credenceid.resolver.service;
 
 import com.credenceid.resolver.client.IssuerDIDWebClient;
 import com.credenceid.resolver.exception.BadRequestException;
+import com.credenceid.resolver.openapi.universal.model.ResolutionResult;
 import com.credenceid.resolver.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +33,12 @@ public class ResolverService {
     public Object resolveDIDWeb(final String didIdentifier) throws IOException {
         validateDIDString(didIdentifier);
         String url = convertDIDToURL(didIdentifier);
-        return issuerDIDWebClient.downloadDIDDocument(url);
+        Object didDocument = issuerDIDWebClient.downloadDIDDocument(url);
+        ResolutionResult resolutionResult = new ResolutionResult();
+        resolutionResult.didResolutionMetadata(null);
+        resolutionResult.didDocumentMetadata(null);
+        resolutionResult.didDocument(didDocument);
+        return resolutionResult;
     }
 
     //TODO handle port in domain name

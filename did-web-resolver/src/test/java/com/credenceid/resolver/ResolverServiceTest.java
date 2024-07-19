@@ -2,6 +2,7 @@ package com.credenceid.resolver;
 
 import com.credenceid.resolver.client.IssuerDIDWebClient;
 import com.credenceid.resolver.exception.BadRequestException;
+import com.credenceid.resolver.openapi.universal.model.ResolutionResult;
 import com.credenceid.resolver.service.ResolverService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,10 +39,14 @@ class ResolverServiceTest {
         byte[] bytes = Files.readAllBytes(file.toPath());
 
         String didDocument = new String(bytes, StandardCharsets.UTF_8);
+        ResolutionResult resolutionResult = new ResolutionResult();
+        resolutionResult.didResolutionMetadata(null);
+        resolutionResult.didDocumentMetadata(null);
+        resolutionResult.didDocument(didDocument);
 
         when(issuerDIDWebClient.downloadDIDDocument(anyString())).thenReturn(didDocument);
-        Object didObject = resolverService.resolveDIDWeb("did:web:danubetech.com");
-        assertEquals(didObject, didDocument);
+        Object resolutionObject = resolverService.resolveDIDWeb("did:web:danubetech.com");
+        assertEquals(resolutionObject, resolutionResult);
     }
 
     @Test
