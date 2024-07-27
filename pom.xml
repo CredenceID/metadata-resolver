@@ -8,6 +8,16 @@
     <artifactId>metadata-resolver</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
+
+
+    <repositories>
+        <repository>
+            <id>danubetech-maven-public</id>
+            <url>https://repo.danubetech.com/repository/maven-public/</url>
+        </repository>
+    </repositories>
+
+
     <modules>
         <module>did-web-resolver</module>
     </modules>
@@ -16,5 +26,20 @@
         <maven.compiler.source>20</maven.compiler.source>
         <maven.compiler.target>20</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <springboot.version>3.3.1</springboot.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <!-- Import dependency management from Spring Boot -->
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${springboot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
 </project>

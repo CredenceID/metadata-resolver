@@ -4,6 +4,7 @@ import com.credenceid.resolver.client.IssuerDIDWebClient;
 import com.credenceid.resolver.exception.BadRequestException;
 import com.credenceid.resolver.openapi.universal.model.ResolutionResult;
 import com.credenceid.resolver.service.ResolverService;
+import foundation.identity.did.DIDDocument;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -38,15 +39,15 @@ class ResolverServiceTest {
         File file = new File(Objects.requireNonNull(classLoader.getResource(resourceName)).getFile());
         byte[] bytes = Files.readAllBytes(file.toPath());
 
-        String didDocument = new String(bytes, StandardCharsets.UTF_8);
+        String didDocumentJSON = new String(bytes, StandardCharsets.UTF_8);
         ResolutionResult resolutionResult = new ResolutionResult();
         resolutionResult.didResolutionMetadata(null);
         resolutionResult.didDocumentMetadata(null);
-        resolutionResult.didDocument(didDocument);
+        resolutionResult.didDocument(DIDDocument.fromJson(didDocumentJSON));
 
-        when(issuerDIDWebClient.downloadDIDDocument(anyString())).thenReturn(didDocument);
-        Object resolutionObject = resolverService.resolveDIDWeb("did:web:danubetech.com");
-        assertEquals(resolutionObject, resolutionResult);
+        when(issuerDIDWebClient.downloadDIDDocument(anyString())).thenReturn(didDocumentJSON);
+        ResolutionResult resolutionObject = resolverService.resolveDIDWeb("did:web:danubetech.com");
+        assertEquals(DIDDocument.fromJson(resolutionObject.getDidDocument().toString()).getId(), DIDDocument.fromJson(didDocumentJSON).getId());
     }
 
     @Test

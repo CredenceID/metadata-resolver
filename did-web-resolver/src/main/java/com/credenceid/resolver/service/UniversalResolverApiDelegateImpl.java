@@ -2,6 +2,7 @@ package com.credenceid.resolver.service;
 
 import com.credenceid.resolver.exception.ServerException;
 import com.credenceid.resolver.openapi.universal.api.UniversalResolverApiDelegate;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ public class UniversalResolverApiDelegateImpl implements UniversalResolverApiDel
     @Autowired
     ResolverService resolverService;
 
+    private @Autowired HttpServletRequest request;
+
     /**
      * Resolves a DID WEB to a DID document
      *
@@ -26,10 +29,15 @@ public class UniversalResolverApiDelegateImpl implements UniversalResolverApiDel
      * @return DID Document
      */
     @Override
-    public ResponseEntity<Object> resolve(String identifier, String accept) {
+    public ResponseEntity<Object> resolve(final String identifier, final String accept) {
+        //TODO implement accept parameter
         try {
             logger.trace("Resolving did:web {}", identifier);
-            return ResponseEntity.ok(resolverService.resolveDIDWeb(identifier));
+            // Here we don't use the "identifier" parameter, instead we take it from the request URL.
+            // We have to do this because if identifier contains a port the colon (:) will be URL encoded as such (did:web:example.com%3A3000),
+            // But Spring boot Controller automatically URL decodes it. We want the Identifier in its encoded form.
+            String[] arr = request.getRequestURL().toString().split("/");
+            return ResponseEntity.ok(resolverService.resolveDIDWeb(arr[arr.length - 1]));
         } catch (Exception e) {
             throw new ServerException(e.getMessage());
         }

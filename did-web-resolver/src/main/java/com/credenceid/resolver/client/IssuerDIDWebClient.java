@@ -10,6 +10,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 
 
 /**
@@ -21,7 +22,7 @@ public class IssuerDIDWebClient {
     private static final Logger logger = LoggerFactory.getLogger(IssuerDIDWebClient.class);
 
     /**
-     * Makes an HTTP call to Issuer DID WEB endpoint to return a DID Document.
+     * Make an HTTP call to Issuer DID WEB endpoint to return a DID Document.
      *
      * @param url Issuer DID WEB Endpoint URL
      * @return DID Document
@@ -29,7 +30,7 @@ public class IssuerDIDWebClient {
     public Object downloadDIDDocument(final String url) throws IOException {
         try {
             logger.trace("Downloading DID Document from {}", url);
-            HttpClient client = HttpClient.newBuilder().build();
+            HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
                     .build();
