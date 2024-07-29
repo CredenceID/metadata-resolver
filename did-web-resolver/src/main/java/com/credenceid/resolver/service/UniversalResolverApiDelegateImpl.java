@@ -37,7 +37,7 @@ public class UniversalResolverApiDelegateImpl implements UniversalResolverApiDel
             // We have to do this because if identifier contains a port the colon (:) will be URL encoded as such (did:web:example.com%3A3000),
             // But Spring boot Controller automatically URL decodes it. We want the Identifier in its encoded form.
             String[] arr = request.getRequestURL().toString().split("/");
-            return ResponseEntity.ok(resolverService.resolveDIDWeb(arr[arr.length - 1]));
+            return ResponseEntity.ok(resolverService.resolveDidWeb(arr[arr.length - 1]));
         } catch (Exception e) {
             throw new ServerException(e.getMessage());
         }

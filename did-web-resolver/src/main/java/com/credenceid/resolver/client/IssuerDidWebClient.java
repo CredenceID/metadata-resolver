@@ -18,8 +18,8 @@ import java.time.Duration;
  * Java HTTP client is used for implementation.
  */
 @Service
-public class IssuerDIDWebClient {
-    private static final Logger logger = LoggerFactory.getLogger(IssuerDIDWebClient.class);
+public class IssuerDidWebClient {
+    private static final Logger logger = LoggerFactory.getLogger(IssuerDidWebClient.class);
 
     /**
      * Make an HTTP call to Issuer DID WEB endpoint to return a DID Document.
@@ -27,7 +27,7 @@ public class IssuerDIDWebClient {
      * @param url Issuer DID WEB Endpoint URL
      * @return DID Document
      */
-    public Object downloadDIDDocument(final String url) throws IOException {
+    public Object downloadDidDocument(final String url) throws IOException {
         try {
             logger.trace("Downloading DID Document from {}", url);
             HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();

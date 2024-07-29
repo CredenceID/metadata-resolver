@@ -1,6 +1,6 @@
 package com.credenceid.resolver.service;
 
-import com.credenceid.resolver.client.IssuerDIDWebClient;
+import com.credenceid.resolver.client.IssuerDidWebClient;
 import com.credenceid.resolver.exception.BadRequestException;
 import com.credenceid.resolver.exception.ServerException;
 import com.credenceid.resolver.openapi.universal.model.ResolutionResult;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 
 import static com.credenceid.resolver.util.Constants.DID_WEB;
-import static com.credenceid.resolver.util.Utils.convertDIDToURL;
+import static com.credenceid.resolver.util.Utils.convertDidToUrl;
 
 
 /**
@@ -25,19 +25,19 @@ import static com.credenceid.resolver.util.Utils.convertDIDToURL;
 public class ResolverService {
     private static final Logger logger = LoggerFactory.getLogger(ResolverService.class);
     @Autowired
-    IssuerDIDWebClient issuerDIDWebClient;
+    IssuerDidWebClient issuerDidWebClient;
 
     /**
-     * Resolve a did:web ID to return a DID document
+     * Resolves a did:web ID to return a DID document
      *
      * @param didIdentifier did:web string
      * @return DID document
      */
-    public ResolutionResult resolveDIDWeb(final String didIdentifier) throws IOException {
-        validateDIDString(didIdentifier);
-        String url = convertDIDToURL(didIdentifier);
-        DIDDocument didDocument = DIDDocument.fromJson(issuerDIDWebClient.downloadDIDDocument(url).toString());
-        validateDIDDocument(didIdentifier, didDocument);
+    public ResolutionResult resolveDidWeb(final String didIdentifier) throws IOException {
+        validateDidString(didIdentifier);
+        String url = convertDidToUrl(didIdentifier);
+        DIDDocument didDocument = DIDDocument.fromJson(issuerDidWebClient.downloadDidDocument(url).toString());
+        validateDidDocument(didIdentifier, didDocument);
         ResolutionResult resolutionResult = new ResolutionResult();
         resolutionResult.didResolutionMetadata(null);
         resolutionResult.didDocumentMetadata(null);
@@ -48,25 +48,25 @@ public class ResolverService {
     }
 
     /**
-     * Validate did string
+     * Validates did string
      * Check if the DID starts with "did:web"
      *
      * @param didIdentifier did string
      * @throws BadRequestException Validation fails
      */
-    private void validateDIDString(final String didIdentifier) throws BadRequestException {
+    private void validateDidString(final String didIdentifier) throws BadRequestException {
         if (!didIdentifier.startsWith(DID_WEB)) throw new BadRequestException(Constants.BAD_DID_ERROR_MESSAGE);
     }
 
 
     /**
-     * Validate DID Document downloaded from the Issuer DID Web endpoint
-     * Check if the input DID is same as the DID ID from the downloaded DID Document
+     * Validates DID Document downloaded from the Issuer DID Web endpoint
+     * Checks if the input DID is same as the DID ID from the downloaded DID Document
      *
      * @param didIdentifier did:web ID passed as input to this Service
      * @param didDocument   DID Document downloaded using the input did:web ID
      */
-    private void validateDIDDocument(final String didIdentifier, final DIDDocument didDocument) {
+    private void validateDidDocument(final String didIdentifier, final DIDDocument didDocument) {
         if (!didIdentifier.equals(didDocument.getId().toString()))
             throw new ServerException("DID document downloaded doesn't match with the input did:web ID");
     }

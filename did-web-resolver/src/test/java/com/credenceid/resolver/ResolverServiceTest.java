@@ -1,6 +1,6 @@
 package com.credenceid.resolver;
 
-import com.credenceid.resolver.client.IssuerDIDWebClient;
+import com.credenceid.resolver.client.IssuerDidWebClient;
 import com.credenceid.resolver.exception.BadRequestException;
 import com.credenceid.resolver.openapi.universal.model.ResolutionResult;
 import com.credenceid.resolver.service.ResolverService;
@@ -27,13 +27,13 @@ import static org.mockito.Mockito.when;
 class ResolverServiceTest {
 
     @Mock
-    private IssuerDIDWebClient issuerDIDWebClient;
+    private IssuerDidWebClient issuerDidWebClient;
 
     @InjectMocks
     private ResolverService resolverService;
 
     @Test
-    void testResolveDIDWeb_Danubetech_Success() throws IOException {
+    void testResolveDidWeb_Danubetech_Success() throws IOException {
         String resourceName = "test_data/danubetech.json";
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(Objects.requireNonNull(classLoader.getResource(resourceName)).getFile());
@@ -45,13 +45,13 @@ class ResolverServiceTest {
         resolutionResult.didDocumentMetadata(null);
         resolutionResult.didDocument(DIDDocument.fromJson(didDocumentJSON));
 
-        when(issuerDIDWebClient.downloadDIDDocument(anyString())).thenReturn(didDocumentJSON);
-        ResolutionResult resolutionObject = resolverService.resolveDIDWeb("did:web:danubetech.com");
+        when(issuerDidWebClient.downloadDidDocument(anyString())).thenReturn(didDocumentJSON);
+        ResolutionResult resolutionObject = resolverService.resolveDidWeb("did:web:danubetech.com");
         assertEquals(DIDDocument.fromJson(resolutionObject.getDidDocument().toString()).getId(), DIDDocument.fromJson(didDocumentJSON).getId());
     }
 
     @Test
-    void testResolveDIDWeb_IncorrectDID_Fail() {
-        assertThrows(BadRequestException.class, () -> resolverService.resolveDIDWeb("did:eth:danubetech.com"), BAD_DID_ERROR_MESSAGE);
+    void testResolveDidWeb_IncorrectDID_Fail() {
+        assertThrows(BadRequestException.class, () -> resolverService.resolveDidWeb("did:eth:danubetech.com"), BAD_DID_ERROR_MESSAGE);
     }
 }

@@ -8,4 +8,3 @@ openapi:
 resolver:
   logging:
     level: debug
-
