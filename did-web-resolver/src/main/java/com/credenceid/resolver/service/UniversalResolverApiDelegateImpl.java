@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 /**
  * This class uses the OpenAPI codegen delegate pattern.
@@ -18,8 +20,6 @@ public class UniversalResolverApiDelegateImpl implements UniversalResolverApiDel
 
     @Autowired
     ResolverService resolverService;
-
-    private @Autowired HttpServletRequest request;
 
     /**
      * Resolves a DID WEB to a DID document
@@ -36,6 +36,9 @@ public class UniversalResolverApiDelegateImpl implements UniversalResolverApiDel
             // Here we don't use the "identifier" parameter, instead we take it from the request URL.
             // We have to do this because if identifier contains a port the colon (:) will be URL encoded as such (did:web:example.com%3A3000),
             // But Spring boot Controller automatically URL decodes it. We want the Identifier in its encoded form.
+            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
+                    .currentRequestAttributes()).getRequest();
+
             String[] arr = request.getRequestURL().toString().split("/");
             return ResponseEntity.ok(resolverService.resolveDidWeb(arr[arr.length - 1]));
         } catch (Exception e) {
