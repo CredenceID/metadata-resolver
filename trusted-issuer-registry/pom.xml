@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
@@ -9,7 +9,7 @@
         <version>0.1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>did-web-resolver</artifactId>
+    <artifactId>trusted-issuer-registry</artifactId>
 
     <dependencies>
         <dependency>
@@ -33,20 +33,7 @@
             <artifactId>jackson-databind-nullable</artifactId>
             <version>0.2.6</version>
         </dependency>
-
-        <!-- DIF -->
-        <dependency>
-            <groupId>decentralized-identity</groupId>
-            <artifactId>uni-resolver-core</artifactId>
-            <version>0.20.0</version>
-        </dependency>
-        <dependency>
-            <groupId>decentralized-identity</groupId>
-            <artifactId>did-common-java</artifactId>
-            <version>1.13.0</version>
-        </dependency>
     </dependencies>
-
 
     <build>
         <plugins>
@@ -73,12 +60,12 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                ${project.basedir}/src/main/resources/openapi/openapi.yaml
+                                ${project.basedir}/src/main/resources/openapi/trusted-issuer-registry.yaml
                             </inputSpec>
                             <skipValidateSpec>true</skipValidateSpec>
                             <generatorName>spring</generatorName>
-                            <apiPackage>com.credenceid.resolver.openapi.universal.api</apiPackage>
-                            <modelPackage>com.credenceid.resolver.openapi.universal.model</modelPackage>
+                            <apiPackage>com.credenceid.registry.openapi.api</apiPackage>
+                            <modelPackage>com.credenceid.registry.openapi.model</modelPackage>
                             <supportingFilesToGenerate>
                                 ApiUtil.java
                             </supportingFilesToGenerate>
