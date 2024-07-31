@@ -1,0 +1,8 @@
+server:
+  port: 8082
+openapi:
+  universalResolver:
+    base-path: /trusted-issuer-registry
+resolver:
+  logging:
+    level: debug
