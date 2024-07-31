@@ -2,13 +2,13 @@
 <configuration>
     <springProperty name="LOG_LEVEL" source="resolver.logging.level"/>
 
-    <property name="HOME_LOG" value="logs/trusted-issuer-registry/trusted-issuer-registry.log"/>
+    <property name="HOME_LOG" value="logs/trusted-issuer-registry.log"/>
 
     <appender name="FILE-ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${HOME_LOG}</file>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>logs/trusted-issuer-registry/archived/trusted-issuer-registry.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <fileNamePattern>logs/archived/trusted-issuer-registry.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
             <!-- each archived file, size max 10MB -->
             <maxFileSize>20MB</maxFileSize>
             <!-- total size of all archive files, if total size > 20GB, it will delete old archived file -->
