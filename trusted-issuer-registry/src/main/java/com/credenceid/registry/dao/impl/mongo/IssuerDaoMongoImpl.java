@@ -22,7 +22,7 @@ public class IssuerDaoMongoImpl implements IssuerDao {
      * @param domain Issuer domain
      */
     @Override
-    public void create(String domain) {
+    public void create(final String domain) {
         issuerRepository.save(new Issuer(domain));
     }
 
@@ -34,8 +34,8 @@ public class IssuerDaoMongoImpl implements IssuerDao {
      * @param domain Issuer domain
      */
     @Override
-    public void read(String domain) {
-        Issuer issuer = issuerRepository.findByDomain(domain);
+    public void read(final String domain) {
+        final Issuer issuer = issuerRepository.findByDomain(domain);
         if (issuer == null) {
             throw new IssuerNotFoundException("Issuer doesn't exist in Trusted Registry!");
         }
@@ -48,8 +48,8 @@ public class IssuerDaoMongoImpl implements IssuerDao {
      * @param domain Issuer domain
      */
     @Override
-    public void delete(String domain) {
-        Issuer issuer = issuerRepository.findByDomain(domain);
+    public void delete(final String domain) {
+        final Issuer issuer = issuerRepository.findByDomain(domain);
         if (issuer == null) {
             throw new IssuerNotFoundException("Issuer doesn't exist in Trusted Registry!");
         }
