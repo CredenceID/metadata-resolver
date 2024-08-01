@@ -3,6 +3,11 @@ server:
 openapi:
   universalResolver:
     base-path: /trusted-issuer-registry
-resolver:
+registry:
   logging:
     level: debug
+spring:
+  data:
+    mongodb:
+      uri: mongodb://18.216.16.45:27017/trustedIssuersDB?tlsInsecure=true
+      auto-index-creation: true

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <springProperty name="LOG_LEVEL" source="resolver.logging.level"/>
+    <springProperty name="LOG_LEVEL" source="registry.logging.level"/>
 
     <property name="HOME_LOG" value="logs/trusted-issuer-registry.log"/>
 

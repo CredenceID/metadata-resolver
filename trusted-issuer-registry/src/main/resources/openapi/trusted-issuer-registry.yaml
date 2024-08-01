@@ -6,10 +6,10 @@ info:
   description: Trusted Issuer Registry
   version: 1.0.0
 paths:
-  "/registry/{issuer}":
+  "/registry/{domain}":
     post:
       summary: Adds an issuer to the Trusted Issuer Registry
-      description: Only the domain part of the did:web identifier (for ex, did:web:w3c-ccg.github.io) is added to the registry. 
+      description: Only the domain part of the did:web identifier (for ex, did:web:w3c-ccg.github.io) is added to the registry.
         The registry service is backed by a database.
       operationId: addIssuerToTrustedRegistry
       tags:
@@ -17,7 +17,7 @@ paths:
       parameters:
         - in: path
           required: true
-          name: issuer
+          name: domain
           schema:
             type: string
           description: The domain part of the did:web identifier
@@ -44,7 +44,7 @@ paths:
       parameters:
         - in: path
           required: true
-          name: issuer
+          name: domain
           schema:
             type: string
           description: The domain part of the did:web identifier
@@ -73,7 +73,7 @@ paths:
       parameters:
         - in: path
           required: true
-          name: issuer
+          name: domain
           schema:
             type: string
           description: The domain part of the did:web identifier
