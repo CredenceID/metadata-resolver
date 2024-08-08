@@ -12,7 +12,6 @@ public class Issuer {
     @Indexed(unique = true)
     private String domain;
 
-
     public Issuer() {
     }
 

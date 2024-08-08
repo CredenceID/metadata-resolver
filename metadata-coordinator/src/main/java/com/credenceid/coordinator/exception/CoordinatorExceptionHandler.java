@@ -1,6 +1,6 @@
-package com.credenceid.resolver.exception;
+package com.credenceid.coordinator.exception;
 
-import com.credenceid.resolver.dto.Error;
+import com.credenceid.coordinator.dto.Error;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
@@ -17,8 +17,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
  */
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
-public class ResolverExceptionHandler extends ResponseEntityExceptionHandler {
-    private static final Logger exceptionHandlerLogger = LoggerFactory.getLogger(ResolverExceptionHandler.class);
+public class CoordinatorExceptionHandler extends ResponseEntityExceptionHandler {
+    private static final Logger exceptionHandlerLogger = LoggerFactory.getLogger(CoordinatorExceptionHandler.class);
 
     @ExceptionHandler(value = {BadRequestException.class})
     public ResponseEntity<Error> handleBadRequestException(

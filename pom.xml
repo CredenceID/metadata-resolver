@@ -21,6 +21,7 @@
     <modules>
         <module>did-web-resolver</module>
         <module>trusted-issuer-registry</module>
+        <module>metadata-coordinator</module>
     </modules>
 
     <properties>
