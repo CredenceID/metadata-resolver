@@ -1,11 +1,11 @@
-package com.credenceid.registry;
+package com.credenceid.coordinator;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class TrustedIssuerRegistryApplication {
+public class MetadataCoordinatorApplication {
     public static void main(String[] args) {
-        SpringApplication.run(TrustedIssuerRegistryApplication.class, args);
+        SpringApplication.run(MetadataCoordinatorApplication.class, args);
     }
 }

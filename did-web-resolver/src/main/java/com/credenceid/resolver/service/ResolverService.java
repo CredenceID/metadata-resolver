@@ -11,8 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-
 import static com.credenceid.resolver.util.Constants.DID_WEB;
 import static com.credenceid.resolver.util.Utils.convertDidToUrl;
 
@@ -31,9 +29,9 @@ public class ResolverService {
      * Resolves a did:web ID to return a DID document
      *
      * @param didIdentifier did:web string
-     * @return DID document
+     * @return ResolutionResult containing DID document, DID Document metadata and Resolution metadata
      */
-    public ResolutionResult resolveDidWeb(final String didIdentifier) throws IOException {
+    public ResolutionResult resolveDidWeb(final String didIdentifier) {
         validateDidString(didIdentifier);
         String url = convertDidToUrl(didIdentifier);
         DIDDocument didDocument = DIDDocument.fromJson(issuerDidWebClient.downloadDidDocument(url).toString());

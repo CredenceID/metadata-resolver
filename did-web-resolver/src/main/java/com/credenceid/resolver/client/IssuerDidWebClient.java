@@ -22,12 +22,12 @@ public class IssuerDidWebClient {
     private static final Logger logger = LoggerFactory.getLogger(IssuerDidWebClient.class);
 
     /**
-     * Make an HTTP call to Issuer DID WEB endpoint to return a DID Document.
+     * Makes an HTTP call to Issuer DID WEB endpoint to return a DID Document.
      *
      * @param url Issuer DID WEB Endpoint URL
      * @return DID Document
      */
-    public Object downloadDidDocument(final String url) throws IOException {
+    public Object downloadDidDocument(final String url) {
         try {
             logger.trace("Downloading DID Document from {}", url);
             HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
@@ -40,14 +40,16 @@ public class IssuerDidWebClient {
 
             String didDocument;
             if (response == null || response.body() == null)
-                throw new ServerException("Unable to download DID document from Issuer endpoint " + url);
+                throw new ServerException("No response received from Issuer DID WEB HTTP endpoint " + url);
             didDocument = response.body();
             logger.debug("DID Document downloaded successfully! {}", didDocument);
 
             return response.body();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new ServerException("Unable to download DID document from Issuer endpoint " + url);
+            throw new ServerException(e);
+        } catch (IOException e) {
+            throw new ServerException(e);
         }
     }
 }
