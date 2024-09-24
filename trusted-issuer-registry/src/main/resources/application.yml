@@ -6,5 +6,5 @@ registry:
 spring:
   data:
     mongodb:
-      uri: mongodb://18.216.16.45:27017/trustedIssuersDB?tlsInsecure=true
+      uri: mongodb://localhost:27017/trustedIssuersDB?tlsInsecure=true
       auto-index-creation: true
