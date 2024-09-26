@@ -12,70 +12,57 @@ app.use(express.json());
 
 app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
-
-
 app.get("/registry", async (req, res) => {
     const param = req.query.param;
-    console.log("These is the request query: ", req.query.param)
+    console.log("These is the request query: ", param)
 
     try {
       const URL = `${BASE_URL}/registry/${param}`;
       console.log("URL: ", URL);
 
-      const requestHeaders = {
-        'Content-Type': 'application/json'
-      };
-
       const responseData = await axios.get(URL);
       console.log("These is the response data: ", responseData)
   
-      // Return the fetched data as JSON
-      return res.status(200).json(responseData)
+      return res.status(responseData.status).json(responseData.data)
 
     } catch (error) {
-      // Handling any error
-      console.log('Error response caught in node backend: ', error.response)
-      console.error('Error data caught in node backend: ', error.response?.data);
-  
-      // Status code and message to send back to the client
-      const statusCode = error.response?.status || 500;
-      const errorMessage = error.response?.data || { error: 'InternalServerError', message: 'An unexpected error occurred' };
-  
-      // Send the error response to the client
-      return res.status(statusCode).json(error.response?.data);
+      console.log("The error: ", error)
+
+      if (error.response) {
+        return res.status(error.response.status).json(error.response.data)
+      } else {
+        return res.status(error.status).json(error.message)
+      }
     }
   })
 
 app.post("/registry",  async (req, res) => {
   const param = req.query.param;
-  console.log("These is the request query: ", req.query.param);
+  console.log("These is the request query: ", param);
 
   try {
     const URL = `${BASE_URL}/registry/${param}`;
     console.log("URL: ", URL);
-    console.log("Issuer data: ", req.body)
-
-    const requestHeaders = {
-      'Content-Type': 'application/json'
-    };
 
     const responseData = await axios.post(URL, null);
     console.log("These is the response data: ", responseData.status)
 
-    // Return the fetched data as JSON
-    return res.status(200).json();
+    return res.status(responseData.status).json();
 
   } catch (error) {
-    // console.log("Error response caught in node backend: ", error.response)
-    console.error('Error data caught in node backend: ', error.response?.data);
-    const statusCode = error.response?.status || 500;
-    return res.status(statusCode).json(error);
+    console.log("The error: ", error)
+
+    if (error.response) {
+      return res.status(error.response.status).json(error.response.data)
+    } else {
+      return res.status(error.status).json(error.message)
+    }
   }
 })
 
 app.delete("/registry",  async (req, res) => {
   const param = req.query.param;
-  console.log("These is the request query: ", req.query.param);
+  console.log("These is the request query: ", param);
 
   try {
     const URL = `${BASE_URL}/registry/${param}`;
@@ -84,22 +71,21 @@ app.delete("/registry",  async (req, res) => {
     const responseData = await axios.delete(URL);
     console.log("These is the response data: ", responseData)
 
-    // Return the fetched data as JSON
-    return res.status(200).json()
+    return res.status(responseData.status).json()
   } catch (error) {
-    // Handling any error
-    console.log("Error response caught in node backend: ", error.response)
-    console.error('Error data caught in node backend: ', error.response?.data);
+    console.log("The error: ", error)
 
-    // Status code and message to send back to the client
-    const statusCode = error.response?.status || 500;
-    return res.status(statusCode).json(error);
+    if (error.response) {
+      return res.status(error.response.status).json(error.response.data)
+    } else {
+      return res.status(error.status).json(error.message)
+    }
   }
 })
 
 app.get("/identifiers", async (req, res) => {
   const param = req.query.param;
-  console.log("These is the request query: ", req.query.param);
+  console.log("These is the request query: ", param);
 
   try {
     const URL = `${BASE_URL}/identifiers/${param}`;
@@ -108,24 +94,16 @@ app.get("/identifiers", async (req, res) => {
     const responseData = await axios.get(URL);
     console.log("These is the response data: ", responseData)
     
-    return res.status(200).json(responseData)
+    return res.status(responseData.status).json(responseData.data)
 
   } catch (error) {
     console.log("The error: ", error)
 
     if (error.response) {
-      return res.status(error.response.status).json({
-        status: error.response.status,
-        message: error.response.statusText,
-        data: error.response.data,
-      })
+      return res.status(error.response.status).json(error.response.data)
     } else {
       console.log("Network or unexpected error: ", error.message);
-      return res.status(500).json({
-        status: 500,
-        message: "An Error Occured while making the request",
-        data: error.message
-      })
+      return res.status(error.status).json(error.message)
     }
   }
 })
