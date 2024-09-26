@@ -1,5 +1,3 @@
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import credenceidLogo from './assets/credenceid.svg'
 import './App.css'
 import InputField from './InputField'
