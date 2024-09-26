@@ -108,34 +108,25 @@ app.get("/identifiers", async (req, res) => {
     const responseData = await axios.get(URL);
     console.log("These is the response data: ", responseData)
     
-
-    // Return the fetched data as JSON
     return res.status(200).json(responseData)
+
   } catch (error) {
+    console.log("The error: ", error)
 
     if (error.response) {
-      console.log("Error caught on Backend: ", error.response)
-      console.log("Error caught on Backend: ", error.response.data)
       return res.status(error.response.status).json({
         status: error.response.status,
         message: error.response.statusText,
         data: error.response.data,
       })
     } else {
+      console.log("Network or unexpected error: ", error.message);
       return res.status(500).json({
         status: 500,
         message: "An Error Occured while making the request",
-        data: error.response.data
+        data: error.message
       })
     }
-
-    // // Handling any error
-    // console.log("Error response caught in node backend: ", error.response)
-    // console.error('Error data caught in node backend: ', error.response?.data);
-
-    // // Status code and message to send back to the client
-    // const statusCode = error.response?.status || 500;
-    // return res.status(statusCode).json(error);
   }
 })
 
