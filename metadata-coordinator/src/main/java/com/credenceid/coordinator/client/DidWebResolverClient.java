@@ -1,8 +1,10 @@
 package com.credenceid.coordinator.client;
 
+import com.credenceid.coordinator.dto.Error;
 import com.credenceid.coordinator.exception.ServerException;
 import com.credenceid.coordinator.resolver.openapi.model.ResolutionResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +16,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+
+import static com.credenceid.coordinator.util.Constants.ERROR_CALLING_DID_WEB_SERVICE;
 
 
 /**
@@ -35,23 +39,31 @@ public class DidWebResolverClient {
     public ResolutionResult resolveDID(final String identifier) {
         try {
             logger.trace("Resolving DID Identifier {}", identifier);
-            HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
-            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(didWebResolverBasePath + PATH_DELIMITER + identifier)).build();
+            HttpResponse<String> response;
+            try (HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build()) {
+                HttpRequest request = HttpRequest.newBuilder().uri(URI.create(didWebResolverBasePath + PATH_DELIMITER + identifier)).build();
 
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            }
             if (response == null || response.body() == null)
                 throw new ServerException("No response from DidWebResolver service for identifier " + identifier);
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            ResolutionResult resolutionResult = objectMapper.readValue(response.body(), ResolutionResult.class);
-            logger.debug("DID {} resolved successfully!", identifier);
-
-            return resolutionResult;
+            if(response.statusCode() == HttpStatus.SC_OK){
+                ObjectMapper objectMapper = new ObjectMapper();
+                ResolutionResult resolutionResult = objectMapper.readValue(response.body(), ResolutionResult.class);
+                logger.debug("DID {} resolved successfully!", identifier);
+                return resolutionResult;
+            }
+            else{
+                ObjectMapper objectMapper = new ObjectMapper();
+                Error error = objectMapper.readValue(response.body(), Error.class);
+                throw new ServerException(error.errorMessage());
+            }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new ServerException(e);
+            throw new ServerException(ERROR_CALLING_DID_WEB_SERVICE, e);
         } catch (IOException e) {
-            throw new ServerException(e);
+            throw new ServerException(ERROR_CALLING_DID_WEB_SERVICE, e);
         }
     }
 

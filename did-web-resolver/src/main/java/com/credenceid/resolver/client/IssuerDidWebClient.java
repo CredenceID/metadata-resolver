@@ -12,6 +12,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
+import static com.credenceid.resolver.util.Constants.ERROR_CALLING_DID_ENDPOINT;
+
 
 /**
  * This class implements the HTTP client to download DID document from an Issuer DID WEB Endpoint
@@ -30,13 +32,14 @@ public class IssuerDidWebClient {
     public Object downloadDidDocument(final String url) {
         try {
             logger.trace("Downloading DID Document from {}", url);
-            HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .build();
+            HttpResponse<String> response;
+            try (HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build()) {
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(url))
+                        .build();
 
-            HttpResponse<String> response =
-                    client.send(request, HttpResponse.BodyHandlers.ofString());
+                response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            }
 
             String didDocument;
             if (response == null || response.body() == null)
@@ -47,9 +50,9 @@ public class IssuerDidWebClient {
             return response.body();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new ServerException(e);
+            throw new ServerException(ERROR_CALLING_DID_ENDPOINT, e);
         } catch (IOException e) {
-            throw new ServerException(e);
+            throw new ServerException(ERROR_CALLING_DID_ENDPOINT, e);
         }
     }
 }
