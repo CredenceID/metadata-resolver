@@ -7,6 +7,7 @@ public class Constants {
     public static final String HTTPS = "https://";
     public static final String DID_DOCUMENT_JSON = "did.json";
 
+    public static final String ERROR_CALLING_DID_ENDPOINT = "Error occurred while calling Issuer DID WEB HTTP endpoint";
     private Constants() {
         //do nothing
     }

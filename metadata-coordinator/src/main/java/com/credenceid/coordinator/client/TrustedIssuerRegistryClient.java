@@ -1,6 +1,9 @@
 package com.credenceid.coordinator.client;
 
+import com.credenceid.coordinator.dto.Error;
 import com.credenceid.coordinator.exception.ServerException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +16,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
+import static com.credenceid.coordinator.util.Constants.ERROR_CALLING_TRUSTED_ISSUER_REGISTRY_SERVICE;
 import static com.credenceid.coordinator.util.Constants.NO_RESPONSE_RECEIVED_FROM_TRUSTED_ISSUER_REGISTRY_FOR_DOMAIN;
 
 
@@ -34,23 +38,30 @@ public class TrustedIssuerRegistryClient {
     public void addIssuerToTrustedRegistry(final String domain) {
         try {
             logger.trace("Adding issuer domain {} to Trusted Registry", domain);
-            HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(trustedIssuerRegistryBasePath + PATH_DELIMITER + domain))
-                    .POST(HttpRequest.BodyPublishers.noBody())
-                    .build();
+            HttpResponse<String> response;
+            try (HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build()) {
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(trustedIssuerRegistryBasePath + PATH_DELIMITER + domain))
+                        .POST(HttpRequest.BodyPublishers.noBody())
+                        .build();
 
-            HttpResponse<String> response =
-                    client.send(request, HttpResponse.BodyHandlers.ofString());
+                response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            }
 
             if (response == null || response.body() == null)
                 throw new ServerException(NO_RESPONSE_RECEIVED_FROM_TRUSTED_ISSUER_REGISTRY_FOR_DOMAIN + domain);
-            logger.debug("Issuer {} successfully added to Trusted Registry!", domain);
+            if (response.statusCode() == HttpStatus.SC_OK) {
+                logger.debug("Issuer {} successfully added to Trusted Registry!", domain);
+            } else {
+                ObjectMapper objectMapper = new ObjectMapper();
+                Error error = objectMapper.readValue(response.body(), Error.class);
+                throw new ServerException(error.errorMessage());
+            }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new ServerException(e);
+            throw new ServerException(ERROR_CALLING_TRUSTED_ISSUER_REGISTRY_SERVICE, e);
         } catch (IOException e) {
-            throw new ServerException(e);
+            throw new ServerException(ERROR_CALLING_TRUSTED_ISSUER_REGISTRY_SERVICE, e);
         }
     }
 
@@ -62,23 +73,30 @@ public class TrustedIssuerRegistryClient {
     public void removeIssuerFromTrustedRegistry(final String domain) {
         try {
             logger.trace("Removing issuer domain {} to Trusted Registry", domain);
-            HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(trustedIssuerRegistryBasePath + PATH_DELIMITER + domain))
-                    .DELETE()
-                    .build();
+            HttpResponse<String> response;
+            try (HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build()) {
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(trustedIssuerRegistryBasePath + PATH_DELIMITER + domain))
+                        .DELETE()
+                        .build();
 
-            HttpResponse<String> response =
-                    client.send(request, HttpResponse.BodyHandlers.ofString());
+                response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            }
 
             if (response == null || response.body() == null)
                 throw new ServerException(NO_RESPONSE_RECEIVED_FROM_TRUSTED_ISSUER_REGISTRY_FOR_DOMAIN + domain);
-            logger.debug("Issuer {} successfully removed from Trusted Registry!", domain);
+            if (response.statusCode() == HttpStatus.SC_OK) {
+                logger.debug("Issuer {} successfully removed from Trusted Registry!", domain);
+            } else {
+                ObjectMapper objectMapper = new ObjectMapper();
+                Error error = objectMapper.readValue(response.body(), Error.class);
+                throw new ServerException(error.errorMessage());
+            }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new ServerException(e);
+            throw new ServerException(ERROR_CALLING_TRUSTED_ISSUER_REGISTRY_SERVICE, e);
         } catch (IOException e) {
-            throw new ServerException(e);
+            throw new ServerException(ERROR_CALLING_TRUSTED_ISSUER_REGISTRY_SERVICE, e);
         }
     }
 
@@ -90,25 +108,32 @@ public class TrustedIssuerRegistryClient {
     public void isIssuerTrusted(final String domain) {
         try {
             logger.trace("Checking if issuer domain {} is in Trusted Registry", domain);
-            HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(trustedIssuerRegistryBasePath + PATH_DELIMITER + domain))
-                    .GET()
-                    .build();
+            HttpResponse<String> response;
+            try (HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build()) {
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(trustedIssuerRegistryBasePath + PATH_DELIMITER + domain))
+                        .GET()
+                        .build();
 
-            HttpResponse<String> response =
-                    client.send(request, HttpResponse.BodyHandlers.ofString());
+                response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            }
 
             if (response == null || response.body() == null)
                 throw new ServerException(NO_RESPONSE_RECEIVED_FROM_TRUSTED_ISSUER_REGISTRY_FOR_DOMAIN + domain);
             if (response.statusCode() != 200)
-                throw new ServerException("Error occurred while checking issuer in Trusted Registry " + response.body());
-            logger.debug("Issuer {} is trusted in Trusted Registry!", domain);
+                throw new ServerException("Issuer domain doesn't exist in Trusted Registry!");
+            if (response.statusCode() == HttpStatus.SC_OK) {
+                logger.debug("Issuer domain {} exists in Trusted Registry!", domain);
+            } else {
+                ObjectMapper objectMapper = new ObjectMapper();
+                Error error = objectMapper.readValue(response.body(), Error.class);
+                throw new ServerException(error.errorMessage());
+            }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new ServerException(e);
+            throw new ServerException(ERROR_CALLING_TRUSTED_ISSUER_REGISTRY_SERVICE, e);
         } catch (IOException e) {
-            throw new ServerException(e);
+            throw new ServerException(ERROR_CALLING_TRUSTED_ISSUER_REGISTRY_SERVICE, e);
         }
     }
 }

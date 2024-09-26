@@ -30,17 +30,13 @@ public class UniversalResolverApiDelegateImpl implements UniversalResolverApiDel
      */
     @Override
     public ResponseEntity<Object> resolve(String identifier, String accept) {
-        try {
-            logger.trace("Resolving did:web {}", identifier);
-            // Here we don't use the "identifier" parameter, instead we take it from the request URL.
-            // We have to do this because if identifier contains a port the colon (:) will be URL encoded as such (did:web:example.com%3A3000),
-            // But Spring boot Controller automatically URL decodes it. We want the Identifier in its encoded form.
-            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
-                    .currentRequestAttributes()).getRequest();
-            String[] arr = request.getRequestURL().toString().split("/");
-            return ResponseEntity.ok(resolverService.resolve(arr[arr.length - 1], accept));
-        } catch (Exception e) {
-            throw new ServerException(e);
-        }
+        logger.trace("Resolving did:web {}", identifier);
+        // Here we don't use the "identifier" parameter, instead we take it from the request URL.
+        // We have to do this because if identifier contains a port the colon (:) will be URL encoded as such (did:web:example.com%3A3000),
+        // But Spring boot Controller automatically URL decodes it. We want the Identifier in its encoded form.
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
+                .currentRequestAttributes()).getRequest();
+        String[] arr = request.getRequestURL().toString().split("/");
+        return ResponseEntity.ok(resolverService.resolve(arr[arr.length - 1], accept));
     }
 }
