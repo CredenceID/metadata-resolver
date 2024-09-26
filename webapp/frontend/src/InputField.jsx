@@ -10,7 +10,8 @@ function InputField({name, label, placeholder, btnText}) {
     const [responseData, setResponseData] = useState({})
 
     async function callAPI(name) {
-        console.log("Calling the API: ", name)
+        setResponseData({})
+
         try {
             let response;
 
