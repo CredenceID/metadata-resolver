@@ -2,13 +2,11 @@ import { useState } from 'react';
 import './InputField.css'
 import { addIssuer, getIssuer, performDIDWebResolution, removeIssuer } from './Utils';
 
-function InputField({name, label, placeholder, btnText}) {
+function InputField({name, label, placeholder, btnText, setAPIStatusCode, setResponseData}) {
 
     const [value, setValue] = useState("")
-    const [APIStatusCode, setAPIStatusCode] = useState("")
     const [showResponse, setShowResponse] = useState(false)
-    const [responseData, setResponseData] = useState({})
-
+    
     async function callAPI(name) {
         setResponseData({})
 
@@ -34,14 +32,12 @@ function InputField({name, label, placeholder, btnText}) {
             }
 
             console.log("Response data: ", response.data)
-            setShowResponse(true)
             setAPIStatusCode(response.status)
             setResponseData(response.data)
         } catch (error) {
             console.log("Error: ", error)
             console.log("Error response: ", error.response)
             console.log("Error Data: ", error.response.data)
-            setShowResponse(true)
             setAPIStatusCode(error.response.status)
             setResponseData(error.response.data)
         }
@@ -50,13 +46,6 @@ function InputField({name, label, placeholder, btnText}) {
     function handleInput(event) {
         const { value } = event.target;
         setValue(value)
-    }
-
-    function clearResponse() {
-        setValue("")
-        setAPIStatusCode("")
-        setShowResponse(false)
-        setResponseData({})
     }
 
     return (
@@ -85,29 +74,6 @@ function InputField({name, label, placeholder, btnText}) {
                     </button>
                 </div>
             </div>
-
-            { showResponse &&
-                <div className="response-wrap">
-                    <div className="response-header-wrap">
-                    <div className="response-title-wrap">
-                        <span>Response</span>
-                        <span className={`${APIStatusCode == 200? "response-success-code" : "response-error-code"}`}>{APIStatusCode}</span>
-                        <span className={`${APIStatusCode == 200? "response-success-code" : "response-error-code"}`}>
-                            {APIStatusCode == 200 && "Success"}
-                            {APIStatusCode != 200 && "Error"}
-                        </span>
-                    </div>
-                    <div className="clear-btn-wrap" onClick={clearResponse}>
-                        <span>Clear</span>
-                    </div>
-                    </div>
-
-                    <div className="response-body-wrap">
-                        {responseData && <pre>{JSON.stringify(responseData, null, 2)}</pre>}
-                        {/* <pre>{responseData}</pre> */}
-                    </div> 
-                </div>
-            }
         </div>  
     )
 }

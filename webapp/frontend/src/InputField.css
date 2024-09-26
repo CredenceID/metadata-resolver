@@ -30,6 +30,10 @@ label {
     justify-content: center;
 }
 
+.input-field::placeholder {
+    color: #BBBBBB !important;
+}
+
 .input-btn {
     width: 144px;
     height: 54px;
@@ -41,45 +45,4 @@ label {
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.response-wrap {
-    padding: 1.25rem;
-    border-radius: 5px;
-    background-color: #F1F1F1;
-    font-size: 1rem;
-  }
-  
-.response-header-wrap {
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.response-title-wrap {
-    display: flex;
-    gap: 0.75rem;
-    align-items: center;
-}
-
-.response-success-code {
-    color: #1AB101;
-}
-
-.response-error-code {
-    color: #FF4545;
-}
-
-.clear-btn-wrap {
-    cursor: pointer;
-}
-
-.response-body-wrap {
-    color: #888;
-}
-
-.response-body-wrap pre {
-    width: 100%;
-    overflow-x: scroll;
 }
