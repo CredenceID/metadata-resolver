@@ -9,8 +9,7 @@
         <version>0.1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>did-web-resolver</artifactId>
-
+    <artifactId>metadata-coordinator</artifactId>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -47,7 +46,6 @@
         </dependency>
     </dependencies>
 
-
     <build>
         <plugins>
             <plugin>
@@ -68,6 +66,7 @@
                 <version>7.7.0</version>
                 <executions>
                     <execution>
+                        <id>resolver</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
@@ -77,8 +76,31 @@
                             </inputSpec>
                             <skipValidateSpec>true</skipValidateSpec>
                             <generatorName>spring</generatorName>
-                            <apiPackage>com.credenceid.resolver.openapi.universal.api</apiPackage>
-                            <modelPackage>com.credenceid.resolver.openapi.universal.model</modelPackage>
+                            <apiPackage>com.credenceid.coordinator.resolver.openapi.api</apiPackage>
+                            <modelPackage>com.credenceid.coordinator.resolver.openapi.model</modelPackage>
+                            <supportingFilesToGenerate>
+                                ApiUtil.java
+                            </supportingFilesToGenerate>
+                            <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
+                                <useTags>true</useTags>
+                                <delegatePattern>true</delegatePattern>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>trusted-issuer-registry</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>
+                                ${project.basedir}/src/main/resources/openapi/trusted-issuer-registry.yaml
+                            </inputSpec>
+                            <skipValidateSpec>true</skipValidateSpec>
+                            <generatorName>spring</generatorName>
+                            <apiPackage>com.credenceid.coordinator.registry.openapi.api</apiPackage>
+                            <modelPackage>com.credenceid.coordinator.registry.openapi.model</modelPackage>
                             <supportingFilesToGenerate>
                                 ApiUtil.java
                             </supportingFilesToGenerate>

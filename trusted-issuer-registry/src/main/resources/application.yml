@@ -1,0 +1,10 @@
+server:
+  port: 8082
+registry:
+  logging:
+    level: debug
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/trustedIssuersDB?tlsInsecure=true
+      auto-index-creation: true
