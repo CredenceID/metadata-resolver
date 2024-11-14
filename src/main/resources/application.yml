@@ -1,0 +1,15 @@
+server:
+  port: 8084
+openapi:
+  universalResolver:
+    base-path: /metadata-resolver
+  trustedIssuerRegistry:
+    base-path: /metadata-resolver
+resolver:
+  logging:
+    level: debug
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/trustedIssuersDB?tlsInsecure=true
+      auto-index-creation: true

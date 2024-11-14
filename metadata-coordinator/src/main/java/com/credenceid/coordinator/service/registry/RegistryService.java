@@ -17,6 +17,9 @@ public class RegistryService {
     @Autowired
     TrustedIssuerRegistryClient trustedIssuerRegistryClient;
 
+
+
+
     public void addIssuerToTrustedRegistry(final String domain) {
         trustedIssuerRegistryClient.addIssuerToTrustedRegistry(domain);
         logger.debug("Issuer {} successfully added to Trust Registry!", domain);

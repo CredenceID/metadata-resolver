@@ -1,0 +1,95 @@
+openapi: 3.1.0
+servers:
+  - url: "/trusted-issuer-registry"
+info:
+  title: Trusted Issuer Registry
+  description: Trusted Issuer Registry
+  version: 1.0.0
+paths:
+  "/registry/{domain}":
+    post:
+      summary: Adds an issuer to the Trusted Issuer Registry
+      description: Only the domain part of the did:web identifier (for ex, did:web:w3c-ccg.github.io) is added to the registry.
+        The registry service is backed by a database.
+      operationId: addIssuerToTrustedRegistry
+      tags:
+        - registry
+      parameters:
+        - in: path
+          required: true
+          name: domain
+          schema:
+            type: string
+          description: The domain part of the did:web identifier
+          examples:
+            example1:
+              value: w3c-ccg.github.io
+              description: Issuer domain
+            example2:
+              value: example.com%3A3000
+              description: Issuer domain with port
+      responses:
+        "200":
+          description: Issuer added to Trusted Registry!
+        "400":
+          description: Invalid Issuer domain.
+        "500":
+          description: Internal Error.
+    get:
+      summary: Checks if the issuer is present in the Trusted Issuer Registry
+      description: Queries the database against the issuer domain from the request.
+      operationId: isIssuerTrusted
+      tags:
+        - registry
+      parameters:
+        - in: path
+          required: true
+          name: domain
+          schema:
+            type: string
+          description: The domain part of the did:web identifier
+          examples:
+            example1:
+              value: w3c-ccg.github.io
+              description: Issuer domain
+            example2:
+              value: example.com%3A3000
+              description: Issuer domain with port
+      responses:
+        "200":
+          description: Issuer exits in the Trusted Registry!
+        "400":
+          description: Invalid Issuer domain.
+        "404":
+          description: Issuer not found in the Trusted Registry!
+        "500":
+          description: Internal Error.
+    delete:
+      summary: Removes the issuer from Trusted Issuer Registry
+      description: Deletes the issuer domain entry from the database.
+      operationId: removeIssuer
+      tags:
+        - registry
+      parameters:
+        - in: path
+          required: true
+          name: domain
+          schema:
+            type: string
+          description: The domain part of the did:web identifier
+          examples:
+            example1:
+              value: w3c-ccg.github.io
+              description: Issuer domain
+            example2:
+              value: example.com%3A3000
+              description: Issuer domain with port
+      responses:
+        "200":
+          description: Issuer successfully removed from the Trusted Registry!
+        "400":
+          description: Invalid Issuer domain.
+        "404":
+          description: Issuer not found in the Trusted Registry!
+        "500":
+          description: Internal Error.

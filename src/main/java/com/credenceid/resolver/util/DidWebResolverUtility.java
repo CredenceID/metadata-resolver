@@ -1,4 +1,4 @@
-package com.credenceid.resolver.utils;
+package com.credenceid.resolver.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

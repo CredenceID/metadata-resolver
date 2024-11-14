@@ -1,2 +1,5 @@
-package com.credenceid.resolver.client;public interface IIssuerDidWebClient {
+package com.credenceid.resolver.client;
+
+public interface IIssuerDidWebClient {
+    Object downloadDidDocument(final String url);
 }
