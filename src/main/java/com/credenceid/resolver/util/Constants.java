@@ -1,4 +1,4 @@
-package com.credenceid.resolver.global;
+package com.credenceid.resolver.util;
 
 public class Constants {
 

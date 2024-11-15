@@ -1,12 +1,11 @@
-package com.credenceid.resolver.service.resolver.impl;
+package com.credenceid.resolver.service.WebDidResolver;
 
-import com.credenceid.resolver.client.impl.IssuerDidWebClient;
+import com.credenceid.resolver.client.IssuerWebDidClient;
 import com.credenceid.resolver.exception.BadRequestException;
 import com.credenceid.resolver.exception.ServerException;
-import com.credenceid.resolver.global.Constants;
+import com.credenceid.resolver.util.Constants;
 import com.credenceid.resolver.openapi.model.ResolutionResult;
-import com.credenceid.resolver.service.registry.IRegistryService;
-import com.credenceid.resolver.service.resolver.IResolverService;
+import com.credenceid.resolver.service.TrustedIssuerRegistry.RegistryService;
 import com.credenceid.resolver.util.TrustedIssuerRegistryUtility;
 import foundation.identity.did.DIDDocument;
 import org.slf4j.Logger;
@@ -14,21 +13,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static com.credenceid.resolver.global.Constants.DID_WEB;
-import static com.credenceid.resolver.util.DidWebResolverUtility.convertDidToUrl;
+import static com.credenceid.resolver.util.Constants.DID_WEB;
+import static com.credenceid.resolver.util.WebDidResolverUtility.convertDidToUrl;
 
 /**
  * This class is responsible for DID Web resolution and status list download.
  */
 @Service
-public class ResolverService implements IResolverService {
+public class ResolverService  {
     private static final Logger logger = LoggerFactory.getLogger(ResolverService.class);
 
     @Autowired
-    IRegistryService registryService;
+    RegistryService registryService;
 
     @Autowired
-    IssuerDidWebClient issuerDidWebClient;
+    IssuerWebDidClient issuerWebDidClient;
 
     //TODO implement the accept parameter
 
@@ -39,7 +38,7 @@ public class ResolverService implements IResolverService {
      * @param accept     The requested media type of the DID document representation or DID resolution result
      * @return ResolutionResult containing DID document, DID Document metadata and Resolution metadata
      */
-    @Override
+
     public ResolutionResult resolve(String identifier, String accept) {
         ResolutionResult resolutionResult = resolveDID(identifier);
         registryService.isIssuerTrusted(TrustedIssuerRegistryUtility.extractDomainFromDidWebIdentifier(identifier));
@@ -55,11 +54,11 @@ public class ResolverService implements IResolverService {
      * @param identifier did:web string
      * @return ResolutionResult containing DID document, DID Document metadata and Resolution metadata
      */
-    @Override
+
     public ResolutionResult resolveDID(String identifier) {
         validateDidString(identifier);
         String url = convertDidToUrl(identifier);
-        DIDDocument didDocument = DIDDocument.fromJson(issuerDidWebClient.downloadDidDocument(url).toString());
+        DIDDocument didDocument = DIDDocument.fromJson(issuerWebDidClient.downloadDidDocument(url).toString());
         validateDidDocument(identifier, didDocument);
         ResolutionResult resolutionResult = new ResolutionResult();
         resolutionResult.didResolutionMetadata(null);

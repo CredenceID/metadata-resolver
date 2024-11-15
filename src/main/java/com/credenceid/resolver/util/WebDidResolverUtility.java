@@ -6,13 +6,13 @@ import org.slf4j.LoggerFactory;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
-import static com.credenceid.resolver.global.Constants.DID_DOCUMENT_JSON;
-import static com.credenceid.resolver.global.Constants.HTTPS;
+import static com.credenceid.resolver.util.Constants.DID_DOCUMENT_JSON;
+import static com.credenceid.resolver.util.Constants.HTTPS;
 
-public class DidWebResolverUtility {
-    private static final Logger logger = LoggerFactory.getLogger(DidWebResolverUtility.class);
+public class WebDidResolverUtility {
+    private static final Logger logger = LoggerFactory.getLogger(WebDidResolverUtility.class);
 
-    private DidWebResolverUtility() {
+    private WebDidResolverUtility() {
     }
 
     /**

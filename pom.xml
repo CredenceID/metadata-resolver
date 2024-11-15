@@ -32,9 +32,11 @@
         <springboot.version>3.3.1</springboot.version>
         <springdoc-openapi-ui.version>1.7.0</springdoc-openapi-ui.version>
     </properties>
-    <groupId>com.credenceid</groupId>
-    <artifactId>metadata-resolver</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+
+        <groupId>com.credenceid</groupId>
+        <artifactId>metadata-resolver</artifactId>
+        <version>0.2.0-SNAPSHOT</version>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>

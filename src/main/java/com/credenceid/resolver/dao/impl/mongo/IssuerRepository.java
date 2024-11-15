@@ -5,6 +5,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IIssuerRepository extends MongoRepository<Issuer, String> {
+public interface IssuerRepository extends MongoRepository<Issuer, String> {
     Issuer findByDomain(String domain);
 }

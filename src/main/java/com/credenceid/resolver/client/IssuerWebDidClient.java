@@ -1,6 +1,5 @@
-package com.credenceid.resolver.client.impl;
+package com.credenceid.resolver.client;
 
-import com.credenceid.resolver.client.IIssuerDidWebClient;
 import com.credenceid.resolver.exception.ServerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,15 +12,15 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
-import static com.credenceid.resolver.global.Constants.ERROR_CALLING_DID_ENDPOINT;
+import static com.credenceid.resolver.util.Constants.ERROR_CALLING_DID_ENDPOINT;
 
 /**
  * This class implements the HTTP client to download DID document from an Issuer DID WEB Endpoint
  * Java HTTP client is used for implementation.
  */
 @Service
-public class IssuerDidWebClient implements IIssuerDidWebClient {
-    private static final Logger logger = LoggerFactory.getLogger(IssuerDidWebClient.class);
+public class IssuerWebDidClient {
+    private static final Logger logger = LoggerFactory.getLogger(IssuerWebDidClient.class);
 
     /**
      * Makes an HTTP call to Issuer DID WEB endpoint to return a DID Document.

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 public class IssuerDaoMongoImpl implements IssuerDao {
 
     @Autowired
-    IIssuerRepository issuerRepository;
+    IssuerRepository issuerRepository;
 
     /**
      * Creates a new database entry for Issuer.

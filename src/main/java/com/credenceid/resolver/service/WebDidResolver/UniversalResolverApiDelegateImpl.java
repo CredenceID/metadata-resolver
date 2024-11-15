@@ -1,7 +1,6 @@
-package com.credenceid.resolver.service.resolver.impl;
+package com.credenceid.resolver.service.WebDidResolver;
 
 import com.credenceid.resolver.openapi.api.UniversalResolverApiDelegate;
-import com.credenceid.resolver.service.resolver.IResolverService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +15,7 @@ public class UniversalResolverApiDelegateImpl implements UniversalResolverApiDel
     private static final Logger logger = LoggerFactory.getLogger(UniversalResolverApiDelegateImpl.class);
 
     @Autowired
-    IResolverService resolverService;
+    ResolverService resolverService;
 
     /**
      * Resolves a did:web identifier to DID document. The issuer did:web is checked against the Trusted Issuer Registry before the DID document is returned.
