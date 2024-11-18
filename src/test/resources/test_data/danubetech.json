@@ -1,0 +1,41 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://w3id.org/security/suites/ed25519-2018/v1",
+    "https://w3id.org/security/suites/x25519-2019/v1"
+  ],
+  "id": "did:web:danubetech.com",
+  "service": [
+    {
+      "id": "did:web:danubetech.com#godiddy-docs-apis",
+      "serviceEndpoint": "https://docs.godiddy.com/en/apis/"
+    },
+    {
+      "id": "did:web:danubetech.com#github",
+      "serviceEndpoint": "https://github.com/danubetech/"
+    }
+  ],
+  "verificationMethod": [
+    {
+      "id": "did:web:danubetech.com#z6MktQLK3vCsHj67Rr92SDVyC26Ph5MFoafPCaYgUk3uzs43",
+      "type": "Ed25519VerificationKey2018",
+      "controller": "did:web:danubetech.com",
+      "publicKeyBase58": "Ex5GTfxRxBbeKMJKkeY8LvYPsW5QPhR2WZdkeU5u5eGf"
+    },
+    {
+      "id": "did:web:danubetech.com#z6LSkcZ9Wqzk5mR21hSLm1mVvohFqS2QdX4qZLwx5xXLFfKq",
+      "type": "X25519KeyAgreementKey2019",
+      "controller": "did:web:danubetech.com",
+      "publicKeyBase58": "9wNyzYBszJhGvK4aENFYcDUmzHVHvutggNEGbVsoYHZ5"
+    }
+  ],
+  "assertionMethod": [
+    "did:web:danubetech.com#z6MktQLK3vCsHj67Rr92SDVyC26Ph5MFoafPCaYgUk3uzs43"
+  ],
+  "authentication": [
+    "did:web:danubetech.com#z6MktQLK3vCsHj67Rr92SDVyC26Ph5MFoafPCaYgUk3uzs43"
+  ],
+  "keyAgreement": [
+    "did:web:danubetech.com#z6LSkcZ9Wqzk5mR21hSLm1mVvohFqS2QdX4qZLwx5xXLFfKq"
+  ]
+}
