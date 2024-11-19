@@ -1,9 +1,8 @@
-package com.credenceid.resolver.client;
+package com.credenceid.webdidresolver.client;
 
-import com.credenceid.resolver.exception.ServerException;
+import com.credenceid.webdidresolver.exception.ServerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.URI;
@@ -12,13 +11,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
-import static com.credenceid.resolver.util.Constants.ERROR_CALLING_DID_ENDPOINT;
+import static com.credenceid.webdidresolver.util.Constants.ERROR_CALLING_DID_ENDPOINT;
 
-/**
- * This class implements the HTTP client to download DID document from an Issuer DID WEB Endpoint
- * Java HTTP client is used for implementation.
- */
-@Service
 public class IssuerWebDidClient {
     private static final Logger logger = LoggerFactory.getLogger(IssuerWebDidClient.class);
 
@@ -28,7 +22,7 @@ public class IssuerWebDidClient {
      * @param url Issuer DID WEB Endpoint URL
      * @return DID Document
      */
-    public Object downloadDidDocument(final String url){
+    public static Object downloadDidDocument(final String url){
         try {
             logger.trace("Downloading DID Document from {}", url);
             HttpResponse<String> response;

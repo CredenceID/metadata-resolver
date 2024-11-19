@@ -1,7 +1,7 @@
 package com.credenceid.resolver.services;
 
-import com.credenceid.resolver.client.IssuerWebDidClient;
-import com.credenceid.resolver.exception.BadRequestException;
+import com.credenceid.webdidresolver.client.IssuerWebDidClient;
+import com.credenceid.webdidresolver.exception.BadRequestException;
 import com.credenceid.resolver.openapi.model.ResolutionResult;
 import com.credenceid.resolver.service.TrustedIssuerRegistry.RegistryService;
 import com.credenceid.resolver.service.WebDidResolver.ResolverService;
@@ -23,7 +23,6 @@ import java.util.Objects;
 import static com.credenceid.resolver.util.Constants.BAD_DID_ERROR_MESSAGE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @DisplayName("WebDidResolver Tests")
@@ -31,13 +30,7 @@ import static org.mockito.Mockito.*;
 class ResolverServiceTest {
 
     @Mock
-    private IssuerWebDidClient issuerWebDidClient;
-
-    @Mock
     private RegistryService registryService;
-
-    @Mock
-    private TrustedIssuerRegistryUtility TrustedIssuerRegistryUtility;
 
     @InjectMocks
     private ResolverService resolverService;
@@ -57,7 +50,7 @@ class ResolverServiceTest {
         resolutionResult.didDocumentMetadata(null);
         resolutionResult.didDocument(didDocument);
 
-        when(issuerWebDidClient.downloadDidDocument(anyString())).thenReturn(didDocumentJSON);
+//        when(IssuerWebDidClient.downloadDidDocument(anyString())).thenReturn(didDocumentJSON);
         ResolutionResult resolutionObject = resolverService.resolve("did:web:danubetech.com", null);
 
         assertEquals(DIDDocument.fromJson(resolutionObject.getDidDocument().toString()).getId(), DIDDocument.fromJson(didDocumentJSON).getId());

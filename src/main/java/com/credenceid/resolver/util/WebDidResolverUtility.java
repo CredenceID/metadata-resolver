@@ -40,4 +40,17 @@ public class WebDidResolverUtility {
         logger.debug("DID {} converted to HTTPS URL {}", didIdentifier, url);
         return url;
     }
+
+
+    public static com.credenceid.resolver.openapi.model.ResolutionResult convertToCredenceIDResolutionResult(
+            uniresolver.openapi.model.ResolutionResult uniresolverResult) {
+        com.credenceid.resolver.openapi.model.ResolutionResult credenceIdResult =
+                new com.credenceid.resolver.openapi.model.ResolutionResult();
+
+        credenceIdResult.setDidDocument(uniresolverResult.getDidDocument());
+        credenceIdResult.setDidResolutionMetadata(uniresolverResult.getDidResolutionMetadata());
+        credenceIdResult.setDidDocumentMetadata(uniresolverResult.getDidDocumentMetadata());
+
+        return credenceIdResult;
+    }
 }
