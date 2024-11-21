@@ -28,6 +28,7 @@ public class Util {
         } else {
             //This is the case with a path, for example, did:web:w3c-ccg.github.io:user:alice
             StringBuilder stringBuilder = new StringBuilder();
+       
             for (int i = 3; i < arr.length; i++) {
                 stringBuilder.append("/");
                 stringBuilder.append(arr[i]);

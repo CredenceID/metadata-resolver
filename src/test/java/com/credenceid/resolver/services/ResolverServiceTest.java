@@ -1,11 +1,10 @@
 package com.credenceid.resolver.services;
 
-import com.credenceid.webdidresolver.client.IssuerWebDidClient;
-import com.credenceid.webdidresolver.exception.BadRequestException;
 import com.credenceid.resolver.openapi.model.ResolutionResult;
 import com.credenceid.resolver.service.TrustedIssuerRegistry.RegistryService;
 import com.credenceid.resolver.service.WebDidResolver.ResolverService;
 import com.credenceid.resolver.util.TrustedIssuerRegistryUtility;
+import com.credenceid.webdidresolver.exception.BadRequestException;
 import foundation.identity.did.DIDDocument;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,7 +22,8 @@ import java.util.Objects;
 import static com.credenceid.resolver.util.Constants.BAD_DID_ERROR_MESSAGE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @DisplayName("WebDidResolver Tests")
 @ExtendWith(MockitoExtension.class)
@@ -42,17 +42,13 @@ class ResolverServiceTest {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(Objects.requireNonNull(classLoader.getResource(resourceName), "Resource not found: " + resourceName).getFile());
         byte[] bytes = Files.readAllBytes(file.toPath());
-
         String didDocumentJSON = new String(bytes, StandardCharsets.UTF_8);
         DIDDocument didDocument = DIDDocument.fromJson(didDocumentJSON);
         ResolutionResult resolutionResult = new ResolutionResult();
         resolutionResult.didResolutionMetadata(null);  // Add mocks if needed
         resolutionResult.didDocumentMetadata(null);
         resolutionResult.didDocument(didDocument);
-
-//        when(IssuerWebDidClient.downloadDidDocument(anyString())).thenReturn(didDocumentJSON);
         ResolutionResult resolutionObject = resolverService.resolve("did:web:danubetech.com", null);
-
         assertEquals(DIDDocument.fromJson(resolutionObject.getDidDocument().toString()).getId(), DIDDocument.fromJson(didDocumentJSON).getId());
         verify(registryService, times(1)).isIssuerTrusted(TrustedIssuerRegistryUtility.extractDomainFromDidWebIdentifier("did:web:danubetech.com"));
     }

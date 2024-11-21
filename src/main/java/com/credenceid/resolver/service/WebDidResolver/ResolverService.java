@@ -15,7 +15,7 @@ import static com.credenceid.webdidresolver.service.WebDidResolverService.resolv
  * This class is responsible for DID Web resolution and status list download.
  */
 @Service
-public class ResolverService  {
+public class ResolverService {
     private static final Logger logger = LoggerFactory.getLogger(ResolverService.class);
 
     @Autowired
@@ -31,7 +31,7 @@ public class ResolverService  {
      * @return ResolutionResult containing DID document, DID Document metadata and Resolution metadata
      */
     public ResolutionResult resolve(String identifier, String accept) {
-        ResolutionResult resolutionResult = WebDidResolverUtility.convertToCredenceIDResolutionResult(resolveDID(identifier));
+        ResolutionResult resolutionResult = WebDidResolverUtility.convertToMetadataResolverResolutionResult(resolveDID(identifier));
         registryService.isIssuerTrusted(TrustedIssuerRegistryUtility.extractDomainFromDidWebIdentifier(identifier));
         logger.debug("Resolution result for {} is {}", identifier, resolutionResult);
         return resolutionResult;

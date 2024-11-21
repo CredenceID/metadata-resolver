@@ -13,6 +13,10 @@ import java.time.Duration;
 
 import static com.credenceid.webdidresolver.util.Constants.ERROR_CALLING_DID_ENDPOINT;
 
+/**
+ * This class implements the HTTP client to download DID document from an Issuer DID WEB Endpoint
+ * Java HTTP client is used for implementation.
+ */
 public class IssuerWebDidClient {
     private static final Logger logger = LoggerFactory.getLogger(IssuerWebDidClient.class);
 
@@ -22,7 +26,7 @@ public class IssuerWebDidClient {
      * @param url Issuer DID WEB Endpoint URL
      * @return DID Document
      */
-    public static Object downloadDidDocument(final String url){
+    public static Object downloadDidDocument(final String url) {
         try {
             logger.trace("Downloading DID Document from {}", url);
             HttpResponse<String> response;

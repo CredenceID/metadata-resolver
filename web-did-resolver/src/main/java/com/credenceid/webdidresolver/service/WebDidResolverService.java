@@ -15,10 +15,11 @@ import static com.credenceid.webdidresolver.util.Util.convertDidToUrl;
 /**
  * This class is responsible for DID Web resolution and status list download.
  */
-public class WebDidResolverService  {
+public class WebDidResolverService {
     private static final Logger logger = LoggerFactory.getLogger(WebDidResolverService.class);
 
     //TODO implement the accept parameter
+
     /**
      * Resolves a did:web ID to return a DID document
      *
@@ -57,13 +58,8 @@ public class WebDidResolverService  {
      * @param didIdentifier did:web ID passed as input to this Service
      * @param didDocument   DID Document downloaded using the input did:web ID
      */
-    private static void validateDidDocument(final String didIdentifier, final DIDDocument didDocument) {
+    private static void validateDidDocument(final String didIdentifier, final DIDDocument didDocument) throws ServerException {
         if (!didIdentifier.equals(didDocument.getId().toString()))
             throw new ServerException("DID document downloaded doesn't match with the input did:web ID");
     }
-
-
-
-
-
 }
