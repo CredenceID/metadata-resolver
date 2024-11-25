@@ -14,8 +14,12 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 public class UniversalResolverApiDelegateImpl implements UniversalResolverApiDelegate {
     private static final Logger logger = LoggerFactory.getLogger(UniversalResolverApiDelegateImpl.class);
 
-    @Autowired
     ResolverService resolverService;
+
+    @Autowired
+    UniversalResolverApiDelegateImpl(ResolverService resolverService) {
+        this.resolverService = resolverService;
+    }
 
     /**
      * Resolves a did:web identifier to DID document. The issuer did:web is checked against the Trusted Issuer Registry before the DID document is returned.

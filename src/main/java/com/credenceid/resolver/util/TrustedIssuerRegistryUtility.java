@@ -9,6 +9,10 @@ import java.nio.charset.StandardCharsets;
 public class TrustedIssuerRegistryUtility {
     private static final Logger logger = LoggerFactory.getLogger(TrustedIssuerRegistryUtility.class);
 
+    private TrustedIssuerRegistryUtility() {
+
+    }
+
     /**
      * Extracts domain from did:web Identifier
      *
@@ -21,4 +25,6 @@ public class TrustedIssuerRegistryUtility {
         logger.debug("domain {} extracted from DID {}", domain, didIdentifier);
         return domain;
     }
+
+
 }

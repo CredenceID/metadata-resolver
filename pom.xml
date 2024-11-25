@@ -24,7 +24,6 @@
     </dependencyManagement>
 
 
-
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
@@ -33,11 +32,19 @@
         <springdoc-openapi-ui.version>1.7.0</springdoc-openapi-ui.version>
     </properties>
 
-        <groupId>com.credenceid</groupId>
-        <artifactId>metadata-resolver</artifactId>
-        <version>0.2.0-SNAPSHOT</version>
+    <groupId>com.credenceid</groupId>
+    <artifactId>metadata-resolver</artifactId>
+    <version>0.2.0-SNAPSHOT</version>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.credenceid</groupId>
+            <artifactId>web-did-resolver</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+        </dependency>
+
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -149,6 +156,25 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.3.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.12</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
