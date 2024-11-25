@@ -10,12 +10,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.net.http.HttpClient;
+
 @Service
 public class UniversalResolverApiDelegateImpl implements UniversalResolverApiDelegate {
     private static final Logger logger = LoggerFactory.getLogger(UniversalResolverApiDelegateImpl.class);
 
-    @Autowired
     ResolverService resolverService;
+
+    @Autowired
+    UniversalResolverApiDelegateImpl(ResolverService resolverService) {
+        this.resolverService = resolverService;
+    }
 
     /**
      * Resolves a did:web identifier to DID document. The issuer did:web is checked against the Trusted Issuer Registry before the DID document is returned.
@@ -33,7 +39,7 @@ public class UniversalResolverApiDelegateImpl implements UniversalResolverApiDel
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
                 .currentRequestAttributes()).getRequest();
         String[] arr = request.getRequestURL().toString().split("/");
-        return ResponseEntity.ok(resolverService.resolve(arr[arr.length - 1], accept));
+        return ResponseEntity.ok(resolverService.resolve(arr[arr.length - 1], accept, HttpClient.newHttpClient()));
     }
 
 }

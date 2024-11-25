@@ -23,11 +23,12 @@ import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class UniversalResolverApiDelegateImplTest {
+class UniversalResolverApiDelegateImplTest {
 
     @Mock
     private ResolverService resolverService; // Mock the dependency
@@ -36,7 +37,7 @@ public class UniversalResolverApiDelegateImplTest {
     private UniversalResolverApiDelegateImpl resolverApiDelegate;
 
     @Test
-    public void testResolve_ShouldReturnResolutionResult() throws IOException {
+    void testResolve_ShouldReturnResolutionResult() throws IOException {
         String resourceName = "test_data/danubetech.json";
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(Objects.requireNonNull(classLoader.getResource(resourceName), "Resource not found: " + resourceName).getFile());
@@ -47,7 +48,7 @@ public class UniversalResolverApiDelegateImplTest {
         resolutionResult.didResolutionMetadata(null);  // Set to null or provide mocks if necessary
         resolutionResult.didDocumentMetadata(null);
         resolutionResult.didDocument(didDocument);
-        when(resolverService.resolve(anyString(), anyString())).thenReturn(resolutionResult);
+        when(resolverService.resolve(anyString(), anyString(), any())).thenReturn(resolutionResult);
         MockHttpServletRequest request = new MockHttpServletRequest();
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
         ResponseEntity<Object> result = resolverApiDelegate.resolve("param1", "param2");

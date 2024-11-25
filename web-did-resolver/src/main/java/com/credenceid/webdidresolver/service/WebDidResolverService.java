@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.openapi.model.ResolutionResult;
 
+import java.net.http.HttpClient;
+
 import static com.credenceid.webdidresolver.util.Constants.DID_WEB;
 import static com.credenceid.webdidresolver.util.Util.convertDidToUrl;
 
@@ -20,16 +22,20 @@ public class WebDidResolverService {
 
     //TODO implement the accept parameter
 
+    private WebDidResolverService() {
+    }
+
     /**
      * Resolves a did:web ID to return a DID document
      *
      * @param identifier did:web string
+     * @param httpClient HttpClient for sending requests
      * @return ResolutionResult containing DID document, DID Document metadata and Resolution metadata
      */
-    public static ResolutionResult resolveDID(String identifier) {
+    public static ResolutionResult resolveDID(String identifier, HttpClient httpClient) {
         validateDidString(identifier);
         String url = convertDidToUrl(identifier);
-        DIDDocument didDocument = DIDDocument.fromJson(IssuerWebDidClient.downloadDidDocument(url).toString());
+        DIDDocument didDocument = DIDDocument.fromJson(IssuerWebDidClient.downloadDidDocument(url, httpClient).toString());
         validateDidDocument(identifier, didDocument);
         ResolutionResult resolutionResult = new ResolutionResult();
         resolutionResult.didResolutionMetadata(null);
@@ -39,6 +45,18 @@ public class WebDidResolverService {
         logger.debug("Resolution result of {} is {}", identifier, resolutionResult);
         return resolutionResult;
     }
+
+
+    /**
+     * Resolves a did:web ID to return a DID document
+     *
+     * @param identifier did:web string
+     * @return ResolutionResult containing DID document, DID Document metadata and Resolution metadata
+     */
+    public static ResolutionResult resolveDID(String identifier) {
+        return resolveDID(identifier, HttpClient.newHttpClient());
+    }
+
 
     /**
      * Validates did string

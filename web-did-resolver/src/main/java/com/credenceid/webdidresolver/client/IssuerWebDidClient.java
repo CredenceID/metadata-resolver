@@ -9,7 +9,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.Duration;
 
 import static com.credenceid.webdidresolver.util.Constants.ERROR_CALLING_DID_ENDPOINT;
 
@@ -20,28 +19,30 @@ import static com.credenceid.webdidresolver.util.Constants.ERROR_CALLING_DID_END
 public class IssuerWebDidClient {
     private static final Logger logger = LoggerFactory.getLogger(IssuerWebDidClient.class);
 
+    private IssuerWebDidClient() {
+    }
+
     /**
      * Makes an HTTP call to Issuer DID WEB endpoint to return a DID Document.
      *
-     * @param url Issuer DID WEB Endpoint URL
+     * @param url    Issuer DID WEB Endpoint URL
+     * @param client HttpClient
      * @return DID Document
      */
-    public static Object downloadDidDocument(final String url) {
+    public static Object downloadDidDocument(final String url, HttpClient client) {
         try {
             logger.trace("Downloading DID Document from {}", url);
             HttpResponse<String> response;
-            try (HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build()) {
-                HttpRequest request = HttpRequest.newBuilder()
-                        .uri(URI.create(url))
-                        .build();
-                response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            }
-            String didDocument;
-            if (response == null || response.body() == null)
-                throw new ServerException("No response received from Issuer DID WEB HTTP endpoint " + url);
-            didDocument = response.body();
-            logger.debug("DID Document downloaded successfully! {}", didDocument);
 
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .build();
+
+            response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response == null || response.body().isEmpty()) {
+                throw new ServerException("No response received from Issuer DID WEB HTTP endpoint " + url);
+            }
             return response.body();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();

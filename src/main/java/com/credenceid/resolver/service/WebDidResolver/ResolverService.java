@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.net.http.HttpClient;
+
 import static com.credenceid.webdidresolver.service.WebDidResolverService.resolveDID;
 
 /**
@@ -18,8 +20,12 @@ import static com.credenceid.webdidresolver.service.WebDidResolverService.resolv
 public class ResolverService {
     private static final Logger logger = LoggerFactory.getLogger(ResolverService.class);
 
-    @Autowired
     RegistryService registryService;
+
+    @Autowired
+    ResolverService(RegistryService registryService) {
+        this.registryService = registryService;
+    }
 
     //TODO implement the accept parameter
 
@@ -30,8 +36,8 @@ public class ResolverService {
      * @param accept     The requested media type of the DID document representation or DID resolution result
      * @return ResolutionResult containing DID document, DID Document metadata and Resolution metadata
      */
-    public ResolutionResult resolve(String identifier, String accept) {
-        ResolutionResult resolutionResult = WebDidResolverUtility.convertToMetadataResolverResolutionResult(resolveDID(identifier));
+    public ResolutionResult resolve(String identifier, String accept, HttpClient httpClient) {
+        ResolutionResult resolutionResult = WebDidResolverUtility.convertToMetadataResolverResolutionResult(resolveDID(identifier, httpClient));
         registryService.isIssuerTrusted(TrustedIssuerRegistryUtility.extractDomainFromDidWebIdentifier(identifier));
         logger.debug("Resolution result for {} is {}", identifier, resolutionResult);
         return resolutionResult;
