@@ -23,7 +23,6 @@ import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -48,7 +47,7 @@ class UniversalResolverApiDelegateImplTest {
         resolutionResult.didResolutionMetadata(null);  // Set to null or provide mocks if necessary
         resolutionResult.didDocumentMetadata(null);
         resolutionResult.didDocument(didDocument);
-        when(resolverService.resolve(anyString(), anyString(), any())).thenReturn(resolutionResult);
+        when(resolverService.resolve(anyString(), anyString())).thenReturn(resolutionResult);
         MockHttpServletRequest request = new MockHttpServletRequest();
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
         ResponseEntity<Object> result = resolverApiDelegate.resolve("param1", "param2");

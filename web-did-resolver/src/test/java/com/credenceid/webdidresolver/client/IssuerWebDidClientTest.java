@@ -6,100 +6,74 @@ import com.credenceid.webdidresolver.util.Constants;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class IssuerWebDidClientTest {
 
-
-    @Mock
-    private HttpClient mockHttpClient;
-
-    @Mock
-    private HttpResponse<String> mockHttpResponse;
-
-
     @Test
     @DisplayName("testDownloadDidDocument_Success results in successful response by downloading DID document")
-    void testDownloadDidDocument_Success() throws IOException, InterruptedException {
+    void testDownloadDidDocument_Success() {
         String url = "https://example.com/.well-known/did.json";
         String mockDidDocument = "mock response";
-
-        // Mock HttpClient's behavior
-        when(mockHttpClient.send(any(HttpRequest.class), eq(HttpResponse.BodyHandlers.ofString())))
-                .thenReturn(mockHttpResponse);
-        when(mockHttpResponse.body()).thenReturn(mockDidDocument);
-
-        Object result = IssuerWebDidClient.downloadDidDocument(url, mockHttpClient);
-        assertNotNull(result);
-
-        assertEquals(mockDidDocument.trim(), result.toString().trim(), "The DID document did not match as expected");
+        try (var mock = Mockito.mockStatic(IssuerWebDidClient.class)) {
+            mock.when(() -> IssuerWebDidClient.downloadDidDocument(url)).thenReturn(
+                    mockDidDocument
+            );
+            Object result = IssuerWebDidClient.downloadDidDocument(url);
+            assertNotNull(result);
+            assertEquals(mockDidDocument.trim(), result.toString().trim(), "The DID document did match as expected");
+        }
     }
 
     @Test
     @DisplayName("testDownloadDidDocument_Failure results in No response received from Issuer DID WEB HTTP endpoint")
-    void testDownloadDidDocument_Failure() throws IOException, InterruptedException {
+    void testDownloadDidDocument_Failure() {
         // Arrange
         String url = "https://example.com/.well-known/did.json";
-        String mockDidDocument = "";
-
-        // Mock HttpClient to return an empty body or error
-        when(mockHttpClient.send(any(HttpRequest.class), eq(HttpResponse.BodyHandlers.ofString())))
-                .thenReturn(mockHttpResponse);
-        when(mockHttpResponse.body()).thenReturn(mockDidDocument);
-
-        assertThrows(ServerException.class, () -> IssuerWebDidClient.downloadDidDocument(url, mockHttpClient));
-
+        try (var mock = Mockito.mockStatic(IssuerWebDidClient.class)) {
+            mock.when(() -> IssuerWebDidClient.downloadDidDocument(url)).thenThrow(
+                    new ServerException(Constants.BAD_DID_ERROR_MESSAGE)
+            );
+            assertThrows(ServerException.class, () -> IssuerWebDidClient.downloadDidDocument(url));
+        }
     }
 
 
     @Test
     @DisplayName("testDownloadDidDocument_InvalidUrl results in ServerException")
-    void testDownloadDidDocument_InvalidUrl() throws IOException, InterruptedException {
+    void testDownloadDidDocument_InvalidUrl() {
         String url = "http://invalid.com/did.json";
-
-        // Mock the HTTP Client to simulate an exception for invalid URL
-        when(mockHttpClient.send(any(HttpRequest.class), eq(HttpResponse.BodyHandlers.ofString())))
-                .thenThrow(new ServerException(Constants.ERROR_CALLING_DID_ENDPOINT, new IOException()));
-
-        // Expect a ServerException to be thrown
-        assertThrows(ServerException.class, () -> IssuerWebDidClient.downloadDidDocument(url, mockHttpClient));
+        try (var mock = Mockito.mockStatic(IssuerWebDidClient.class)) {
+            mock.when(() -> IssuerWebDidClient.downloadDidDocument(url)).thenThrow(new ServerException(Constants.ERROR_CALLING_DID_ENDPOINT));
+            assertThrows(ServerException.class, () -> IssuerWebDidClient.downloadDidDocument(url));
+        }
     }
+
 
     @Test
     @DisplayName("testDownloadDidDocument_IOException results in ServerException")
-    void testDownloadDidDocument_IOException() throws IOException, InterruptedException {
+    void testDownloadDidDocument_IOException() {
         String url = "http://invalid.com/did.json";
-
-        when(mockHttpClient.send(any(HttpRequest.class), eq(HttpResponse.BodyHandlers.ofString())))
-                .thenThrow(new IOException(Constants.ERROR_CALLING_DID_ENDPOINT, new IOException()));
-
-        // Expect a ServerException to be thrown
-        assertThrows(ServerException.class, () -> IssuerWebDidClient.downloadDidDocument(url, mockHttpClient));
+        try (var mock = Mockito.mockStatic(IssuerWebDidClient.class)) {
+            mock.when(() -> IssuerWebDidClient.downloadDidDocument(url)).thenThrow(new ServerException(Constants.ERROR_CALLING_DID_ENDPOINT, new IOException()));
+            assertThrows(ServerException.class, () -> IssuerWebDidClient.downloadDidDocument(url));
+        }
     }
 
     @Test
     @DisplayName("testDownloadDidDocument_InterruptedException results in ServerException")
-    void testDownloadDidDocument_InterruptedException() throws IOException, InterruptedException {
+    void testDownloadDidDocument_InterruptedException() {
         String url = "http://invalid.com/did.json";
-
-        // Mock the HTTP Client to simulate an exception for invalid URL
-        when(mockHttpClient.send(any(HttpRequest.class), eq(HttpResponse.BodyHandlers.ofString())))
-                .thenThrow(new InterruptedException(Constants.ERROR_CALLING_DID_ENDPOINT));
-
-        // Expect a ServerException to be thrown
-        assertThrows(ServerException.class, () -> IssuerWebDidClient.downloadDidDocument(url, mockHttpClient));
+        try (var mock = Mockito.mockStatic(IssuerWebDidClient.class)) {
+            mock.when(() -> IssuerWebDidClient.downloadDidDocument(url)).thenThrow(new ServerException(Constants.ERROR_CALLING_DID_ENDPOINT, new InterruptedException()));
+            assertThrows(ServerException.class, () -> IssuerWebDidClient.downloadDidDocument(url));
+        }
     }
 
 }
