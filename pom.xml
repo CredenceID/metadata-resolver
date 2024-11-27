@@ -35,16 +35,17 @@
     <groupId>com.credenceid</groupId>
     <artifactId>metadata-resolver</artifactId>
     <version>0.2.0-SNAPSHOT</version>
-
     <dependencies>
-
+        <dependency>
+            <groupId>com.credenceid</groupId>
+            <artifactId>vc-status-verifier</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>com.credenceid</groupId>
             <artifactId>web-did-resolver</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
-
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
