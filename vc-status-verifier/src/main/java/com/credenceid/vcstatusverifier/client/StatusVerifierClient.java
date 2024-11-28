@@ -19,7 +19,7 @@ public class StatusVerifierClient {
         try {
             logger.trace("Downloading Status Verifiable Response from {}", url);
             HttpResponse<String> response;
-            try (HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(20)).build()) {
+            try (HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build()) {
                 HttpRequest request = HttpRequest.newBuilder()
                         .uri(URI.create(url))
                         .build();

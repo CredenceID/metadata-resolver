@@ -10,7 +10,7 @@ import java.util.List;
 public class VerifiableCredential implements Serializable {
 
     @JsonProperty("@context")
-    private List<String> context;
+    private String[] context;
     private String id;
     private String[] type;
     private String issuer;
@@ -18,7 +18,7 @@ public class VerifiableCredential implements Serializable {
     private List<CredentialStatus> credentialStatus;
     private CredentialSubject credentialSubject;
 
-    public List<String> getContext() {
+    public String[] getContext() {
         return context;
     }
 
@@ -34,15 +34,8 @@ public class VerifiableCredential implements Serializable {
         return issuer;
     }
 
-    public String getValidFrom() {
-        return validFrom;
-    }
-
     public List<CredentialStatus> getCredentialStatus() {
         return credentialStatus;
     }
 
-    public CredentialSubject getCredentialSubject() {
-        return credentialSubject;
-    }
 }
