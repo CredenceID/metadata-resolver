@@ -1,12 +1,18 @@
 package com.credenceid.vcstatusverifier.dto;
 
-import com.credenceid.vcstatusverifier.entity.VerifiableCredential;
-
 public class VerifiedResult {
 
     private boolean verified;
     private int status;
-    private VerifiableCredential credential;
+    private String statusPurpose;
+
+    public String getStatusPurpose() {
+        return statusPurpose;
+    }
+
+    public void setStatusPurpose(String statusPurpose) {
+        this.statusPurpose = statusPurpose;
+    }
 
     public boolean isVerified() {
         return verified;
@@ -29,15 +35,8 @@ public class VerifiedResult {
         return "VerifiedResult{" +
                 "verified=" + verified +
                 ", status=" + status +
-                ", credential=" + credential +
+                ", statusPurpose='" + statusPurpose + '\'' +
                 '}';
     }
 
-    public VerifiableCredential getCredential() {
-        return credential;
-    }
-
-    public void setCredential(VerifiableCredential credential) {
-        this.credential = credential;
-    }
 }

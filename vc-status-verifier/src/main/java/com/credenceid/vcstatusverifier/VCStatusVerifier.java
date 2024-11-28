@@ -21,7 +21,6 @@ public class VCStatusVerifier {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
 }
