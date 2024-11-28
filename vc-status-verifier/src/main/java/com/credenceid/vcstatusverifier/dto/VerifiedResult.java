@@ -5,6 +5,7 @@ public class VerifiedResult {
     private boolean verified;
     private int status;
     private String statusPurpose;
+    private String credentialStatusId;
 
     public String getStatusPurpose() {
         return statusPurpose;
@@ -30,13 +31,21 @@ public class VerifiedResult {
         this.status = status;
     }
 
+    public String getCredentialStatusId() {
+        return credentialStatusId;
+    }
+
+    public void setCredentialStatusId(String credentialStatusId) {
+        this.credentialStatusId = credentialStatusId;
+    }
+
     @Override
     public String toString() {
         return "VerifiedResult{" +
                 "verified=" + verified +
                 ", status=" + status +
                 ", statusPurpose='" + statusPurpose + '\'' +
+                ", credentialStatusId='" + credentialStatusId + '\'' +
                 '}';
     }
-
 }
