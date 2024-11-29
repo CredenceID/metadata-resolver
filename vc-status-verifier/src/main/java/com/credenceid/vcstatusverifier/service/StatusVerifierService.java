@@ -38,7 +38,7 @@ public class StatusVerifierService {
     private static boolean validateStatusPurpose(String statusPurposeOfCredentialStatus, String statusPurposeOfCredentialSubject) {
         return statusPurposeOfCredentialStatus.equalsIgnoreCase(statusPurposeOfCredentialSubject);
     }
-    
+
     /**
      * Resolves the verification of status for the provided verifiable credential for status type BitstringStatusListEntry.
      *
@@ -75,7 +75,7 @@ public class StatusVerifierService {
                 verifiedResult.setStatusPurpose(statusPurpose.toString().toLowerCase());
             } catch (IllegalArgumentException e) {
                 logger.error(String.format("Invalid Status Purpose: %s", credentialStatus.getStatusPurpose()));
-                verifiedResult.setStatusPurpose(credentialStatus.getStatusPurpose());
+                throw new ServerException(Constants.STATUS_VERIFICATION_ERROR);
             }
 
             int statusListIndex = Integer.parseInt(credentialStatus.getStatusListIndex());
@@ -93,11 +93,11 @@ public class StatusVerifierService {
             }
 
             //encodedList
-            String encodedList = statusVerifiableResult.getCredentialSubject().getEncodedList().replace('+', '-').replace('/', '_');
+            String encodedList = statusVerifiableResult.getCredentialSubject().getEncodedList().substring(1);
             logger.info(String.format("Encoded List: %s", encodedList));
 
-//          int decodedIndexValue = decodeStatusList(encodedList,statusListIndex,statusSize);
-//          verifiedResult.setStatus(decodedIndexValue);
+//            int decodedIndexValue = decodeStatusList(encodedList, statusListIndex, statusSize);
+//            verifiedResult.setStatus(decodedIndexValue);
             verifiedResults.add(verifiedResult);
         }
         return verifiedResults;
