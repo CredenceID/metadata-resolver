@@ -11,13 +11,12 @@ import java.nio.file.Paths;
 public class VCStatusVerifier {
     public static void main(String[] args) throws IOException {
         StatusVerifierService statusVerifierService = new StatusVerifierService();
-        String VC = Files.readString(Paths.get("vc-status-verifier/src/main/resources/sampleVC.json"));
+        String VC = Files.readString(Paths.get("vc-status-verifier/src/main/resources/revokedVC.json"));
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             VerifiableCredential verifiableCredential = objectMapper.readValue(VC, VerifiableCredential.class);
-            System.out.println(statusVerifierService.verifyStatus(verifiableCredential, "StatusList2021Entry").toString());
-            System.out.println("Credential ID: " + verifiableCredential.getId());
-            System.out.println("Issuer ID: " + verifiableCredential.getIssuer());
+            System.out.println(statusVerifierService.verifyStatus(verifiableCredential));
+            System.out.println("Issuer ID: " + verifiableCredential.getIssuer().getId());
         } catch (Exception e) {
             e.printStackTrace();
         }
