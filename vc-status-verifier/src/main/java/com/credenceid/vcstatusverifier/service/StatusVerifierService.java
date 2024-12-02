@@ -1,8 +1,9 @@
 package com.credenceid.vcstatusverifier.service;
 
-import com.credenceid.vcstatusverifier.client.StatusVerifierClient;
-import com.credenceid.vcstatusverifier.dto.VerifiedResult;
-import com.credenceid.vcstatusverifier.entity.StatusPurpose;
+
+import com.credenceid.vcstatusverifier.client.StatusListClient;
+import com.credenceid.vcstatusverifier.dto.StatusPurpose;
+import com.credenceid.vcstatusverifier.dto.StatusVerificationResult;
 import com.credenceid.vcstatusverifier.exception.ServerException;
 import com.credenceid.vcstatusverifier.util.Constants;
 import com.danubetech.verifiablecredentials.VerifiableCredential;
@@ -46,9 +47,9 @@ public class StatusVerifierService {
      * @param verifiableCredential verifiable credential of the holder to be verified.
      * @return List<VerifiedResult> containing List of verifiedResult for the provided type of credentialStatus
      */
-    public List<VerifiedResult> verifyStatus(VerifiableCredential verifiableCredential) throws IOException {
+    public List<StatusVerificationResult> verifyStatus(VerifiableCredential verifiableCredential) throws IOException {
         Map<String, Object> credentialStatus = verifiableCredential.getCredentialStatus().getJsonObject();
-        List<VerifiedResult> verifiedResults = new ArrayList<>();
+        List<StatusVerificationResult> statusVerificationResults = new ArrayList<>();
 
         //objectMapper to deserialize json into StatusVerifiableResult object.
         ObjectMapper objectMapper = new ObjectMapper();
@@ -60,10 +61,10 @@ public class StatusVerifierService {
         int statusSize = credentialStatus.get("statusSize") != null ? Integer.parseInt((String) credentialStatus.get("statusSize")) : 1;  //indicates the size of the status entry in bits
 
 
-        VerifiedResult verifiedResult = new VerifiedResult();
+        StatusVerificationResult statusVerificationResult = new StatusVerificationResult();
         try {
             StatusPurpose credenialStatusPurpose = StatusPurpose.valueOf(statusPurpose.toUpperCase());
-            verifiedResult.setStatusPurpose(credenialStatusPurpose.toString().toLowerCase());
+            statusVerificationResult.setStatusPurpose(credenialStatusPurpose.toString().toLowerCase());
         } catch (IllegalArgumentException e) {
             logger.error(String.format("Invalid Status Purpose: %s", statusPurpose));
             throw new ServerException(Constants.STATUS_VERIFICATION_ERROR);
@@ -75,7 +76,7 @@ public class StatusVerifierService {
         }
 
         //fetch credentialSubject from the provided statusListCredential url.
-        statusVerifiableResult = objectMapper.readValue(StatusVerifierClient.fetchEncodedList(statusListCredential), VerifiableCredential.class);
+        statusVerifiableResult = objectMapper.readValue(StatusListClient.fetchStatusListCredential(statusListCredential), VerifiableCredential.class);
 
         //validation of statusPurpose of credentialStatus and credentialSubject
         if (!validateStatusPurpose(statusPurpose, (String) statusVerifiableResult.getCredentialSubject().getJsonObject().get("statusPurpose"))) {
@@ -85,13 +86,11 @@ public class StatusVerifierService {
         //encodedList
         String encodedList = (String) statusVerifiableResult.getCredentialSubject().getJsonObject().get("encodedList");
 
-        int decodedIndexValue = decodeStatusList(encodedList, statusListIndex, statusSize);
-        if (decodedIndexValue != 0) {
-            verifiedResult.setStatus(true);
-        }
-        verifiedResults.add(verifiedResult);
+        boolean decodedIndexValue = decodeStatusList(encodedList, statusListIndex, statusSize);
+        statusVerificationResult.setStatus(decodedIndexValue);
+        statusVerificationResults.add(statusVerificationResult);
 
-        return verifiedResults;
+        return statusVerificationResults;
     }
 
 
