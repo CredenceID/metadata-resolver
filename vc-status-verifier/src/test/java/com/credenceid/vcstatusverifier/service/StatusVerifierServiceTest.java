@@ -50,7 +50,7 @@ class StatusVerifierServiceTest {
 
 
     @Test
-    @DisplayName("testVerifyStatus_RevocationFalse will return the revocation status as True")
+    @DisplayName("testVerifyStatus_RevocationTrue will return the revocation status as True")
     void testVerifyStatus_RevocationTrue() throws IOException {
         String mockResource = "test_data/VC.json";
         ClassLoader classLoader = getClass().getClassLoader();
@@ -79,9 +79,8 @@ class StatusVerifierServiceTest {
         when(jsonObjectMock.get("statusPurpose")).thenReturn("non revocation");
         try (var mockClient = Mockito.mockStatic(StatusVerifierClient.class)) {
             mockClient.when(() -> StatusVerifierClient.fetchEncodedList(any())).thenReturn("mockEncodedList");
-            ServerException exception = assertThrows(ServerException.class, () -> {
-                statusVerifierService.verifyStatus(verifiableCredential);
-            });
+            ServerException exception = assertThrows(ServerException.class, () ->
+                    statusVerifierService.verifyStatus(verifiableCredential));
 
             assertEquals(Constants.STATUS_VERIFICATION_ERROR, exception.getMessage());
         }
@@ -101,9 +100,9 @@ class StatusVerifierServiceTest {
         when(jsonObjectMock.get("statusPurpose")).thenReturn(StatusPurpose.REVOCATION.toString());
         try (var mockClient = Mockito.mockStatic(StatusVerifierClient.class)) {
             mockClient.when(() -> StatusVerifierClient.fetchEncodedList(any())).thenReturn(mockStatusJSON);
-            ServerException exception = assertThrows(ServerException.class, () -> {
-                statusVerifierService.verifyStatus(verifiableCredential);
-            });
+            ServerException exception = assertThrows(ServerException.class, () ->
+                    statusVerifierService.verifyStatus(verifiableCredential)
+            );
 
             assertEquals(Constants.STATUS_VERIFICATION_ERROR, exception.getMessage());
         }
@@ -115,9 +114,9 @@ class StatusVerifierServiceTest {
         when(jsonObjectMock.get("statusListIndex")).thenReturn("-1");
         when(jsonObjectMock.get("statusSize")).thenReturn("1");
         when(jsonObjectMock.get("statusPurpose")).thenReturn(StatusPurpose.REVOCATION.toString());
-        ServerException exception = assertThrows(ServerException.class, () -> {
-            statusVerifierService.verifyStatus(verifiableCredential);
-        });
+        ServerException exception = assertThrows(ServerException.class, () ->
+                statusVerifierService.verifyStatus(verifiableCredential)
+        );
 
         assertEquals(Constants.STATUS_LIST_INDEX_VERIFICATION_ERROR, exception.getMessage());
     }

@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.credenceid.vcstatusverifier.util.Utils.decodeStatusList;
+
 
 public class StatusVerifierService {
 
@@ -83,8 +85,10 @@ public class StatusVerifierService {
         //encodedList
         String encodedList = (String) statusVerifiableResult.getCredentialSubject().getJsonObject().get("encodedList");
 
-//        boolean decodedIndexValue = decodeStatusList(encodedList, statusListIndex, statusSize);
-//        verifiedResult.setStatus(decodedIndexValue);
+        int decodedIndexValue = decodeStatusList(encodedList, statusListIndex, statusSize);
+        if (decodedIndexValue != 0) {
+            verifiedResult.setStatus(true);
+        }
         verifiedResults.add(verifiedResult);
 
         return verifiedResults;
