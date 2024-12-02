@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.credenceid.vcstatusverifier.util.Utils.decodeStatusList;
+
 
 public class StatusVerifierService {
 
@@ -93,11 +95,11 @@ public class StatusVerifierService {
             }
 
             //encodedList
-            String encodedList = statusVerifiableResult.getCredentialSubject().getEncodedList().substring(1);
+            String encodedList = statusVerifiableResult.getCredentialSubject().getEncodedList();
             logger.info(String.format("Encoded List: %s", encodedList));
 
-//            int decodedIndexValue = decodeStatusList(encodedList, statusListIndex, statusSize);
-//            verifiedResult.setStatus(decodedIndexValue);
+            int decodedIndexValue = decodeStatusList(encodedList, statusListIndex, statusSize);
+            verifiedResult.setStatus(decodedIndexValue);
             verifiedResults.add(verifiedResult);
         }
         return verifiedResults;
