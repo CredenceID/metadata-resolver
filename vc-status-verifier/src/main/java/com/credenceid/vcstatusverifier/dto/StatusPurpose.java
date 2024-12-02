@@ -1,4 +1,4 @@
-package com.credenceid.vcstatusverifier.entity;
+package com.credenceid.vcstatusverifier.dto;
 
 public enum StatusPurpose {
     REVOCATION,

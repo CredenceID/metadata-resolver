@@ -7,43 +7,13 @@ import org.apache.commons.codec.binary.Base64;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.zip.GZIPInputStream;
 
 @Slf4j
 public class Utils {
-//
-//    private Utils() {
-//    }
-//
-//    public static int decodeStatusList(String encodedListStr, int index, int statusSize) throws IOException {
-//        if (encodedListStr == null || encodedListStr.isEmpty()) {
-//            throw new IllegalArgumentException("Encoded string cannot be null or empty");
-//        }
-//
-//        if (!encodedListStr.startsWith("u")) {
-//            throw new IllegalArgumentException("encoded list must start with 'u' ");
-//        }
-//        String encodedList = encodedListStr.substring(1);
-//
-//        // Validate if the string is Base64URL
-//        if (!isValidBase64Url(encodedList)) {
-//            throw new IllegalArgumentException("The provided string is not a valid Base64URL-encoded string");
-//        }
-//
-//
-//        StatusListProcessor statusListProcessor = new StatusListProcessor(encodedList);
-//        int totalBits = statusListProcessor.getTotalBits();
-//        boolean bitValue = statusListProcessor.getStatusBit(index, totalBits, true);
-//        return bitValue ? 1 : 0;
-//    }
-//
-//    private static boolean isValidBase64Url(String str) {
-//        // Base64URL strings should not have padding '=' and use '-' and '_' instead of '+' and '/'
-//        String base64UrlPattern = "^[A-Za-z0-9_-]+$";
-//        return str.matches(base64UrlPattern);
-//    }
-//}
+
+    private Utils() {
+    }
 
     public static boolean decodeStatusList(String encodedListStr, int index, int statusSize) throws IOException {
         if (encodedListStr == null || encodedListStr.isEmpty()) {
@@ -69,18 +39,16 @@ public class Utils {
 
         //Decompress the decodedBytes[]
         byte[] decompressedBytes = decompressGzip(decodedBytes);
-        System.out.println("Decompressed bytes: " + Arrays.toString(decompressedBytes));
 
         int index = credentialIndex * statusSize;
         if (index >= decompressedBytes.length) {
-            //throw new ServerException(Constants.RANGE_ERROR);
+            throw new ServerException(Constants.RANGE_ERROR);
         }
 
         // Step 3: Access the bit at the specified index
         int byteIndex = index / 8;          // Find the byte index
         int bitPosition = index % 8;        // Find the bit within the byte
         byte byteValue = decompressedBytes[byteIndex];
-        System.out.println("This is byte value: " + byteValue);
 
         // Calculate the mask for the bit we are interested in
         int bitMask = 1 << (7 - bitPosition);  // Left-to-right indexing (MSB is 0th bit)

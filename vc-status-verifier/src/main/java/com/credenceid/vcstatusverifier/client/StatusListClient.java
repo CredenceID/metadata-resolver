@@ -12,10 +12,25 @@ import java.net.http.HttpResponse;
 import java.rmi.ServerException;
 import java.time.Duration;
 
-public class StatusVerifierClient {
-    private static final Logger logger = LoggerFactory.getLogger(StatusVerifierClient.class);
 
-    public static String fetchEncodedList(final String url) throws ServerException {
+/**
+ * This class implements the HTTP client to fetch the BitstringStatuslistcredential from an statusListCredential WEB endpoint
+ * Java HTTP client is used for implementation.
+ */
+public class StatusListClient {
+    private static final Logger logger = LoggerFactory.getLogger(StatusListClient.class);
+
+
+    private StatusListClient() {
+    }
+
+    /**
+     * Makes an HTTP call to statusListCredential WEB endpoint to return a BitstringStatuslistcredential.
+     *
+     * @param url statusListCredential url from credentialStatus.
+     * @return String
+     */
+    public static String fetchStatusListCredential(final String url) throws ServerException {
         try {
             logger.trace("Downloading Status Verifiable Response from {}", url);
             HttpResponse<String> response;
@@ -25,11 +40,11 @@ public class StatusVerifierClient {
                         .build();
                 response = client.send(request, HttpResponse.BodyHandlers.ofString());
             }
-            String statusVerifiableResult;
+            String statusListCredential;
             if (response == null || response.body() == null)
                 throw new ServerException("No response received from statusListCredential WEB HTTP endpoint " + url);
-            statusVerifiableResult = response.body();
-            logger.debug("fetched successfully! {}", statusVerifiableResult);
+            statusListCredential = response.body();
+            logger.debug("fetched successfully! {}", statusListCredential);
             return response.body();
 
         } catch (InterruptedException e) {
