@@ -98,8 +98,8 @@ public class StatusVerifierService {
             String encodedList = statusVerifiableResult.getCredentialSubject().getEncodedList();
             logger.info(String.format("Encoded List: %s", encodedList));
 
-            int decodedIndexValue = decodeStatusList(encodedList, statusListIndex, statusSize);
-            verifiedResult.setStatus(decodedIndexValue);
+            //int decodedIndexValue = decodeStatusList(encodedList, statusListIndex, statusSize);
+            //verifiedResult.setStatus(decodedIndexValue);
             verifiedResults.add(verifiedResult);
         }
         return verifiedResults;

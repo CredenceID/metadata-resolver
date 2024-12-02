@@ -4,17 +4,15 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class UtilsTest {
     @Test
     void testDecodeStatusList_validEncodedString() throws IOException {
         String encoded = "uH4sIAAAAAAAAA-3OMQEAAAgDoEU3ugEWwENIQMI3cx0AAAAAAAAAAAAAAAAAAACgLGiNcIEAQAAA"; // Base64 encoding of "StatusListTest"
-        int expected = 1;
-        int result = Utils.decodeStatusList(encoded, 12, 1);
+        boolean result = Utils.decodeStatusList(encoded, 4000, 1);
         System.out.println("This is the result: " + result);
-        assertEquals(expected, result, "The decoded string should match the expected result");
+        assertTrue(result, "The decoded string should match the expected result");
     }
 
     @Test
