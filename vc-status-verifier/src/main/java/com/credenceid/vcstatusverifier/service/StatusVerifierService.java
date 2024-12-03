@@ -7,10 +7,13 @@ import com.credenceid.vcstatusverifier.dto.StatusVerificationResult;
 import com.credenceid.vcstatusverifier.exception.ServerException;
 import com.credenceid.vcstatusverifier.util.Constants;
 import com.danubetech.verifiablecredentials.VerifiableCredential;
+import com.danubetech.verifiablecredentials.credentialstatus.CredentialStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static com.credenceid.vcstatusverifier.util.Utils.decodeStatusList;
@@ -41,36 +44,40 @@ public class StatusVerifierService {
     }
 
     /**
-     * Resolves bitstringStatusListEntry to return StatusVerificationResult.
+     * Resolves bitstringStatusListEntry to return List<StatusVerificationResult>.
      *
-     * @param bitstringStatusListEntry verifiable credential of the holder to be verified.
-     * @return StatusVerificationResult
+     * @param bitstringStatusListEntry list of CredentialStatus of the Verifiable Credential.
+     * @return List<StatusVerificationResult>
      */
-    public static StatusVerificationResult verifyStatus(final VerifiableCredential bitstringStatusListEntry) throws IOException {
-        Map<String, Object> credentialStatus = bitstringStatusListEntry.getCredentialStatus().getJsonObject();
-        VerifiableCredential bitStringStatusListCredential;
-        String statusPurpose = (String) credentialStatus.get("statusPurpose");
-        int statusListIndex = Integer.parseInt((String) credentialStatus.get("statusListIndex"));
-        String statusListCredential = (String) credentialStatus.get("statusListCredential");
-        int statusSize = credentialStatus.get("statusSize") != null ? Integer.parseInt((String) credentialStatus.get("statusSize")) : 1;  //indicates the size of the status entry in bits
-        try {
-            StatusPurpose.valueOf(statusPurpose.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            logger.error(String.format("Invalid Status Purpose: %s", statusPurpose));
-            throw new ServerException(Constants.STATUS_VERIFICATION_ERROR);
+    public static List<StatusVerificationResult> verifyStatus(final List<CredentialStatus> bitstringStatusListEntry) throws IOException {
+        List<StatusVerificationResult> statusVerificationResults = new ArrayList<>();
+        for (CredentialStatus credentialStatus : bitstringStatusListEntry) {
+            Map<String, Object> credentialStatusMap = credentialStatus.getJsonObject();
+            VerifiableCredential bitStringStatusListCredential;
+            String statusPurpose = (String) credentialStatusMap.get("statusPurpose");
+            int statusListIndex = Integer.parseInt((String) credentialStatusMap.get("statusListIndex"));
+            String statusListCredential = (String) credentialStatusMap.get("statusListCredential");
+            int statusSize = credentialStatusMap.get("statusSize") != null ? Integer.parseInt((String) credentialStatusMap.get("statusSize")) : 1;  //indicates the size of the status entry in bits
+            try {
+                StatusPurpose.valueOf(statusPurpose.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                logger.error(String.format("Invalid Status Purpose: %s", statusPurpose));
+                throw new ServerException(Constants.STATUS_VERIFICATION_ERROR);
+            }
+            if (validateStatusListIndex(statusListIndex)) {
+                throw new ServerException(Constants.STATUS_LIST_INDEX_VERIFICATION_ERROR);
+            }
+            //fetch BitstringStatusListCredential.
+            bitStringStatusListCredential = StatusListClient.fetchStatusListCredential(statusListCredential);
+            //validation of statusPurpose of credentialStatus and credentialSubject
+            if (!validateStatusPurpose(statusPurpose, (String) bitStringStatusListCredential.getCredentialSubject().getJsonObject().get("statusPurpose"))) {
+                throw new ServerException(Constants.STATUS_VERIFICATION_ERROR);
+            }
+            //encodedList
+            String encodedList = (String) bitStringStatusListCredential.getCredentialSubject().getJsonObject().get("encodedList");
+            boolean decodedIndexValue = decodeStatusList(encodedList, statusListIndex, statusSize);
+            statusVerificationResults.add(new StatusVerificationResult(statusPurpose.toLowerCase(), decodedIndexValue));
         }
-        if (validateStatusListIndex(statusListIndex)) {
-            throw new ServerException(Constants.STATUS_LIST_INDEX_VERIFICATION_ERROR);
-        }
-        //fetch BitstringStatusListCredential.
-        bitStringStatusListCredential = StatusListClient.fetchStatusListCredential(statusListCredential);
-        //validation of statusPurpose of credentialStatus and credentialSubject
-        if (!validateStatusPurpose(statusPurpose, (String) bitStringStatusListCredential.getCredentialSubject().getJsonObject().get("statusPurpose"))) {
-            throw new ServerException(Constants.STATUS_VERIFICATION_ERROR);
-        }
-        //encodedList
-        String encodedList = (String) bitStringStatusListCredential.getCredentialSubject().getJsonObject().get("encodedList");
-        boolean decodedIndexValue = decodeStatusList(encodedList, statusListIndex, statusSize);
-        return new StatusVerificationResult(statusPurpose.toLowerCase(), decodedIndexValue);
+        return statusVerificationResults;
     }
 }
