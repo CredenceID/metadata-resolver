@@ -151,6 +151,29 @@
                             </configOptions>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>bitstring-status-list</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>
+                                ${project.basedir}/src/main/resources/openapi/status-list.yaml
+                            </inputSpec>
+                            <skipValidateSpec>true</skipValidateSpec>
+                            <generatorName>spring</generatorName>
+                            <apiPackage>com.credenceid.resolver.statuslist.openapi.api</apiPackage>
+                            <modelPackage>com.credenceid.resolver.statuslist.openapi.model</modelPackage>
+                            <supportingFilesToGenerate>
+                                ApiUtil.java
+                            </supportingFilesToGenerate>
+                            <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
+                                <useTags>true</useTags>
+                                <delegatePattern>true</delegatePattern>
+                            </configOptions>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>

@@ -1,6 +1,6 @@
 openapi: 3.1.0
 servers:
-  - url: "/trusted-issuer-registry"
+  - url: "/1.0/"
 info:
   title: Trusted Issuer Registry
   description: Trusted Issuer Registry
