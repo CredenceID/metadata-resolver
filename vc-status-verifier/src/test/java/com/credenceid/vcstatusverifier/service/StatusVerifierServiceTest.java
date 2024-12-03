@@ -7,11 +7,11 @@ import com.credenceid.vcstatusverifier.exception.ServerException;
 import com.credenceid.vcstatusverifier.util.Constants;
 import com.danubetech.verifiablecredentials.VerifiableCredential;
 import com.danubetech.verifiablecredentials.credentialstatus.CredentialStatus;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -29,15 +29,12 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class StatusVerifierServiceTest {
 
-    @InjectMocks
-    private StatusVerifierService statusVerifierService;
-
+    private final ObjectMapper objectMapper = new ObjectMapper();
     @Mock
     private VerifiableCredential verifiableCredential;
-
     @Mock
     private CredentialStatus credentialStatus;
-
+    
     private Map<String, Object> jsonObjectMock;
 
     @BeforeEach
@@ -59,15 +56,15 @@ class StatusVerifierServiceTest {
         when(jsonObjectMock.get("statusPurpose")).thenReturn(StatusPurpose.REVOCATION.toString());
         when(jsonObjectMock.get("statusListIndex")).thenReturn("4000");
         when(jsonObjectMock.get("statusSize")).thenReturn("1");
+        VerifiableCredential bitStringStatusListCredential = objectMapper.readValue(mockStatusJSON, VerifiableCredential.class);
         try (var mockClient = Mockito.mockStatic(StatusListClient.class)) {
-            mockClient.when(() -> StatusListClient.fetchStatusListCredential(any())).thenReturn(mockStatusJSON);
-            StatusVerificationResult result = statusVerifierService.verifyStatus(verifiableCredential);
+            mockClient.when(() -> StatusListClient.fetchStatusListCredential(any()))
+                    .thenReturn(bitStringStatusListCredential);
+            StatusVerificationResult result = StatusVerifierService.verifyStatus(verifiableCredential);
             assertNotNull(result);
-
-            assertTrue(result.isStatus());
-            assertEquals("revocation", result.getStatusPurpose());
+            assertTrue(result.status());
+            assertEquals("revocation", result.statusPurpose());
         }
-
     }
 
     @Test
@@ -76,14 +73,9 @@ class StatusVerifierServiceTest {
         when(jsonObjectMock.get("statusListIndex")).thenReturn("4000");
         when(jsonObjectMock.get("statusSize")).thenReturn("1");
         when(jsonObjectMock.get("statusPurpose")).thenReturn("non revocation");
-        try (var mockClient = Mockito.mockStatic(StatusListClient.class)) {
-            mockClient.when(() -> StatusListClient.fetchStatusListCredential(any())).thenReturn("mockEncodedList");
-            ServerException exception = assertThrows(ServerException.class, () ->
-                    statusVerifierService.verifyStatus(verifiableCredential));
-
-            assertEquals(Constants.STATUS_VERIFICATION_ERROR, exception.getMessage());
-        }
-
+        ServerException exception = assertThrows(ServerException.class, () ->
+                StatusVerifierService.verifyStatus(verifiableCredential));
+        assertEquals(Constants.STATUS_VERIFICATION_ERROR, exception.getMessage());
     }
 
 
@@ -97,10 +89,11 @@ class StatusVerifierServiceTest {
         when(jsonObjectMock.get("statusListIndex")).thenReturn("1");
         when(jsonObjectMock.get("statusSize")).thenReturn("1");
         when(jsonObjectMock.get("statusPurpose")).thenReturn(StatusPurpose.REVOCATION.toString());
+        VerifiableCredential bitStringStatusListCredential = objectMapper.readValue(mockStatusJSON, VerifiableCredential.class);
         try (var mockClient = Mockito.mockStatic(StatusListClient.class)) {
-            mockClient.when(() -> StatusListClient.fetchStatusListCredential(any())).thenReturn(mockStatusJSON);
+            mockClient.when(() -> StatusListClient.fetchStatusListCredential(any())).thenReturn(bitStringStatusListCredential);
             ServerException exception = assertThrows(ServerException.class, () ->
-                    statusVerifierService.verifyStatus(verifiableCredential)
+                    StatusVerifierService.verifyStatus(verifiableCredential)
             );
 
             assertEquals(Constants.STATUS_VERIFICATION_ERROR, exception.getMessage());
@@ -114,7 +107,7 @@ class StatusVerifierServiceTest {
         when(jsonObjectMock.get("statusSize")).thenReturn("1");
         when(jsonObjectMock.get("statusPurpose")).thenReturn(StatusPurpose.REVOCATION.toString());
         ServerException exception = assertThrows(ServerException.class, () ->
-                statusVerifierService.verifyStatus(verifiableCredential)
+                StatusVerifierService.verifyStatus(verifiableCredential)
         );
 
         assertEquals(Constants.STATUS_LIST_INDEX_VERIFICATION_ERROR, exception.getMessage());

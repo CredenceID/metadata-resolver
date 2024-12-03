@@ -1,6 +1,9 @@
 package com.credenceid.vcstatusverifier.client;
 
 import com.credenceid.vcstatusverifier.util.Constants;
+import com.danubetech.verifiablecredentials.VerifiableCredential;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,14 +28,17 @@ public class StatusListClient {
     }
 
     /**
-     * Makes an HTTP call to statusListCredential WEB endpoint to return a BitstringStatuslistcredential.
+     * Makes an HTTP call to statusListCredential WEB endpoint to return a BitstringStatusListCredential.
      *
-     * @param url statusListCredential url from credentialStatus.
-     * @return String
+     * @param url statusListCredential from credentialStatus.
+     * @return BitstringStatusListCredential
      */
-    public static String fetchStatusListCredential(final String url) throws ServerException {
+    public static VerifiableCredential fetchStatusListCredential(final String url) throws ServerException {
         try {
-            logger.trace("Downloading Status Verifiable Response from {}", url);
+            //objectMapper to deserialize json into StatusVerifiableResult object.
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule());
+            logger.trace("Downloading Status List from {}", url);
             HttpResponse<String> response;
             try (HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build()) {
                 HttpRequest request = HttpRequest.newBuilder()
@@ -40,13 +46,12 @@ public class StatusListClient {
                         .build();
                 response = client.send(request, HttpResponse.BodyHandlers.ofString());
             }
-            String statusListCredential;
+            VerifiableCredential bitStringStatusListCredential;
             if (response == null || response.body() == null)
                 throw new ServerException("No response received from statusListCredential WEB HTTP endpoint " + url);
-            statusListCredential = response.body();
-            logger.debug("fetched successfully! {}", statusListCredential);
-            return response.body();
-
+            bitStringStatusListCredential = objectMapper.readValue(response.body(), VerifiableCredential.class);
+            logger.debug("fetched successfully! {}", bitStringStatusListCredential);
+            return bitStringStatusListCredential;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new ServerException(Constants.ERROR_CALLING_STATUS_LIST_CREDENTIAL, e);
