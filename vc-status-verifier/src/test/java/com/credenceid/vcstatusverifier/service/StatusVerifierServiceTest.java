@@ -19,7 +19,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -62,11 +61,11 @@ class StatusVerifierServiceTest {
         when(jsonObjectMock.get("statusSize")).thenReturn("1");
         try (var mockClient = Mockito.mockStatic(StatusListClient.class)) {
             mockClient.when(() -> StatusListClient.fetchStatusListCredential(any())).thenReturn(mockStatusJSON);
-            List<StatusVerificationResult> results = statusVerifierService.verifyStatus(verifiableCredential);
-            assertNotNull(results);
-            assertEquals(1, results.size());
-            assertTrue(results.getFirst().isStatus());
-            assertEquals("revocation", results.getFirst().getStatusPurpose());
+            StatusVerificationResult result = statusVerifierService.verifyStatus(verifiableCredential);
+            assertNotNull(result);
+
+            assertTrue(result.isStatus());
+            assertEquals("revocation", result.getStatusPurpose());
         }
 
     }

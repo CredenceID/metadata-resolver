@@ -13,8 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import static com.credenceid.vcstatusverifier.util.Utils.decodeStatusList;
@@ -45,11 +43,10 @@ public class StatusVerifierService {
      * Resolves the verification of status for the provided verifiable credential.
      *
      * @param verifiableCredential verifiable credential of the holder to be verified.
-     * @return List<VerifiedResult> containing List of verifiedResult for the provided type of credentialStatus
+     * @return StatusVerificationResult containing verifiedResult for the provided type of credentialStatus
      */
-    public List<StatusVerificationResult> verifyStatus(VerifiableCredential verifiableCredential) throws IOException {
+    public StatusVerificationResult verifyStatus(VerifiableCredential verifiableCredential) throws IOException {
         Map<String, Object> credentialStatus = verifiableCredential.getCredentialStatus().getJsonObject();
-        List<StatusVerificationResult> statusVerificationResults = new ArrayList<>();
 
         //objectMapper to deserialize json into StatusVerifiableResult object.
         ObjectMapper objectMapper = new ObjectMapper();
@@ -88,9 +85,9 @@ public class StatusVerifierService {
 
         boolean decodedIndexValue = decodeStatusList(encodedList, statusListIndex, statusSize);
         statusVerificationResult.setStatus(decodedIndexValue);
-        statusVerificationResults.add(statusVerificationResult);
 
-        return statusVerificationResults;
+
+        return statusVerificationResult;
     }
 
 
