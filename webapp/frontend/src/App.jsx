@@ -46,7 +46,6 @@ function App() {
                   btnText="Add"
                   placeholder="danubetech.com"
                   label="Add Issuer domain to Trusted Registry" 
-
                   setAPIStatusCode={setAPIStatusCode}
                   setResponseData={setResponseData}
                 />
@@ -73,6 +72,28 @@ function App() {
                   placeholder="did:web:danubetech.com"
                   btnText="Submit"
 
+                  setAPIStatusCode={setAPIStatusCode}
+                  setResponseData={setResponseData}
+                />
+              </div>
+              
+              <div>
+                <h2>Status Verifier</h2>
+
+                <InputField 
+                  name="performStatusVerification"
+                  label="Perform Status verification" 
+                  type="textarea"
+                  placeholder={`[
+    {
+    "id": "https://dhs-svip.github.io/ns/uscis/status/3#4000",
+    "type": "BitstringStatusListEntry",
+    "statusListIndex": "4000",
+    "statusListCredential": "https://dhs-svip.github.io/ns/uscis/status/3",
+    "statusPurpose": "revocation"
+    }
+]`}
+                  btnText="Submit"
                   setAPIStatusCode={setAPIStatusCode}
                   setResponseData={setResponseData}
                 />

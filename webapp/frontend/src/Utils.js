@@ -31,3 +31,11 @@ export async function performDIDWebResolution(param) {
         },
     });
 }
+
+export async function performStatusVerification(body) {
+    return await axios.post(`${BASE_URL}/status/verify`, body, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+}
