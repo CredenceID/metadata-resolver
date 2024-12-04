@@ -1,7 +1,6 @@
 package com.credenceid.vcstatusverifier.service;
 
 import com.credenceid.vcstatusverifier.client.StatusListClient;
-import com.credenceid.vcstatusverifier.dto.StatusPurpose;
 import com.credenceid.vcstatusverifier.dto.StatusVerificationResult;
 import com.credenceid.vcstatusverifier.exception.ServerException;
 import com.credenceid.vcstatusverifier.util.Constants;
@@ -34,7 +33,7 @@ class StatusVerifierServiceTest {
 
     @Mock
     private CredentialStatus credentialStatus;
-    
+
     private Map<String, Object> jsonObjectMock;
 
     @BeforeEach
@@ -52,34 +51,22 @@ class StatusVerifierServiceTest {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(Objects.requireNonNull(classLoader.getResource(mockResource), "Resource not found: " + mockResource).getFile());
         String mockStatusJSON = Files.readString(file.toPath());
-        when(jsonObjectMock.get("statusPurpose")).thenReturn(StatusPurpose.REVOCATION.toString());
+        when(jsonObjectMock.get("statusPurpose")).thenReturn("revocation");
         when(jsonObjectMock.get("statusListIndex")).thenReturn("4000");
         when(jsonObjectMock.get("statusSize")).thenReturn("1");
-        List<CredentialStatus> credentialStatuses = List.of(credentialStatus);
+        List<CredentialStatus> listOfCredentialStatus = List.of(credentialStatus);
         VerifiableCredential bitStringStatusListCredential = objectMapper.readValue(mockStatusJSON, VerifiableCredential.class);
 
         try (var mockClient = Mockito.mockStatic(StatusListClient.class)) {
             mockClient.when(() -> StatusListClient.fetchStatusListCredential(any()))
                     .thenReturn(bitStringStatusListCredential);
-            List<StatusVerificationResult> results = StatusVerifierService.verifyStatus(credentialStatuses);
+            List<StatusVerificationResult> results = StatusVerifierService.verifyStatus(listOfCredentialStatus);
             assertNotNull(results);
             assertFalse(results.isEmpty());
             assertTrue(results.getFirst().status());
             assertEquals("revocation", results.getFirst().statusPurpose());
         }
     }
-
-    @Test
-    void testVerifyStatus_withInvalidStatusPurpose() {
-        when(jsonObjectMock.get("statusListIndex")).thenReturn("4000");
-        when(jsonObjectMock.get("statusSize")).thenReturn("1");
-        when(jsonObjectMock.get("statusPurpose")).thenReturn("non revocation");
-        List<CredentialStatus> credentialStatuses = List.of(credentialStatus);
-        ServerException exception = assertThrows(ServerException.class, () ->
-                StatusVerifierService.verifyStatus(credentialStatuses));
-        assertEquals(Constants.STATUS_VERIFICATION_ERROR, exception.getMessage());
-    }
-
 
     @Test
     void testVerifyStatus_StatusPurposeCompareFailure() throws IOException {
@@ -89,13 +76,13 @@ class StatusVerifierServiceTest {
         String mockStatusJSON = Files.readString(file.toPath());
         when(jsonObjectMock.get("statusListIndex")).thenReturn("1");
         when(jsonObjectMock.get("statusSize")).thenReturn("1");
-        when(jsonObjectMock.get("statusPurpose")).thenReturn(StatusPurpose.REVOCATION.toString());
+        when(jsonObjectMock.get("statusPurpose")).thenReturn("revocation");
         VerifiableCredential bitStringStatusListCredential = objectMapper.readValue(mockStatusJSON, VerifiableCredential.class);
-        List<CredentialStatus> credentialStatuses = List.of(credentialStatus);
+        List<CredentialStatus> listOfCredentialStatus = List.of(credentialStatus);
         try (var mockClient = Mockito.mockStatic(StatusListClient.class)) {
             mockClient.when(() -> StatusListClient.fetchStatusListCredential(any())).thenReturn(bitStringStatusListCredential);
             ServerException exception = assertThrows(ServerException.class, () ->
-                    StatusVerifierService.verifyStatus(credentialStatuses)
+                    StatusVerifierService.verifyStatus(listOfCredentialStatus)
             );
 
             assertEquals(Constants.STATUS_VERIFICATION_ERROR, exception.getMessage());
@@ -106,10 +93,10 @@ class StatusVerifierServiceTest {
     void testVerifyStatus_withInvalidStatusListIndex() {
         when(jsonObjectMock.get("statusListIndex")).thenReturn("-1");
         when(jsonObjectMock.get("statusSize")).thenReturn("1");
-        when(jsonObjectMock.get("statusPurpose")).thenReturn(StatusPurpose.REVOCATION.toString());
-        List<CredentialStatus> credentialStatuses = List.of(credentialStatus);
+        when(jsonObjectMock.get("statusPurpose")).thenReturn("revocation");
+        List<CredentialStatus> listOfCredentialStatus = List.of(credentialStatus);
         ServerException exception = assertThrows(ServerException.class, () ->
-                StatusVerifierService.verifyStatus(credentialStatuses)
+                StatusVerifierService.verifyStatus(listOfCredentialStatus)
         );
 
         assertEquals(Constants.STATUS_LIST_INDEX_VERIFICATION_ERROR, exception.getMessage());

@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * Utility class that provides methods to convert between different types of credential status lists.
- * The class includes methods for converting a list of `CredentialStatus` objects from the Danubetech model
+ * The class includes methods for converting a list of `CredentialStatus` objects from the vc-status-verifier model
  * and the `StatusVerificationResult` objects from the Metadata Resolver.
  */
 public class StatusListVerifierUtility {
@@ -19,25 +19,25 @@ public class StatusListVerifierUtility {
 
     /**
      * Converts a list of `CredentialStatus` objects from the `com.credenceid.resolver.statuslist.openapi.model` package
-     * to a list of `CredentialStatus` objects for the Danubetech model.
+     * to a list of `CredentialStatus` objects for the vc-status-verifier model.
      *
-     * @param credentialStatusList the list of `CredentialStatus` objects from the `com.credenceid.resolver.statuslist.openapi.model` package
-     * @return a list of `CredentialStatus` objects in the Danubetech model
+     * @param listOfCredentialStatus the list of `CredentialStatus` objects from the `com.credenceid.resolver.statuslist.openapi.model` package
+     * @return a list of `CredentialStatus` objects in the vc-status-verifier model
      */
-    public static List<CredentialStatus> convertToDanubetechCredentialStatus(
-            List<com.credenceid.resolver.statuslist.openapi.model.CredentialStatus> credentialStatusList
+    public static List<CredentialStatus> convertToVcStatusVerifierCredentialStatus(
+            List<com.credenceid.resolver.statuslist.openapi.model.CredentialStatus> listOfCredentialStatus
     ) {
-        List<CredentialStatus> danubetechCredentialStatuses = new ArrayList<>();
-        for (com.credenceid.resolver.statuslist.openapi.model.CredentialStatus status : credentialStatusList) {
-            CredentialStatus danubetechCredentialStatus = new CredentialStatus();
-            danubetechCredentialStatus.setJsonObjectKeyValue("type", status.getType());
-            danubetechCredentialStatus.setJsonObjectKeyValue("id", status.getId());
-            danubetechCredentialStatus.setJsonObjectKeyValue("statusPurpose", status.getStatusPurpose());
-            danubetechCredentialStatus.setJsonObjectKeyValue("statusListIndex", status.getStatusListIndex());
-            danubetechCredentialStatus.setJsonObjectKeyValue("statusListCredential", status.getStatusListCredential());
-            danubetechCredentialStatuses.add(danubetechCredentialStatus);
+        List<CredentialStatus> listOfVcStatusVerifierCredentialStatus = new ArrayList<>();
+        for (com.credenceid.resolver.statuslist.openapi.model.CredentialStatus status : listOfCredentialStatus) {
+            CredentialStatus vcStatusVerifierCredentialStatus = new CredentialStatus();
+            vcStatusVerifierCredentialStatus.setJsonObjectKeyValue("type", status.getType());
+            vcStatusVerifierCredentialStatus.setJsonObjectKeyValue("id", status.getId());
+            vcStatusVerifierCredentialStatus.setJsonObjectKeyValue("statusPurpose", status.getStatusPurpose());
+            vcStatusVerifierCredentialStatus.setJsonObjectKeyValue("statusListIndex", status.getStatusListIndex());
+            vcStatusVerifierCredentialStatus.setJsonObjectKeyValue("statusListCredential", status.getStatusListCredential());
+            listOfVcStatusVerifierCredentialStatus.add(vcStatusVerifierCredentialStatus);
         }
-        return danubetechCredentialStatuses;
+        return listOfVcStatusVerifierCredentialStatus;
     }
 
 

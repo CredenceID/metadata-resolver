@@ -26,7 +26,7 @@ import static org.mockito.ArgumentMatchers.any;
 class StatusListVerifierServiceTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
-    
+
     @Test
     void testVerifyStatus_Success() throws IOException {
         String resourceName = "test_data/vcCredentialStatus.json";
@@ -34,13 +34,13 @@ class StatusListVerifierServiceTest {
         File file = new File(Objects.requireNonNull(classLoader.getResource(resourceName), "Resource not found: " + resourceName).getFile());
         byte[] bytes = Files.readAllBytes(file.toPath());
         String mockJSON = new String(bytes, StandardCharsets.UTF_8);
-        List<CredentialStatus> mockCredentialStatus = objectMapper.readValue(mockJSON, objectMapper.getTypeFactory().constructCollectionType(List.class, CredentialStatus.class));
+        List<CredentialStatus> listOfCredentialStatus = objectMapper.readValue(mockJSON, objectMapper.getTypeFactory().constructCollectionType(List.class, CredentialStatus.class));
         List<StatusVerificationResult> mockVerificationResults = new ArrayList<>();
         mockVerificationResults.add(new StatusVerificationResult("revocation", true));
         try (var mockClient = Mockito.mockStatic(StatusVerifierService.class)) {
             mockClient.when(() -> StatusVerifierService.verifyStatus(any())).thenReturn(mockVerificationResults);
             StatusListVerifierService statusListVerifierService = new StatusListVerifierService();
-            List<com.credenceid.resolver.statuslist.openapi.model.StatusVerificationResult> results = statusListVerifierService.verifyStatus(mockCredentialStatus);
+            List<com.credenceid.resolver.statuslist.openapi.model.StatusVerificationResult> results = statusListVerifierService.verifyStatus(listOfCredentialStatus);
             assertNotNull(results);
             assertEquals(1, results.size());
             assertEquals("revocation", results.getFirst().getStatusPurpose());
@@ -50,13 +50,13 @@ class StatusListVerifierServiceTest {
 
     @Test
     void testVerifyStatus_Exception() {
-        List<CredentialStatus> credentialStatusList = new ArrayList<>();
+        List<CredentialStatus> listOfCredentialStatus = new ArrayList<>();
         try (var mockClient = Mockito.mockStatic(StatusVerifierService.class)) {
             mockClient.when(() -> StatusVerifierService.verifyStatus(any()))
                     .thenThrow(new IOException("Network Failure"));
             StatusListVerifierService statusListVerifierService = new StatusListVerifierService();
             assertThrows(ServerException.class, () -> {
-                statusListVerifierService.verifyStatus(credentialStatusList);
+                statusListVerifierService.verifyStatus(listOfCredentialStatus);
             });
         }
     }

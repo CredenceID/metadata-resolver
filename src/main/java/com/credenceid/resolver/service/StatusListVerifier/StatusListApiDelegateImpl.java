@@ -28,15 +28,15 @@ public class StatusListApiDelegateImpl implements StatusListApiDelegate {
      * Verifies the status of a list of {@link CredentialStatus} objects and returns the verification results
      * wrapped in a {@link ResponseEntity} with an HTTP status code of 200 (OK).
      *
-     * @param credentialStatus a list of {@link CredentialStatus} objects representing the status of the
-     *                         Verifiable Credentials to be verified.
+     * @param listOfCredentialStatus a list of {@link CredentialStatus} objects representing the status of the
+     *                               Verifiable Credentials to be verified.
      * @return a {@link ResponseEntity} containing a list of {@link StatusVerificationResult} objects as the
      * response body, with an HTTP status code of 200 (OK) indicating successful verification.
      */
     @Override
     public ResponseEntity<List<StatusVerificationResult>> verifyVCStatus(
-            List<CredentialStatus> credentialStatus) {
-        List<StatusVerificationResult> statusVerificationResults = statusListVerifierService.verifyStatus(credentialStatus);
+            List<CredentialStatus> listOfCredentialStatus) {
+        List<StatusVerificationResult> statusVerificationResults = statusListVerifierService.verifyStatus(listOfCredentialStatus);
         return ResponseEntity.ok(statusVerificationResults);
     }
 }
