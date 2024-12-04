@@ -67,16 +67,20 @@ public class StatusVerifierService {
             if (validateStatusListIndex(statusListIndex)) {
                 throw new ServerException(Constants.STATUS_LIST_INDEX_VERIFICATION_ERROR);
             }
-            //fetch BitstringStatusListCredential.
-            bitStringStatusListCredential = StatusListClient.fetchStatusListCredential(statusListCredential);
-            //validation of statusPurpose of credentialStatus and credentialSubject
-            if (!validateStatusPurpose(statusPurpose, (String) bitStringStatusListCredential.getCredentialSubject().getJsonObject().get("statusPurpose"))) {
-                throw new ServerException(Constants.STATUS_VERIFICATION_ERROR);
+            try {
+                //fetch BitstringStatusListCredential.
+                bitStringStatusListCredential = StatusListClient.fetchStatusListCredential(statusListCredential);
+                //validation of statusPurpose of credentialStatus and credentialSubject
+                if (!validateStatusPurpose(statusPurpose, (String) bitStringStatusListCredential.getCredentialSubject().getJsonObject().get("statusPurpose"))) {
+                    throw new ServerException(Constants.STATUS_VERIFICATION_ERROR);
+                }
+                //encodedList
+                String encodedList = (String) bitStringStatusListCredential.getCredentialSubject().getJsonObject().get("encodedList");
+                boolean decodedIndexValue = decodeStatusList(encodedList, statusListIndex, statusSize);
+                statusVerificationResults.add(new StatusVerificationResult(statusPurpose.toLowerCase(), decodedIndexValue));
+            } catch (IOException e) {
+                throw new IOException(e.getMessage());
             }
-            //encodedList
-            String encodedList = (String) bitStringStatusListCredential.getCredentialSubject().getJsonObject().get("encodedList");
-            boolean decodedIndexValue = decodeStatusList(encodedList, statusListIndex, statusSize);
-            statusVerificationResults.add(new StatusVerificationResult(statusPurpose.toLowerCase(), decodedIndexValue));
         }
         return statusVerificationResults;
     }
