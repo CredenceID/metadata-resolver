@@ -10,14 +10,13 @@ public class TrustedIssuerRegistryUtility {
     private static final Logger logger = LoggerFactory.getLogger(TrustedIssuerRegistryUtility.class);
 
     private TrustedIssuerRegistryUtility() {
-
     }
 
     /**
      * Extracts domain from did:web Identifier
      *
      * @param didIdentifier did:web ID
-     * @return Issuser domain
+     * @return Issuer domain
      */
     public static String extractDomainFromDidWebIdentifier(final String didIdentifier) {
         String[] arr = didIdentifier.split(":");

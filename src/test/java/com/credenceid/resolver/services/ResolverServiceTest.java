@@ -1,8 +1,8 @@
 package com.credenceid.resolver.services;
 
 import com.credenceid.resolver.openapi.model.ResolutionResult;
-import com.credenceid.resolver.service.TrustedIssuerRegistry.RegistryService;
-import com.credenceid.resolver.service.WebDidResolver.ResolverService;
+import com.credenceid.resolver.service.trustedissuerregistry.RegistryService;
+import com.credenceid.resolver.service.webdidresolver.ResolverService;
 import com.credenceid.resolver.util.WebDidResolverUtility;
 import com.credenceid.webdidresolver.exception.BadRequestException;
 import com.credenceid.webdidresolver.service.WebDidResolverService;

@@ -6,9 +6,23 @@ import org.slf4j.LoggerFactory;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Utility class providing methods for common operations related to DID (Decentralized Identifiers) and URLs.
+ * This class contains methods to convert DID:web identifiers to URLs that point to Issuer DID Web Endpoints.
+ *
+ * <p>This class contains static utility methods and should not be instantiated.
+ */
 public class Util {
+
+    /**
+     * Logger for logging debug and error messages within the Util class.
+     */
     private static final Logger logger = LoggerFactory.getLogger(Util.class);
 
+    /**
+     * Private constructor to prevent instantiation of the Util class.
+     * This class is meant to serve as a utility container and does not need to be instantiated.
+     */
     private Util() {
     }
 
@@ -28,7 +42,7 @@ public class Util {
         } else {
             //This is the case with a path, for example, did:web:w3c-ccg.github.io:user:alice
             StringBuilder stringBuilder = new StringBuilder();
-       
+
             for (int i = 3; i < arr.length; i++) {
                 stringBuilder.append("/");
                 stringBuilder.append(arr[i]);
@@ -38,4 +52,6 @@ public class Util {
         logger.debug("DID {} converted to HTTPS URL {}", didIdentifier, url);
         return url;
     }
+
+
 }

@@ -1,9 +1,9 @@
 package com.credenceid.resolver.dao;
 
 public interface IssuerDao {
-    public void create(String domain);
+    void create(String domain);
 
-    public void read(String domain);
+    void read(String domain);
 
-    public void delete(String domain);
+    void delete(String domain);
 }

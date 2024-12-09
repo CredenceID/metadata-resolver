@@ -1,4 +1,5 @@
-package com.credenceid.resolver.service.TrustedIssuerRegistry;
+package com.credenceid.resolver.service.trustedissuerregistry;
+
 import com.credenceid.resolver.registry.openapi.api.RegistryApiDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,8 +10,14 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class RegistryAPIDelegateImpl implements RegistryApiDelegate {
-    @Autowired
+
     RegistryService registryService;
+
+    @Autowired
+    RegistryAPIDelegateImpl(RegistryService registryService) {
+        this.registryService = registryService;
+    }
+
     /**
      * Adds issuer domain to the Trusted Registry database
      *

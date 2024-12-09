@@ -1,7 +1,7 @@
-package com.credenceid.resolver.service.WebDidResolver;
+package com.credenceid.resolver.service.webdidresolver;
 
 import com.credenceid.resolver.openapi.model.ResolutionResult;
-import com.credenceid.resolver.service.TrustedIssuerRegistry.RegistryService;
+import com.credenceid.resolver.service.trustedissuerregistry.RegistryService;
 import com.credenceid.resolver.util.TrustedIssuerRegistryUtility;
 import com.credenceid.resolver.util.WebDidResolverUtility;
 import org.slf4j.Logger;

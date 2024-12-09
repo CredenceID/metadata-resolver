@@ -12,8 +12,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class IssuerDaoMongoImpl implements IssuerDao {
 
-    @Autowired
     IssuerRepository issuerRepository;
+
+    @Autowired
+    IssuerDaoMongoImpl(IssuerRepository issuerRepository) {
+        this.issuerRepository = issuerRepository;
+    }
 
     /**
      * Creates a new database entry for Issuer.

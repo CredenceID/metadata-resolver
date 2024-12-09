@@ -1,4 +1,4 @@
-package com.credenceid.resolver.service.TrustedIssuerRegistry;
+package com.credenceid.resolver.service.trustedissuerregistry;
 
 import com.credenceid.resolver.dao.IssuerDao;
 import org.slf4j.Logger;
@@ -10,8 +10,12 @@ import org.springframework.stereotype.Service;
 public class RegistryService {
     private static final Logger logger = LoggerFactory.getLogger(RegistryService.class);
 
-    @Autowired
     IssuerDao issuerDao;
+
+    @Autowired
+    RegistryService(IssuerDao issuerDao) {
+        this.issuerDao = issuerDao;
+    }
 
 
     public void addIssuerToTrustedRegistry(String domain) {

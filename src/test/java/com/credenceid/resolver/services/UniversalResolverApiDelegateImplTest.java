@@ -1,8 +1,8 @@
 package com.credenceid.resolver.services;
 
 import com.credenceid.resolver.openapi.model.ResolutionResult;
-import com.credenceid.resolver.service.WebDidResolver.ResolverService;
-import com.credenceid.resolver.service.WebDidResolver.UniversalResolverApiDelegateImpl;
+import com.credenceid.resolver.service.webdidresolver.ResolverService;
+import com.credenceid.resolver.service.webdidresolver.UniversalResolverApiDelegateImpl;
 import foundation.identity.did.DIDDocument;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,4 +1,4 @@
-package com.credenceid.resolver.service.WebDidResolver;
+package com.credenceid.resolver.service.webdidresolver;
 
 import com.credenceid.resolver.openapi.api.UniversalResolverApiDelegate;
 import jakarta.servlet.http.HttpServletRequest;
