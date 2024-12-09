@@ -8,19 +8,31 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 
+
+/**
+ * Utility class that provides methods for decoding Base64URL-encoded strings, decompressing GZIP data,
+ * and extracting specific bits at a given index from a decoded status list.
+ * <p>
+ * This class is designed to handle the decoding, decompression, and bitextraction logic
+ * used in status list processing. It is not intended to be instantiated.
+ */
 public class Utils {
 
+    // Private constructor to prevent instantiation
     private Utils() {
     }
 
     /**
-     * Decodes a Base64URL-encoded string, validates it, and extracts the bit at a specified index.
+     * Decodes a Base64URL-encoded and GZIP-compressed string, validates it, and extracts the bit at a specified index.
      * It also handles decompression of the data.
      *
      * @param encodedListStr The Base64URL-encoded and compressed string prefixed with 'u'.
+     *                       The 'u' prefix is removed before processing.
      * @param index          The index of the status to extract.
      * @param statusSize     The size of each status in bits.
      * @return boolean indicating whether the bit at the specified index is set (true) or not (false).
+     * @throws IllegalArgumentException If the encoded string is null, empty, or improperly formatted.
+     * @throws IOException              If there are issues during the decoding or decompression process.
      */
     public static boolean decodeStatusList(String encodedListStr, int index, int statusSize) throws IOException {
         if (encodedListStr == null || encodedListStr.isEmpty()) {
@@ -49,6 +61,8 @@ public class Utils {
      * @param credentialIndex The index of the credential to retrieve the bit for.
      * @param statusSize      The size of each status in bits.
      * @return boolean indicating whether the bit at the specified index is set (true) or not (false).
+     * @throws IOException              If there are issues with decoding or decompression.
+     * @throws IllegalArgumentException If the index is out of bounds of the decompressed data.
      */
     public static boolean getBitAtIndex(String encodedString, int credentialIndex, int statusSize) throws IOException {
         //Decode the base64url encoded string
@@ -79,6 +93,7 @@ public class Utils {
      *
      * @param base64Url The Base64URL-encoded string.
      * @return A byte array representing the decoded data.
+     * @throws IllegalArgumentException If the provided string is not a valid Base64URL string.
      */
     public static byte[] decodeBase64Url(String base64Url) {
         String standardBase64 = base64Url.replace('-', '+').replace('_', '/');
@@ -91,6 +106,7 @@ public class Utils {
      *
      * @param compressedData The GZIP-compressed byte array.
      * @return A byte array containing the decompressed data.
+     * @throws IOException If an error occurs during decompression.
      */
     public static byte[] decompressGzip(byte[] compressedData) throws IOException {
         try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(compressedData);

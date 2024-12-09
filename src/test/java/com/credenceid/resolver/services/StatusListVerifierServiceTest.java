@@ -1,7 +1,7 @@
 package com.credenceid.resolver.services;
 
 import com.credenceid.resolver.exception.ServerException;
-import com.credenceid.resolver.service.StatusListVerifier.StatusListVerifierService;
+import com.credenceid.resolver.service.statuslistverifier.StatusListVerifierService;
 import com.credenceid.resolver.statuslist.openapi.model.CredentialStatus;
 import com.credenceid.vcstatusverifier.dto.StatusVerificationResult;
 import com.credenceid.vcstatusverifier.service.StatusVerifierService;
@@ -55,9 +55,8 @@ class StatusListVerifierServiceTest {
             mockClient.when(() -> StatusVerifierService.verifyStatus(any()))
                     .thenThrow(new IOException("Network Failure"));
             StatusListVerifierService statusListVerifierService = new StatusListVerifierService();
-            assertThrows(ServerException.class, () -> {
-                statusListVerifierService.verifyStatus(listOfCredentialStatus);
-            });
+            assertThrows(ServerException.class, () ->
+                    statusListVerifierService.verifyStatus(listOfCredentialStatus));
         }
     }
 

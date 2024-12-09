@@ -6,8 +6,50 @@
 
     <groupId>com.credenceid</groupId>
     <artifactId>vc-status-verifier</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.0.1</version>
     <packaging>jar</packaging>
+
+    <name>vc-status-verifier</name>
+    <description>A application to verify the status of the verifiable credential
+    </description>
+    <url>https://github.com/CredenceID/metadata-resolver/tree/dev/vc-status-verifier</url>
+
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Nagabhushan Srinivasa</name>
+            <email>nagabhushan.srinivasa@credenceid.com</email>
+            <organization>CredenceId</organization>
+            <organizationUrl>https://www.credenceid.com</organizationUrl>
+        </developer>
+        <developer>
+            <name>Rohith Gour</name>
+            <email>rohith.gour@credenceid.com</email>
+            <organization>CredenceId</organization>
+            <organizationUrl>https://www.credenceid.com</organizationUrl>
+        </developer>
+        <developer>
+            <name>Dhanush Raj G P</name>
+            <email>dhanush.raj@credenceid.com</email>
+            <organization>CredenceId</organization>
+            <organizationUrl>https://www.credenceid.com</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/CredenceID/metadata-resolver/tree/dev/vc-status-verifier.git</connection>
+        <developerConnection>scm:git:ssh://github.com:CredenceID/metadata-resolver/tree/dev/vc-status-verifier.git
+        </developerConnection>
+        <url>http://github.com/CredenceID/metadata-resolver/tree/dev/vc-status-verifier</url>
+    </scm>
+
     <repositories>
         <repository>
             <id>danubetech-maven-public</id>
@@ -109,6 +151,59 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <!--            maven central publish plugin-->
+            <!--            Javadoc and Sources Attachments-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--        Maven GPG plugin is used to sign the components    -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--            Publishing via the Central Portal -->
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.6.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>central</publishingServerId>
+                </configuration>
             </plugin>
         </plugins>
     </build>

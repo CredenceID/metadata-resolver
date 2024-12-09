@@ -1,5 +1,6 @@
 package com.credenceid.vcstatusverifier.client;
 
+import com.credenceid.vcstatusverifier.exception.ServerException;
 import com.credenceid.vcstatusverifier.util.Constants;
 import com.danubetech.verifiablecredentials.VerifiableCredential;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,7 +13,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.rmi.ServerException;
 import java.time.Duration;
 
 
@@ -32,6 +32,7 @@ public class StatusListClient {
      *
      * @param url statusListCredential from credentialStatus.
      * @return BitstringStatusListCredential
+     * @throws ServerException If there is an issue during the HTTP call or if the response body is null or empty.
      */
     public static VerifiableCredential fetchStatusListCredential(final String url) throws ServerException {
         try {
@@ -54,9 +55,9 @@ public class StatusListClient {
             return bitStringStatusListCredential;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new ServerException(Constants.ERROR_CALLING_STATUS_LIST_CREDENTIAL, e);
+            throw new ServerException(Constants.ERROR_CALLING_STATUS_LIST_CREDENTIAL);
         } catch (IOException e) {
-            throw new ServerException(Constants.ERROR_CALLING_STATUS_LIST_CREDENTIAL, e);
+            throw new ServerException(Constants.ERROR_CALLING_STATUS_LIST_CREDENTIAL);
         }
     }
 }

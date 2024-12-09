@@ -1,4 +1,4 @@
-package com.credenceid.resolver.service.StatusListVerifier;
+package com.credenceid.resolver.service.statuslistverifier;
 
 import com.credenceid.resolver.exception.ServerException;
 import com.credenceid.resolver.statuslist.openapi.model.CredentialStatus;

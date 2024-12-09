@@ -39,10 +39,11 @@ public class StatusVerifierService {
     }
 
     /**
-     * Resolves bitstringStatusListEntry to return List<StatusVerificationResult>.
+     * Resolves bitstringStatusListEntry to return a List of {@link StatusVerificationResult}.
      *
      * @param listOfCredentialStatus list of CredentialStatus of the Verifiable Credential.
-     * @return List<StatusVerificationResult>
+     * @return A List of {@link StatusVerificationResult}.
+     * @throws IOException If an I/O error occurs during status verification.
      */
     public static List<StatusVerificationResult> verifyStatus(final List<CredentialStatus> listOfCredentialStatus) throws IOException {
         List<StatusVerificationResult> statusVerificationResults = new ArrayList<>();
