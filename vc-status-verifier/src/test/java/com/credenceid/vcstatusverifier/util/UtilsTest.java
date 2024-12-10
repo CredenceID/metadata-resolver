@@ -21,7 +21,7 @@ class UtilsTest {
         String encoded = "uH4sIAAAAAAAAA-3OMQEAAAgDoEU3ugEWwENIQMI3cx0AAAAAAAAAAAAAAAAAAACgLGiNcIEAQAAA"; // Base64 encoding of "StatusListTest"
         boolean result = Utils.decodeStatusList(encoded, 4001, 1);
         System.out.println("This is the result: " + result);
-        assertFalse(result, "The decoded string should match the expected result");
+        assertFalse(result, "The decoded string should not match the expected result");
     }
 
     @Test
