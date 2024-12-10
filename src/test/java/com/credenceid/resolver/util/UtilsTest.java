@@ -2,9 +2,12 @@ package com.credenceid.resolver.util;
 
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import uniresolver.openapi.model.ResolutionResult;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class UtilsTest {
 
@@ -42,4 +45,25 @@ class UtilsTest {
         assertThrows(NullPointerException.class,
                 () -> TrustedIssuerRegistryUtility.extractDomainFromDidWebIdentifier(didIdentifier));
     }
+
+
+    @Test
+    void testConvertToMetadataResolverResolutionResult() {
+        ResolutionResult uniResolverResult = Mockito.mock(ResolutionResult.class);
+        Object mockDidResolutionMetadata = new Object();
+        Object mockDidDocumentMetadata = new Object();
+        Mockito.when(uniResolverResult.getDidDocument()).thenReturn("mockDidDocument");
+        Mockito.when(uniResolverResult.getDidResolutionMetadata()).thenReturn(Map.of("mockDidResolutionMetadata", mockDidResolutionMetadata));
+        Mockito.when(uniResolverResult.getDidDocumentMetadata()).thenReturn(Map.of("mockDidDocumentMetadata", mockDidDocumentMetadata));
+        com.credenceid.resolver.openapi.model.ResolutionResult expectedMetadataResolverResult = new com.credenceid.resolver.openapi.model.ResolutionResult();
+        expectedMetadataResolverResult.setDidDocument("mockDidDocument");
+        expectedMetadataResolverResult.setDidResolutionMetadata(Map.of("mockDidResolutionMetadata", mockDidResolutionMetadata));
+        expectedMetadataResolverResult.setDidDocumentMetadata(Map.of("mockDidDocumentMetadata", mockDidDocumentMetadata));
+        com.credenceid.resolver.openapi.model.ResolutionResult metadataResolverResult = WebDidResolverUtility.convertToMetadataResolverResolutionResult(uniResolverResult);
+        assertNotNull(metadataResolverResult);
+        assertEquals(expectedMetadataResolverResult.getDidDocument(), metadataResolverResult.getDidDocument());
+        assertEquals(expectedMetadataResolverResult.getDidResolutionMetadata(), metadataResolverResult.getDidResolutionMetadata());
+        assertEquals(expectedMetadataResolverResult.getDidDocumentMetadata(), metadataResolverResult.getDidDocumentMetadata());
+    }
+
 }

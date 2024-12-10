@@ -14,7 +14,7 @@ public class RegistryAPIDelegateImpl implements RegistryApiDelegate {
     RegistryService registryService;
 
     @Autowired
-    RegistryAPIDelegateImpl(RegistryService registryService) {
+    public RegistryAPIDelegateImpl(RegistryService registryService) {
         this.registryService = registryService;
     }
 
