@@ -92,7 +92,6 @@ class StatusVerifierServiceTest {
     @Test
     void testVerifyStatus_withInvalidStatusListIndex() {
         when(jsonObjectMock.get("statusListIndex")).thenReturn("-1");
-        when(jsonObjectMock.get("statusSize")).thenReturn("1");
         when(jsonObjectMock.get("statusPurpose")).thenReturn("revocation");
         List<CredentialStatus> listOfCredentialStatus = List.of(credentialStatus);
         ServerException exception = assertThrows(ServerException.class, () ->
