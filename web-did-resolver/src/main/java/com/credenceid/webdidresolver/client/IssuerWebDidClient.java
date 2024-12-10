@@ -47,9 +47,9 @@ public class IssuerWebDidClient {
             return response.body();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new ServerException(ERROR_CALLING_DID_ENDPOINT, e);
+            throw new ServerException(ERROR_CALLING_DID_ENDPOINT + " error: " + e.getMessage());
         } catch (IOException e) {
-            throw new ServerException(ERROR_CALLING_DID_ENDPOINT, e);
+            throw new ServerException(ERROR_CALLING_DID_ENDPOINT + " error: " + e.getMessage());
         }
     }
 }

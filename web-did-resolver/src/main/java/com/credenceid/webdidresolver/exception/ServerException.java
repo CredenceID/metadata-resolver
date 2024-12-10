@@ -13,7 +13,6 @@ package com.credenceid.webdidresolver.exception;
  * </p>
  */
 public class ServerException extends RuntimeException {
-
     /**
      * Constructs a new ServerException with the specified detail message.
      * <p>
@@ -24,19 +23,5 @@ public class ServerException extends RuntimeException {
      */
     public ServerException(String message) {
         super(message);
-    }
-
-    /**
-     * Constructs a new ServerException with the specified detail message and cause.
-     * <p>
-     * This constructor allows for chaining exceptions, providing both a descriptive message and the underlying
-     * cause of the exception.
-     * </p>
-     *
-     * @param message The detail message describing the error that caused this exception.
-     * @param cause   The underlying cause of the exception (a {@link Throwable} object).
-     */
-    public ServerException(String message, Throwable cause) {
-        super(message, cause);
     }
 }
