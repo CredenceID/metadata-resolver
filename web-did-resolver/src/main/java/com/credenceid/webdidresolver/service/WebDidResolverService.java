@@ -62,7 +62,7 @@ public class WebDidResolverService {
      * @param didIdentifier did:web ID passed as input to this Service
      * @param didDocument   DID Document downloaded using the input did:web ID
      */
-    private static void validateDidDocument(final String didIdentifier, final DIDDocument didDocument) throws ServerException {
+    static void validateDidDocument(final String didIdentifier, final DIDDocument didDocument) throws ServerException {
         if (!didIdentifier.equals(didDocument.getId().toString()))
             throw new ServerException("DID document downloaded doesn't match with the input did:web ID");
     }

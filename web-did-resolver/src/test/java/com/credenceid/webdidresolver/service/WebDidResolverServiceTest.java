@@ -3,6 +3,7 @@ package com.credenceid.webdidresolver.service;
 
 import com.credenceid.webdidresolver.client.IssuerWebDidClient;
 import com.credenceid.webdidresolver.exception.BadRequestException;
+import com.credenceid.webdidresolver.exception.ServerException;
 import foundation.identity.did.DIDDocument;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -57,10 +58,21 @@ class WebDidResolverServiceTest {
     @Test()
     @DisplayName("testResolveDID_IncorrectDID_Fail should throw BadRequestException with BAD_DID_ERROR_MESSAGE")
     void testResolveDID_IncorrectDID_Fail() {
-        try (var mock = Mockito.mockStatic(WebDidResolverService.class)) {
-            mock.when(() -> WebDidResolverService.resolveDID(":web:danubetech.com")).thenThrow(new BadRequestException(BAD_DID_ERROR_MESSAGE));
-            assertThrows(BadRequestException.class, () -> WebDidResolverService.resolveDID(":web:danubetech.com"), BAD_DID_ERROR_MESSAGE);
-        }
+        assertThrows(BadRequestException.class, () -> WebDidResolverService.resolveDID(":web:danubetech.com"), BAD_DID_ERROR_MESSAGE);
     }
+
+    @Test()
+    @DisplayName("testResolveDID_validateDidDocument should throw ServerException with DID document downloaded doesn't match with the input did:web ID")
+    void testResolveDID_validateDidDocument() throws IOException {
+        String didIdentifier = "did:invalidweb:danubetech.com";
+        String resourceName = "test_data/danubetech.json";
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(Objects.requireNonNull(classLoader.getResource(resourceName), "Resource not found: " + resourceName).getFile());
+        byte[] bytes = Files.readAllBytes(file.toPath());
+        String didDocumentJSON = new String(bytes, StandardCharsets.UTF_8);
+        DIDDocument didDocument = DIDDocument.fromJson(didDocumentJSON);
+        assertThrows(ServerException.class, () -> WebDidResolverService.validateDidDocument(didIdentifier, didDocument), "DID document downloaded doesn't match with the input did:web ID");
+    }
+
 
 }
