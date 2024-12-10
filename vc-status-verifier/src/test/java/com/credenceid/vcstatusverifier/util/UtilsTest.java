@@ -13,7 +13,7 @@ class UtilsTest {
         String encoded = "uH4sIAAAAAAAAA-3OMQEAAAgDoEU3ugEWwENIQMI3cx0AAAAAAAAAAAAAAAAAAACgLGiNcIEAQAAA"; // Base64 encoding of "StatusListTest"
         boolean result = Utils.decodeStatusList(encoded, 4000, 1);
         System.out.println("This is the result: " + result);
-        assertTrue(result, "The decoded string should match the expected result");
+        assertTrue(result, "status at the index 4000 must be true");
     }
 
     @Test
@@ -21,7 +21,7 @@ class UtilsTest {
         String encoded = "uH4sIAAAAAAAAA-3OMQEAAAgDoEU3ugEWwENIQMI3cx0AAAAAAAAAAAAAAAAAAACgLGiNcIEAQAAA"; // Base64 encoding of "StatusListTest"
         boolean result = Utils.decodeStatusList(encoded, 4001, 1);
         System.out.println("This is the result: " + result);
-        assertFalse(result, "The decoded string should not match the expected result");
+        assertFalse(result, "status at the index 4001 must be false");
     }
 
     @Test
