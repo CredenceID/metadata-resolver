@@ -38,13 +38,13 @@
     <dependencies>
         <dependency>
             <groupId>com.credenceid</groupId>
-            <artifactId>vc-status-verifier</artifactId>
-            <version>0.0.1</version>
+            <artifactId>credential-status-check</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.credenceid</groupId>
-            <artifactId>web-did-resolver</artifactId>
-            <version>0.0.1</version>
+            <artifactId>did-resolver</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -124,8 +124,8 @@
                             </inputSpec>
                             <skipValidateSpec>true</skipValidateSpec>
                             <generatorName>spring</generatorName>
-                            <apiPackage>com.credenceid.resolver.openapi.api</apiPackage>
-                            <modelPackage>com.credenceid.resolver.openapi.model</modelPackage>
+                            <apiPackage>com.credenceid.metadata.openapi.api</apiPackage>
+                            <modelPackage>com.credenceid.metadata.openapi.model</modelPackage>
                             <supportingFilesToGenerate>
                                 ApiUtil.java
                             </supportingFilesToGenerate>
@@ -147,8 +147,8 @@
                             </inputSpec>
                             <skipValidateSpec>true</skipValidateSpec>
                             <generatorName>spring</generatorName>
-                            <apiPackage>com.credenceid.resolver.registry.openapi.api</apiPackage>
-                            <modelPackage>com.credenceid.resolver.registry.openapi.model</modelPackage>
+                            <apiPackage>com.credenceid.metadata.registry.openapi.api</apiPackage>
+                            <modelPackage>com.credenceid.metadata.registry.openapi.model</modelPackage>
                             <supportingFilesToGenerate>
                                 ApiUtil.java
                             </supportingFilesToGenerate>
@@ -170,8 +170,8 @@
                             </inputSpec>
                             <skipValidateSpec>true</skipValidateSpec>
                             <generatorName>spring</generatorName>
-                            <apiPackage>com.credenceid.resolver.statuslist.openapi.api</apiPackage>
-                            <modelPackage>com.credenceid.resolver.statuslist.openapi.model</modelPackage>
+                            <apiPackage>com.credenceid.metadata.statuslist.openapi.api</apiPackage>
+                            <modelPackage>com.credenceid.metadata.statuslist.openapi.model</modelPackage>
                             <supportingFilesToGenerate>
                                 ApiUtil.java
                             </supportingFilesToGenerate>
