@@ -2,14 +2,14 @@ package com.credenceid.metadata.resolver.service;
 
 import com.credenceid.metadata.openapi.model.ResolutionResult;
 import com.credenceid.metadata.registry.service.RegistryService;
-import com.credenceid.metadata.registry.util.TrustedIssuerRegistryUtility;
-import com.credenceid.metadata.resolver.util.WebDidResolverUtility;
+import com.credenceid.metadata.registry.util.RegistryUtility;
+import com.credenceid.metadata.resolver.util.ResolverUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static com.credenceid.webdidresolver.service.WebDidResolverService.resolveDID;
+import static com.credenceid.didresolver.service.DidResolverService.resolveDID;
 
 /**
  * This class is responsible for DID Web resolution and status list download.
@@ -35,8 +35,8 @@ public class ResolverService {
      * @return ResolutionResult containing DID document, DID Document metadata and Resolution metadata
      */
     public ResolutionResult resolve(String identifier, String accept) {
-        ResolutionResult resolutionResult = WebDidResolverUtility.convertToMetadataResolverResolutionResult(resolveDID(identifier));
-        registryService.isIssuerTrusted(TrustedIssuerRegistryUtility.extractDomainFromDidWebIdentifier(identifier));
+        ResolutionResult resolutionResult = ResolverUtility.convertToMetadataResolverResolutionResult(resolveDID(identifier));
+        registryService.isIssuerTrusted(RegistryUtility.extractDomainFromDidWebIdentifier(identifier));
         logger.debug("Resolution result for {} is {}", identifier, resolutionResult);
         return resolutionResult;
     }

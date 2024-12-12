@@ -1,10 +1,10 @@
 package com.credenceid.metadata.credentialstatus.service;
 
-import com.credenceid.metadata.credentialstatus.util.StatusListVerifierUtility;
+import com.credenceid.credentialstatuscheck.service.StatusVerifierService;
+import com.credenceid.metadata.credentialstatus.util.CredentialStatusUtility;
 import com.credenceid.metadata.exception.ServerException;
 import com.credenceid.metadata.statuslist.openapi.model.CredentialStatus;
 import com.credenceid.metadata.statuslist.openapi.model.StatusVerificationResult;
-import com.credenceid.vcstatusverifier.service.StatusVerifierService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
@@ -34,8 +34,8 @@ public class StatusListVerifierService {
      */
     public List<StatusVerificationResult> verifyStatus(List<@Valid CredentialStatus> listOfCredentialStatus) {
         try {
-            List<com.credenceid.vcstatusverifier.dto.StatusVerificationResult> statusVerificationResults = StatusVerifierService.verifyStatus(StatusListVerifierUtility.convertToVcStatusVerifierCredentialStatus(listOfCredentialStatus));
-            return StatusListVerifierUtility.convertToMetadataResolverStatusVerificationResult(statusVerificationResults);
+            List<com.credenceid.credentialstatuscheck.dto.StatusVerificationResult> statusVerificationResults = StatusVerifierService.verifyStatus(CredentialStatusUtility.convertToCredentialStatusCheckCredentialStatus(listOfCredentialStatus));
+            return CredentialStatusUtility.convertToMetadataResolverStatusVerificationResult(statusVerificationResults);
         } catch (IOException e) {
             throw new ServerException(e.getMessage());
         }
