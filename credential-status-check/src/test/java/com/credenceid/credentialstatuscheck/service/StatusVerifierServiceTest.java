@@ -47,7 +47,7 @@ class StatusVerifierServiceTest {
     @Test
     @DisplayName("testVerifyStatus_RevocationTrue will return the revocation status as True")
     void testVerifyStatus_RevocationTrue() throws IOException, CredentialStatusCheckException {
-        String mockResource = "test_data/VC.json";
+        String mockResource = "test_data/BitstringStatusListCredential.json";
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(Objects.requireNonNull(classLoader.getResource(mockResource), "Resource not found: " + mockResource).getFile());
         String mockStatusJSON = Files.readString(file.toPath());
@@ -70,7 +70,7 @@ class StatusVerifierServiceTest {
 
     @Test
     void testVerifyStatus_StatusPurposeCompareFailure() throws IOException {
-        String mockResource = "test_data/invalidVC.json";
+        String mockResource = "test_data/invalidBitstringStatusListCredential.json";
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(Objects.requireNonNull(classLoader.getResource(mockResource), "Resource not found: " + mockResource).getFile());
         String mockStatusJSON = Files.readString(file.toPath());
