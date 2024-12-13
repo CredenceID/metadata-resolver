@@ -29,6 +29,15 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <springboot.version>3.3.1</springboot.version>
         <springdoc-openapi-ui.version>1.7.0</springdoc-openapi-ui.version>
+        <maven-surefire.version>3.3.1</maven-surefire.version>
+        <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
+        <did-common-java.version>1.13.0</did-common-java.version>
+        <verifiable-credentials-java.version>1.12.0</verifiable-credentials-java.version>
+        <uni-resolver-core.version>0.20.0</uni-resolver-core.version>
+        <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
+        <openapi-generator-maven-plugin.version>7.7.0</openapi-generator-maven-plugin.version>
+        <credential-status-check.version>0.1.0-SNAPSHOT</credential-status-check.version>
+        <did-resolver.version>0.1.0-SNAPSHOT</did-resolver.version>
     </properties>
 
     <groupId>com.credenceid</groupId>
@@ -39,12 +48,12 @@
         <dependency>
             <groupId>com.credenceid</groupId>
             <artifactId>credential-status-check</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
+            <version>${credential-status-check.version}</version>
         </dependency>
         <dependency>
             <groupId>com.credenceid</groupId>
             <artifactId>did-resolver</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
+            <version>${did-resolver.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -70,25 +79,23 @@
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
-            <version>0.2.6</version>
+            <version>${jackson-databind-nullable.version}</version>
         </dependency>
-
-
         <!-- DIF -->
         <dependency>
             <groupId>decentralized-identity</groupId>
             <artifactId>uni-resolver-core</artifactId>
-            <version>0.20.0</version>
+            <version>${uni-resolver-core.version}</version>
         </dependency>
         <dependency>
             <groupId>decentralized-identity</groupId>
             <artifactId>did-common-java</artifactId>
-            <version>1.13.0</version>
+            <version>${did-common-java.version}</version>
         </dependency>
         <dependency>
             <groupId>com.danubetech</groupId>
             <artifactId>verifiable-credentials-java</artifactId>
-            <version>1.12.0</version>
+            <version>${verifiable-credentials-java.version}</version>
             <scope>compile</scope>
         </dependency>
 
@@ -111,7 +118,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>7.7.0</version>
+                <version>${openapi-generator-maven-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>resolver</id>
@@ -120,7 +127,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                ${project.basedir}/src/main/resources/openapi/openapi.yaml
+                                ${project.basedir}/src/main/resources/openapi/did-resolver.yaml
                             </inputSpec>
                             <skipValidateSpec>true</skipValidateSpec>
                             <generatorName>spring</generatorName>
@@ -187,12 +194,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.3.1</version>
+                <version>${maven-surefire.version}</version>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.12</version>
+                <version>${jacoco-maven-plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>

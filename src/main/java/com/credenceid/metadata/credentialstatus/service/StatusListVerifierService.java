@@ -1,5 +1,6 @@
 package com.credenceid.metadata.credentialstatus.service;
 
+import com.credenceid.credentialstatuscheck.exception.CredentialStatusCheckException;
 import com.credenceid.credentialstatuscheck.service.StatusVerifierService;
 import com.credenceid.metadata.credentialstatus.util.CredentialStatusUtility;
 import com.credenceid.metadata.exception.ServerException;
@@ -36,7 +37,8 @@ public class StatusListVerifierService {
         try {
             List<com.credenceid.credentialstatuscheck.dto.StatusVerificationResult> statusVerificationResults = StatusVerifierService.verifyStatus(CredentialStatusUtility.convertToCredentialStatusCheckCredentialStatus(listOfCredentialStatus));
             return CredentialStatusUtility.convertToMetadataResolverStatusVerificationResult(statusVerificationResults);
-        } catch (IOException e) {
+        } catch (IOException | CredentialStatusCheckException e) {
+
             throw new ServerException(e.getMessage());
         }
     }

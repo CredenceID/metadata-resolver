@@ -1,7 +1,7 @@
 package com.credenceid.metadata.resolver;
 
-import com.credenceid.didresolver.exception.DidResolverBadRequestException;
 import com.credenceid.didresolver.service.DidResolverService;
+import com.credenceid.metadata.exception.BadRequestException;
 import com.credenceid.metadata.openapi.model.ResolutionResult;
 import com.credenceid.metadata.registry.service.RegistryService;
 import com.credenceid.metadata.resolver.service.ResolverService;
@@ -69,6 +69,6 @@ class ResolverServiceTest {
     @Test()
     @DisplayName("testResolveDidWeb_IncorrectDID_Fail should throw BadRequestException with BAD_DID_ERROR_MESSAGE")
     void testResolveDidWeb_IncorrectDID_Fail() {
-        assertThrows(DidResolverBadRequestException.class, () -> resolverService.resolve("did:eth:danubetech.com", null), BAD_DID_ERROR_MESSAGE);
+        assertThrows(BadRequestException.class, () -> resolverService.resolve("did:eth:danubetech.com", null), BAD_DID_ERROR_MESSAGE);
     }
 }
