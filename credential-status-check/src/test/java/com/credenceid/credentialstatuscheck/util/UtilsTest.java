@@ -1,6 +1,6 @@
 package com.credenceid.credentialstatuscheck.util;
 
-import com.credenceid.credentialstatuscheck.exception.ServerException;
+import com.credenceid.credentialstatuscheck.exception.CredentialStatusCheckException;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -9,14 +9,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UtilsTest {
     @Test
-    void testDecodeStatusList_validEncodedString() throws IOException {
+    void testDecodeStatusList_validEncodedString() throws IOException, CredentialStatusCheckException {
         String encoded = "uH4sIAAAAAAAAA-3OMQEAAAgDoEU3ugEWwENIQMI3cx0AAAAAAAAAAAAAAAAAAACgLGiNcIEAQAAA"; // Base64 encoding of "StatusListTest"
         boolean result = Utils.decodeStatusList(encoded, 4000, 1);
         assertTrue(result, "status at the index 4000 must be true");
     }
 
     @Test
-    void testDecodeStatusList_validEncodedString_ResultFalse() throws IOException {
+    void testDecodeStatusList_validEncodedString_ResultFalse() throws IOException, CredentialStatusCheckException {
         String encoded = "uH4sIAAAAAAAAA-3OMQEAAAgDoEU3ugEWwENIQMI3cx0AAAAAAAAAAAAAAAAAAACgLGiNcIEAQAAA"; // Base64 encoding of "StatusListTest"
         boolean result = Utils.decodeStatusList(encoded, 4001, 1);
         System.out.println("This is the result: " + result);
@@ -61,7 +61,7 @@ class UtilsTest {
     @Test
     void testGetBitAtIndex_RANGE_ERROR() {
         String invalidEncoded = "H4sIAAAAAAAAA-3OMQEAAAgDoEU3ugEWwENIQMI3cx0AAAAAAAAAAAAAAAAAAACgLGiNcIEAQAAA";
-        Exception exception = assertThrows(ServerException.class, () ->
+        Exception exception = assertThrows(CredentialStatusCheckException.class, () ->
                 Utils.getBitAtIndex(invalidEncoded, 100000, 1));
         assertEquals(Constants.RANGE_ERROR, exception.getMessage());
     }

@@ -1,7 +1,9 @@
 package com.credenceid.credentialstatuscheck.util;
 
-import com.credenceid.credentialstatuscheck.exception.ServerException;
+import com.credenceid.credentialstatuscheck.exception.CredentialStatusCheckException;
 import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -17,6 +19,7 @@ import java.util.zip.GZIPInputStream;
  * used in status list processing. It is not intended to be instantiated.
  */
 public class Utils {
+    private static final Logger logger = LoggerFactory.getLogger(Utils.class);
 
     // Private constructor to prevent instantiation
     private Utils() {
@@ -34,18 +37,21 @@ public class Utils {
      * @throws IllegalArgumentException If the encoded string is null, empty, or improperly formatted.
      * @throws IOException              If there are issues during the decoding or decompression process.
      */
-    public static boolean decodeStatusList(String encodedListStr, int index, int statusSize) throws IOException {
+    public static boolean decodeStatusList(String encodedListStr, int index, int statusSize) throws IOException, CredentialStatusCheckException {
         if (encodedListStr == null || encodedListStr.isEmpty()) {
+            logger.error("Encoded string is null or empty");
             throw new IllegalArgumentException("Encoded string cannot be null or empty");
         }
 
         if (!encodedListStr.startsWith("u")) {
+            logger.error("Encoded list does not start with 'u': {}", encodedListStr);
             throw new IllegalArgumentException("encoded list must start with 'u' ");
         }
         String encodedList = encodedListStr.substring(1);
 
         // Validate if the string is Base64URL
         if (!isValidBase64Url(encodedList)) {
+            logger.error("The provided string is not a valid Base64URL-encoded string: {}", encodedList);
             throw new IllegalArgumentException("The provided string is not a valid Base64URL-encoded string");
         }
 
@@ -64,25 +70,26 @@ public class Utils {
      * @throws IOException              If there are issues with decoding or decompression.
      * @throws IllegalArgumentException If the index is out of bounds of the decompressed data.
      */
-    public static boolean getBitAtIndex(String encodedString, int credentialIndex, int statusSize) throws IOException {
+    public static boolean getBitAtIndex(String encodedString, int credentialIndex, int statusSize) throws IOException, CredentialStatusCheckException {
         //Decode the base64url encoded string
         byte[] decodedBytes = decodeBase64Url(encodedString);
-
         //Decompress the decodedBytes[]
         byte[] decompressedBytes = decompressGzip(decodedBytes);
-
         int index = credentialIndex * statusSize;
         if (index >= decompressedBytes.length) {
-            throw new ServerException(Constants.RANGE_ERROR);
+            logger.error(Constants.RANGE_ERROR);
+            throw new CredentialStatusCheckException(Constants.RANGE_ERROR);
         }
 
         // Step 3: Access the bit at the specified index
         int byteIndex = index / 8;          // Find the byte index
         int bitPosition = index % 8;        // Find the bit within the byte
         byte byteValue = decompressedBytes[byteIndex];
+        logger.info("byteIndex: {} bitPosition: {} byteValue: {}", byteIndex, bitPosition, byteValue);
 
         // Calculate the mask for the bit we are interested in
         int bitMask = 1 << (7 - bitPosition);  // Left-to-right indexing (MSB is 0th bit)
+        logger.info("bitMask: {}", bitMask);
 
         // Check if the bit is set (non-zero value)
         return (byteValue & bitMask) != 0;
