@@ -7,21 +7,21 @@ package com.credenceid.didresolver.exception;
  * itself, such as invalid input, missing parameters, or malformed data.
  * </p>
  * <p>
- * It extends {@link RuntimeException}, making it an unchecked exception that does not require explicit
- * handling (e.g., with a try-catch block).
+ * It extends {@link Exception}, meaning it is an checked exception and will be explicitly
+ * handled (e.g., with a try-catch block).
  * </p>
  */
-public class BadRequestException extends RuntimeException {
+public class DidResolverBadRequestException extends Exception {
 
     /**
-     * Constructs a new BadRequestException with the specified detail message.
+     * Constructs a new DidResolverBadRequestException with the specified detail message.
      * <p>
      * The detail message can provide more information about the cause of the exception.
      * </p>
      *
      * @param message The detail message to be associated with the exception.
      */
-    public BadRequestException(String message) {
+    public DidResolverBadRequestException(String message) {
         super(message);
     }
 }

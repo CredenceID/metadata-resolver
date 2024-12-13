@@ -8,31 +8,31 @@ package com.credenceid.didresolver.exception;
  * network failures, or configuration issues.
  * </p>
  * <p>
- * It extends {@link RuntimeException}, meaning it is an unchecked exception and does not need to be explicitly
+ * It extends {@link Exception}, meaning it is an checked exception and will be explicitly
  * handled (e.g., with a try-catch block).
  * </p>
  */
-public class ServerException extends RuntimeException {
+public class DidResolverException extends Exception {
     /**
-     * Constructs a new ServerException with the specified detail message.
+     * Constructs a new DidResolverException with the specified detail message.
      * <p>
      * The detail message provides additional context or information about the cause of the server error.
      * </p>
      *
      * @param message The detail message describing the error that caused this exception.
      */
-    public ServerException(String message) {
+    public DidResolverException(String message) {
         super(message);
     }
 
 
     /**
-     * Constructs a new {@code ServerException} with the specified detail message and cause.
+     * Constructs a new {@code DidResolverException} with the specified detail message and cause.
      *
      * @param message the detail message (which is saved for later retrieval by the {@link Throwable#getMessage()} method)
      * @param cause   the cause (which is saved for later retrieval by the {@link Throwable#getCause()} method).
      */
-    public ServerException(String message, Throwable cause) {
+    public DidResolverException(String message, Throwable cause) {
         super(message, cause);
     }
 }

@@ -1,6 +1,6 @@
 package com.credenceid.didresolver.client;
 
-import com.credenceid.didresolver.exception.ServerException;
+import com.credenceid.didresolver.exception.DidResolverException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +29,7 @@ public class IssuerWebDidClient {
      * @param url Issuer DID WEB Endpoint URL
      * @return DID Document
      */
-    public static Object downloadDidDocument(final String url) {
+    public static Object downloadDidDocument(final String url) throws DidResolverException {
         try {
             logger.trace("Downloading DID Document from {}", url);
             HttpResponse<String> response;
@@ -41,15 +41,17 @@ public class IssuerWebDidClient {
             }
             String didDocument;
             if (response == null || response.body() == null)
-                throw new ServerException("No response received from Issuer DID WEB HTTP endpoint " + url);
+                throw new DidResolverException("No response received from Issuer DID WEB HTTP endpoint " + url);
             didDocument = response.body();
             logger.debug("DID Document downloaded successfully! {}", didDocument);
             return response.body();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new ServerException(ERROR_CALLING_DID_ENDPOINT, e);
+            logger.error(e.getMessage());
+            throw new DidResolverException(ERROR_CALLING_DID_ENDPOINT, e);
         } catch (IOException e) {
-            throw new ServerException(ERROR_CALLING_DID_ENDPOINT, e);
+            logger.error(e.getMessage());
+            throw new DidResolverException(ERROR_CALLING_DID_ENDPOINT, e);
         }
     }
 }

@@ -2,8 +2,8 @@ package com.credenceid.didresolver.service;
 
 
 import com.credenceid.didresolver.client.IssuerWebDidClient;
-import com.credenceid.didresolver.exception.BadRequestException;
-import com.credenceid.didresolver.exception.ServerException;
+import com.credenceid.didresolver.exception.DidResolverBadRequestException;
+import com.credenceid.didresolver.exception.DidResolverException;
 import foundation.identity.did.DIDDocument;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ class DidResolverServiceTest {
 
     @Test
     @DisplayName("testResolveDID_Success method should return DIDDocument")
-    void testResolveDID_Success() throws IOException {
+    void testResolveDID_Success() throws IOException, DidResolverBadRequestException, DidResolverException {
         String resourceName = "test_data/danubetech.json";
         // Read the DID Document JSON file
         ClassLoader classLoader = getClass().getClassLoader();
@@ -72,7 +72,7 @@ class DidResolverServiceTest {
             mock.when(() -> IssuerWebDidClient.downloadDidDocument(any())).thenReturn(
                     didDocument
             );
-            assertThrows(ServerException.class, () -> DidResolverService.resolveDID("did:web:vcplayground.org"), "DID document downloaded doesn't match with the input did:web ID");
+            assertThrows(DidResolverException.class, () -> DidResolverService.resolveDID("did:web:vcplayground.org"), "DID document downloaded doesn't match with the input did:web ID");
         }
     }
 
@@ -80,6 +80,6 @@ class DidResolverServiceTest {
     @Test()
     @DisplayName("testResolveDID_IncorrectDID_Fail should throw BadRequestException with BAD_DID_ERROR_MESSAGE")
     void testResolveDID_IncorrectDID_Fail() {
-        assertThrows(BadRequestException.class, () -> DidResolverService.resolveDID(":web:danubetech.com"), BAD_DID_ERROR_MESSAGE);
+        assertThrows(DidResolverBadRequestException.class, () -> DidResolverService.resolveDID(":web:danubetech.com"), BAD_DID_ERROR_MESSAGE);
     }
 }
