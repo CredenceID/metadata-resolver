@@ -33,14 +33,18 @@
         <uni-resolver-core.version>0.20.0</uni-resolver-core.version>
         <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
         <openapi-generator-maven-plugin.version>7.10.0</openapi-generator-maven-plugin.version>
-        <verifiable-credential-status.version>0.1.0-SNAPSHOT</verifiable-credential-status.version>
-        <web-did-resolver.version>0.1.0-SNAPSHOT</web-did-resolver.version>
+        <verifiable-credential-status.version>0.1.0</verifiable-credential-status.version>
+        <web-did-resolver.version>0.1.0</web-did-resolver.version>
     </properties>
 
     <repositories>
         <repository>
             <id>CredenceID-maven-snapshot</id>
             <url>https://nexus.credenceid.com/repository/maven-snapshots/</url>
+        </repository>
+        <repository>
+            <id>CredenceID-maven-release</id>
+            <url>https://nexus.credenceid.com/repository/maven-releases/</url>
         </repository>
         <repository>
             <id>danubetech-maven-public</id>
