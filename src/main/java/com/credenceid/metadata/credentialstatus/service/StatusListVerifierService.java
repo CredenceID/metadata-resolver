@@ -39,9 +39,9 @@ public class StatusListVerifierService {
             List<com.credenceid.credentialstatuscheck.dto.StatusVerificationResult> statusVerificationResults = StatusVerifierService.verifyStatus(CredentialStatusUtility.convertToCredentialStatusCheckModel(listOfCredentialStatus));
             return CredentialStatusUtility.convertToMetadataResolverStatusVerificationResult(statusVerificationResults);
         } catch (CredentialStatusNetworkException e) {
-            throw new ServerException(e.getMessage());
+            throw new ServerException(e.getDetail());
         } catch (CredentialStatusProcessingException e) {
-            throw new BadRequestException(e.getMessage());
+            throw new BadRequestException(e.getDetail());
         }
     }
 

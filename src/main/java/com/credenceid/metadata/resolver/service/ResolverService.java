@@ -45,9 +45,9 @@ public class ResolverService {
             logger.debug("Resolution result for {} is {}", identifier, resolutionResult);
             return resolutionResult;
         } catch (DidResolverNetworkException e) {
-            throw new ServerException(e.getMessage());
+            throw new ServerException(e.getDetail());
         } catch (DidResolverProcessingException e) {
-            throw new BadRequestException(e.getMessage());
+            throw new BadRequestException(e.getDetail());
         }
     }
 }
