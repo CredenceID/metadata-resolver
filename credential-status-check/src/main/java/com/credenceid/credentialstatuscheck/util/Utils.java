@@ -35,24 +35,23 @@ public class Utils {
      * @param statusSize     The size of each status in bits.
      * @return boolean indicating whether the bit at the specified index is set (true) or not (false).
      * @throws CredentialStatusProcessingException If the encoded string is null or empty and is improperly formatted.
-     * @throws IOException                         If there are issues during the decoding or decompression process.
      */
-    public static boolean decodeStatusList(String encodedListStr, int index, int statusSize) throws IOException, CredentialStatusProcessingException {
+    public static boolean decodeStatusList(String encodedListStr, int index, int statusSize) throws CredentialStatusProcessingException {
         if (encodedListStr == null || encodedListStr.isEmpty()) {
             logger.error("Encoded list is null or empty");
-            throw new CredentialStatusProcessingException(Constants.INVALID_ENCODED_LIST, Constants.ENCODED_LIST_IS_EMPTY_OR_NULL);
+            throw new CredentialStatusProcessingException(Constants.ENCODED_LIST_ERROR_TITLE, Constants.ENCODED_LIST_IS_EMPTY_OR_NULL_ERROR_DETAIL);
         }
 
         if (!encodedListStr.startsWith("u")) {
             logger.error("Encoded list does not start with 'u': {}", encodedListStr);
-            throw new CredentialStatusProcessingException(Constants.INVALID_ENCODED_LIST, Constants.ERROR_ENCODED_LIST_STARTS_WITH_U);
+            throw new CredentialStatusProcessingException(Constants.ENCODED_LIST_ERROR_TITLE, Constants.ENCODED_LIST_STARTS_WITH_U_ERROR_DETAIL);
         }
         String encodedList = encodedListStr.substring(1);
 
         // Validate if the string is Base64URL
         if (!isValidBase64Url(encodedList)) {
             logger.error("The provided string is not a valid Base64URL-encoded string: {}", encodedList);
-            throw new CredentialStatusProcessingException(Constants.INVALID_BASE64URL, Constants.ERROR_VALIDATING_BASE64_URL_DESCRIPTION);
+            throw new CredentialStatusProcessingException(Constants.BASE64URL_ERROR_TITLE, Constants.BASE64_URL_ERROR_DETAIL);
         }
 
         return getBitAtIndex(encodedList, index, statusSize);
@@ -67,18 +66,17 @@ public class Utils {
      * @param credentialIndex The index of the credential to retrieve the bit for.
      * @param statusSize      The size of each status in bits.
      * @return boolean indicating whether the bit at the specified index is set (true) or not (false).
-     * @throws IOException                         If there are issues with decoding or decompression.
      * @throws CredentialStatusProcessingException If the index is out of bounds of the decompressed data.
      */
-    public static boolean getBitAtIndex(String encodedString, int credentialIndex, int statusSize) throws IOException, CredentialStatusProcessingException {
+    public static boolean getBitAtIndex(String encodedString, int credentialIndex, int statusSize) throws CredentialStatusProcessingException {
         //Decode the base64url encoded string
         byte[] decodedBytes = decodeBase64Url(encodedString);
         //Decompress the decodedBytes[]
         byte[] decompressedBytes = decompressGzip(decodedBytes);
         int index = credentialIndex * statusSize;
         if (index >= decompressedBytes.length) {
-            logger.error(Constants.RANGE_ERROR_DESCRIPTION);
-            throw new CredentialStatusProcessingException(Constants.RANGE_ERROR, Constants.RANGE_ERROR_DESCRIPTION);
+            logger.error(Constants.RANGE_ERROR_DETAIL);
+            throw new CredentialStatusProcessingException(Constants.RANGE_ERROR_TITLE, Constants.RANGE_ERROR_DETAIL);
         }
         // Step 3: Access the bit at the specified index
         int byteIndex = index / 8;          // Find the byte index
@@ -108,9 +106,8 @@ public class Utils {
      *
      * @param compressedData The GZIP-compressed byte array.
      * @return A byte array containing the decompressed data.
-     * @throws IOException If an error occurs during decompression.
      */
-    public static byte[] decompressGzip(byte[] compressedData) throws IOException {
+    public static byte[] decompressGzip(byte[] compressedData) throws CredentialStatusProcessingException {
         try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(compressedData);
              GZIPInputStream gzipInputStream = new GZIPInputStream(byteArrayInputStream)) {
             byte[] buffer = new byte[1024];
@@ -121,6 +118,8 @@ public class Utils {
                 }
                 return decompressedStream.toByteArray();
             }
+        } catch (IOException e) {
+            throw new CredentialStatusProcessingException("IO_EXCEPTION", e.getMessage());
         }
     }
 

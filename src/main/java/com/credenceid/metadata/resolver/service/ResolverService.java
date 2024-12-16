@@ -1,7 +1,7 @@
 package com.credenceid.metadata.resolver.service;
 
-import com.credenceid.didresolver.exception.DidResolverBadRequestException;
-import com.credenceid.didresolver.exception.DidResolverException;
+import com.credenceid.didresolver.exception.DidResolverNetworkException;
+import com.credenceid.didresolver.exception.DidResolverProcessingException;
 import com.credenceid.metadata.exception.BadRequestException;
 import com.credenceid.metadata.exception.ServerException;
 import com.credenceid.metadata.openapi.model.ResolutionResult;
@@ -44,9 +44,9 @@ public class ResolverService {
             registryService.isIssuerTrusted(RegistryUtility.extractDomainFromDidWebIdentifier(identifier));
             logger.debug("Resolution result for {} is {}", identifier, resolutionResult);
             return resolutionResult;
-        } catch (DidResolverException e) {
+        } catch (DidResolverNetworkException e) {
             throw new ServerException(e.getMessage());
-        } catch (DidResolverBadRequestException e) {
+        } catch (DidResolverProcessingException e) {
             throw new BadRequestException(e.getMessage());
         }
     }

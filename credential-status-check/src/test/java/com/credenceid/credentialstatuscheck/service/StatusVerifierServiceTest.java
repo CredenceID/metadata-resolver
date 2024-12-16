@@ -2,6 +2,7 @@ package com.credenceid.credentialstatuscheck.service;
 
 import com.credenceid.credentialstatuscheck.client.StatusListClient;
 import com.credenceid.credentialstatuscheck.dto.StatusVerificationResult;
+import com.credenceid.credentialstatuscheck.exception.CredentialStatusNetworkException;
 import com.credenceid.credentialstatuscheck.exception.CredentialStatusProcessingException;
 import com.credenceid.credentialstatuscheck.util.Constants;
 import com.danubetech.verifiablecredentials.VerifiableCredential;
@@ -46,7 +47,7 @@ class StatusVerifierServiceTest {
 
     @Test
     @DisplayName("testVerifyStatus_RevocationTrue will return the revocation status as True")
-    void testVerifyStatus_RevocationTrue() throws IOException, CredentialStatusProcessingException {
+    void testVerifyStatus_RevocationTrue() throws IOException, CredentialStatusProcessingException, CredentialStatusNetworkException {
         String mockResource = "test_data/BitstringStatusListCredential.json";
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(Objects.requireNonNull(classLoader.getResource(mockResource), "Resource not found: " + mockResource).getFile());
@@ -85,8 +86,8 @@ class StatusVerifierServiceTest {
                     StatusVerifierService.verifyStatus(listOfCredentialStatus)
             );
 
-            assertEquals(Constants.INVALID_STATUS_PURPOSE, exception.getTitle());
-            assertEquals(Constants.ERROR_STATUS_PURPOSE_COMPARISON, exception.getDetail());
+            assertEquals(Constants.STATUS_PURPOSE_COMPARISON_ERROR_TITLE, exception.getTitle());
+            assertEquals(Constants.STATUS_PURPOSE_COMPARISON_ERROR_DETAIL, exception.getDetail());
         }
     }
 
@@ -99,7 +100,7 @@ class StatusVerifierServiceTest {
                 StatusVerifierService.verifyStatus(listOfCredentialStatus)
         );
 
-        assertEquals(Constants.INVALID_STATUS_LIST_INDEX, exception.getTitle());
-        assertEquals(Constants.ERROR_STATUS_LIST_INDEX, exception.getDetail());
+        assertEquals(Constants.STATUS_LIST_INDEX_ERROR_TITLE, exception.getTitle());
+        assertEquals(Constants.STATUS_LIST_INDEX_ERROR_DETAIL, exception.getDetail());
     }
 }
