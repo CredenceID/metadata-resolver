@@ -36,8 +36,8 @@
         <uni-resolver-core.version>0.20.0</uni-resolver-core.version>
         <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
         <openapi-generator-maven-plugin.version>7.7.0</openapi-generator-maven-plugin.version>
-        <credential-status-check.version>0.1.0-SNAPSHOT</credential-status-check.version>
-        <did-resolver.version>0.1.0-SNAPSHOT</did-resolver.version>
+        <verifiable-credential-status.version>0.1.0-SNAPSHOT</verifiable-credential-status.version>
+        <web-did-resolver.version>0.1.0-SNAPSHOT</web-did-resolver.version>
     </properties>
 
     <groupId>com.credenceid</groupId>
@@ -47,13 +47,13 @@
     <dependencies>
         <dependency>
             <groupId>com.credenceid</groupId>
-            <artifactId>credential-status-check</artifactId>
-            <version>${credential-status-check.version}</version>
+            <artifactId>verifiable-credential-status</artifactId>
+            <version>${verifiable-credential-status.version}</version>
         </dependency>
         <dependency>
             <groupId>com.credenceid</groupId>
-            <artifactId>did-resolver</artifactId>
-            <version>${did-resolver.version}</version>
+            <artifactId>web-did-resolver</artifactId>
+            <version>${web-did-resolver.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
