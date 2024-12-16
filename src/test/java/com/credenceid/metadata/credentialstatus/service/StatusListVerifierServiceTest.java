@@ -1,7 +1,8 @@
 package com.credenceid.metadata.credentialstatus.service;
 
-import com.credenceid.credentialstatuscheck.dto.StatusVerificationResult;
-import com.credenceid.credentialstatuscheck.service.StatusVerifierService;
+import com.credenceid.vcstatus.dto.StatusVerificationResult;
+import com.credenceid.vcstatus.exception.CredentialStatusNetworkException;
+import com.credenceid.vcstatus.service.StatusVerifierService;
 import com.credenceid.metadata.exception.ServerException;
 import com.credenceid.metadata.statuslist.openapi.model.CredentialStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -52,7 +53,7 @@ class StatusListVerifierServiceTest {
         List<CredentialStatus> listOfCredentialStatus = new ArrayList<>();
         try (var mockClient = Mockito.mockStatic(StatusVerifierService.class)) {
             mockClient.when(() -> StatusVerifierService.verifyStatus(any()))
-                    .thenThrow(new ServerException("Network Failure"));
+                    .thenThrow(new CredentialStatusNetworkException("Network Failure", "Network Failure"));
             StatusListVerifierService statusListVerifierService = new StatusListVerifierService();
             assertThrows(ServerException.class, () ->
                     statusListVerifierService.verifyStatus(listOfCredentialStatus));

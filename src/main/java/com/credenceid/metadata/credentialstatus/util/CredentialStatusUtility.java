@@ -48,9 +48,9 @@ public class CredentialStatusUtility {
      * @param statusVerificationResults the list of `StatusVerificationResult` objects from the credential-status-check
      * @return a list of `StatusVerificationResult` objects of Metadata Resolver.
      */
-    public static List<StatusVerificationResult> convertToMetadataResolverStatusVerificationResult(List<com.credenceid.credentialstatuscheck.dto.StatusVerificationResult> statusVerificationResults) {
+    public static List<StatusVerificationResult> convertToMetadataResolverStatusVerificationResult(List<com.credenceid.vcstatus.dto.StatusVerificationResult> statusVerificationResults) {
         List<StatusVerificationResult> metadataResolverStatusVerificationResults = new ArrayList<>();
-        for (com.credenceid.credentialstatuscheck.dto.StatusVerificationResult statusVerificationResult : statusVerificationResults) {
+        for (com.credenceid.vcstatus.dto.StatusVerificationResult statusVerificationResult : statusVerificationResults) {
             StatusVerificationResult metadataResolverStatusVerificationResult = new StatusVerificationResult();
             metadataResolverStatusVerificationResult.setStatus(statusVerificationResult.status());
             metadataResolverStatusVerificationResult.setStatusPurpose(statusVerificationResult.statusPurpose());

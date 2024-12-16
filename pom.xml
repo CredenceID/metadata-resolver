@@ -3,12 +3,9 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <repositories>
-        <repository>
-            <id>danubetech-maven-public</id>
-            <url>https://repo.danubetech.com/repository/maven-public/</url>
-        </repository>
-    </repositories>
+    <groupId>com.credenceid</groupId>
+    <artifactId>metadata-resolver</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
 
     <dependencyManagement>
         <dependencies>
@@ -35,26 +32,23 @@
         <verifiable-credentials-java.version>1.12.0</verifiable-credentials-java.version>
         <uni-resolver-core.version>0.20.0</uni-resolver-core.version>
         <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
-        <openapi-generator-maven-plugin.version>7.7.0</openapi-generator-maven-plugin.version>
+        <openapi-generator-maven-plugin.version>7.10.0</openapi-generator-maven-plugin.version>
         <verifiable-credential-status.version>0.1.0-SNAPSHOT</verifiable-credential-status.version>
         <web-did-resolver.version>0.1.0-SNAPSHOT</web-did-resolver.version>
     </properties>
 
-    <groupId>com.credenceid</groupId>
-    <artifactId>metadata-resolver</artifactId>
-    <version>0.2.0-SNAPSHOT</version>
+    <repositories>
+        <repository>
+            <id>CredenceID-maven-snapshot</id>
+            <url>https://nexus.credenceid.com/repository/maven-snapshots/</url>
+        </repository>
+        <repository>
+            <id>danubetech-maven-public</id>
+            <url>https://repo.danubetech.com/repository/maven-public/</url>
+        </repository>
+    </repositories>
 
     <dependencies>
-        <dependency>
-            <groupId>com.credenceid</groupId>
-            <artifactId>verifiable-credential-status</artifactId>
-            <version>${verifiable-credential-status.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.credenceid</groupId>
-            <artifactId>web-did-resolver</artifactId>
-            <version>${web-did-resolver.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -64,7 +58,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
@@ -99,6 +92,17 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- Credence ID -->
+        <dependency>
+            <groupId>com.credenceid</groupId>
+            <artifactId>verifiable-credential-status</artifactId>
+            <version>${verifiable-credential-status.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.credenceid</groupId>
+            <artifactId>web-did-resolver</artifactId>
+            <version>${web-did-resolver.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

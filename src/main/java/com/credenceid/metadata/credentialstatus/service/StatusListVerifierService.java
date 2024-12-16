@@ -1,13 +1,13 @@
 package com.credenceid.metadata.credentialstatus.service;
 
-import com.credenceid.credentialstatuscheck.exception.CredentialStatusNetworkException;
-import com.credenceid.credentialstatuscheck.exception.CredentialStatusProcessingException;
-import com.credenceid.credentialstatuscheck.service.StatusVerifierService;
 import com.credenceid.metadata.credentialstatus.util.CredentialStatusUtility;
 import com.credenceid.metadata.exception.BadRequestException;
 import com.credenceid.metadata.exception.ServerException;
 import com.credenceid.metadata.statuslist.openapi.model.CredentialStatus;
 import com.credenceid.metadata.statuslist.openapi.model.StatusVerificationResult;
+import com.credenceid.vcstatus.exception.CredentialStatusNetworkException;
+import com.credenceid.vcstatus.exception.CredentialStatusProcessingException;
+import com.credenceid.vcstatus.service.StatusVerifierService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +36,7 @@ public class StatusListVerifierService {
      */
     public List<StatusVerificationResult> verifyStatus(List<@Valid CredentialStatus> listOfCredentialStatus) {
         try {
-            List<com.credenceid.credentialstatuscheck.dto.StatusVerificationResult> statusVerificationResults = StatusVerifierService.verifyStatus(CredentialStatusUtility.convertToCredentialStatusCheckModel(listOfCredentialStatus));
+            List<com.credenceid.vcstatus.dto.StatusVerificationResult> statusVerificationResults = StatusVerifierService.verifyStatus(CredentialStatusUtility.convertToCredentialStatusCheckModel(listOfCredentialStatus));
             return CredentialStatusUtility.convertToMetadataResolverStatusVerificationResult(statusVerificationResults);
         } catch (CredentialStatusNetworkException e) {
             throw new ServerException(e.getDetail());

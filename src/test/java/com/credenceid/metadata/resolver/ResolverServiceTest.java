@@ -46,22 +46,16 @@ class ResolverServiceTest {
         byte[] bytes = Files.readAllBytes(file.toPath());
         String didDocumentJSON = new String(bytes, StandardCharsets.UTF_8);
         DIDDocument didDocument = DIDDocument.fromJson(didDocumentJSON);
-        ResolutionResult resolutionResult = new ResolutionResult();
+        uniresolver.openapi.model.ResolutionResult resolutionResult = new uniresolver.openapi.model.ResolutionResult();
         resolutionResult.didDocument(didDocument);
-        uniresolver.openapi.model.ResolutionResult universalResolutionResult = new uniresolver.openapi.model.ResolutionResult();
 
         try (var mock = Mockito.mockStatic(DidResolverService.class)) {
             mock.when(() -> DidResolverService.resolveDID("did:web:danubetech.com")).thenReturn(
-                    universalResolutionResult
+                    resolutionResult
             );
-            try (var mockConverter = Mockito.mockStatic(ResolverUtility.class)) {
-                mockConverter.when(() -> ResolverUtility.convertToMetadataResolverResolutionResult(any())).thenReturn(
-                        resolutionResult
-                );
-                ResolutionResult resolutionObject = resolverService.resolve("did:web:danubetech.com", null);
-                assertEquals(didDocument.getId(), DIDDocument.fromJson(resolutionObject.getDidDocument().toString()).getId());
-                verify(registryService, times(1)).isIssuerTrusted(anyString());
-            }
+            ResolutionResult resolutionObject = resolverService.resolve("did:web:danubetech.com", null);
+            assertEquals(DIDDocument.fromJson(resolutionResult.getDidDocument().toString()).getId(), DIDDocument.fromJson(resolutionObject.getDidDocument().toString()).getId());
+            verify(registryService, times(1)).isIssuerTrusted(anyString());
         }
 
     }
