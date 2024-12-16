@@ -39,20 +39,20 @@ public class Utils {
      */
     public static boolean decodeStatusList(String encodedListStr, int index, int statusSize) throws IOException, CredentialStatusProcessingException {
         if (encodedListStr == null || encodedListStr.isEmpty()) {
-            logger.error("Encoded string is null or empty");
-            throw new CredentialStatusProcessingException("Encoded string cannot be null or empty");
+            logger.error("Encoded list is null or empty");
+            throw new CredentialStatusProcessingException(Constants.INVALID_ENCODED_LIST, Constants.ENCODED_LIST_IS_EMPTY_OR_NULL);
         }
 
         if (!encodedListStr.startsWith("u")) {
             logger.error("Encoded list does not start with 'u': {}", encodedListStr);
-            throw new CredentialStatusProcessingException("encoded list must start with 'u' ");
+            throw new CredentialStatusProcessingException(Constants.INVALID_ENCODED_LIST, Constants.ERROR_ENCODED_LIST_STARTS_WITH_U);
         }
         String encodedList = encodedListStr.substring(1);
 
         // Validate if the string is Base64URL
         if (!isValidBase64Url(encodedList)) {
             logger.error("The provided string is not a valid Base64URL-encoded string: {}", encodedList);
-            throw new CredentialStatusProcessingException("The provided string is not a valid Base64URL-encoded string");
+            throw new CredentialStatusProcessingException(Constants.INVALID_BASE64URL, Constants.ERROR_VALIDATING_BASE64_URL_DESCRIPTION);
         }
 
         return getBitAtIndex(encodedList, index, statusSize);
@@ -77,8 +77,8 @@ public class Utils {
         byte[] decompressedBytes = decompressGzip(decodedBytes);
         int index = credentialIndex * statusSize;
         if (index >= decompressedBytes.length) {
-            logger.error(Constants.RANGE_ERROR);
-            throw new CredentialStatusProcessingException(Constants.RANGE_ERROR);
+            logger.error(Constants.RANGE_ERROR_DESCRIPTION);
+            throw new CredentialStatusProcessingException(Constants.RANGE_ERROR, Constants.RANGE_ERROR_DESCRIPTION);
         }
         // Step 3: Access the bit at the specified index
         int byteIndex = index / 8;          // Find the byte index

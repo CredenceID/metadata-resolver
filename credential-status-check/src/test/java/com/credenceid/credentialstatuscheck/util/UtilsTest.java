@@ -25,18 +25,20 @@ class UtilsTest {
 
     @Test
     void testDecodeStatusList_emptyString() {
-        Exception exception = assertThrows(CredentialStatusProcessingException.class, () ->
+        CredentialStatusProcessingException exception = assertThrows(CredentialStatusProcessingException.class, () ->
                 Utils.decodeStatusList("", 12, 1));
 
-        assertEquals("Encoded string cannot be null or empty", exception.getMessage());
+        assertEquals(Constants.INVALID_ENCODED_LIST, exception.getTitle());
+        assertEquals(Constants.ENCODED_LIST_IS_EMPTY_OR_NULL, exception.getDetail());
     }
 
     @Test
     void testDecodeStatusList_nullString() {
-        Exception exception = assertThrows(CredentialStatusProcessingException.class, () ->
+        CredentialStatusProcessingException exception = assertThrows(CredentialStatusProcessingException.class, () ->
                 Utils.decodeStatusList(null, 12, 1));
 
-        assertEquals("Encoded string cannot be null or empty", exception.getMessage());
+        assertEquals(Constants.INVALID_ENCODED_LIST, exception.getTitle());
+        assertEquals(Constants.ENCODED_LIST_IS_EMPTY_OR_NULL, exception.getDetail());
     }
 
     @Test
@@ -45,24 +47,27 @@ class UtilsTest {
         assertThrows(CredentialStatusProcessingException.class, () ->
                 Utils.decodeStatusList(invalidEncoded, 12, 1)
         );
-        Exception exception = assertThrows(CredentialStatusProcessingException.class, () ->
+        CredentialStatusProcessingException exception = assertThrows(CredentialStatusProcessingException.class, () ->
                 Utils.decodeStatusList(invalidEncoded, 12, 1));
-        assertEquals("encoded list must start with 'u' ", exception.getMessage());
+        assertEquals(Constants.INVALID_ENCODED_LIST, exception.getTitle());
+        assertEquals(Constants.ERROR_ENCODED_LIST_STARTS_WITH_U, exception.getDetail());
     }
 
     @Test
     void testDecodeStatusList_invalidBase64String() {
         String invalidEncoded = "uNotBase64!";
-        Exception exception = assertThrows(CredentialStatusProcessingException.class, () ->
+        CredentialStatusProcessingException exception = assertThrows(CredentialStatusProcessingException.class, () ->
                 Utils.decodeStatusList(invalidEncoded, 12, 1));
-        assertEquals("The provided string is not a valid Base64URL-encoded string", exception.getMessage());
+        assertEquals(Constants.INVALID_BASE64URL, exception.getTitle());
+        assertEquals(Constants.ERROR_VALIDATING_BASE64_URL_DESCRIPTION, exception.getDetail());
     }
 
     @Test
     void testGetBitAtIndex_RANGE_ERROR() {
         String invalidEncoded = "H4sIAAAAAAAAA-3OMQEAAAgDoEU3ugEWwENIQMI3cx0AAAAAAAAAAAAAAAAAAACgLGiNcIEAQAAA";
-        Exception exception = assertThrows(CredentialStatusProcessingException.class, () ->
+        CredentialStatusProcessingException exception = assertThrows(CredentialStatusProcessingException.class, () ->
                 Utils.getBitAtIndex(invalidEncoded, 100000, 1));
-        assertEquals(Constants.RANGE_ERROR, exception.getMessage());
+        assertEquals(Constants.RANGE_ERROR, exception.getTitle());
+        assertEquals(Constants.RANGE_ERROR_DESCRIPTION, exception.getDetail());
     }
 }

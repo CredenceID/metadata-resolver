@@ -85,7 +85,8 @@ class StatusVerifierServiceTest {
                     StatusVerifierService.verifyStatus(listOfCredentialStatus)
             );
 
-            assertEquals(Constants.STATUS_VERIFICATION_ERROR, exception.getMessage());
+            assertEquals(Constants.INVALID_STATUS_PURPOSE, exception.getTitle());
+            assertEquals(Constants.ERROR_STATUS_PURPOSE_COMPARISON, exception.getDetail());
         }
     }
 
@@ -98,6 +99,7 @@ class StatusVerifierServiceTest {
                 StatusVerifierService.verifyStatus(listOfCredentialStatus)
         );
 
-        assertEquals(Constants.STATUS_LIST_INDEX_VERIFICATION_ERROR, exception.getMessage());
+        assertEquals(Constants.INVALID_STATUS_LIST_INDEX, exception.getTitle());
+        assertEquals(Constants.ERROR_STATUS_LIST_INDEX, exception.getDetail());
     }
 }

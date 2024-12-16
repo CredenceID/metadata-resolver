@@ -49,17 +49,17 @@ public class StatusListClient {
             }
             VerifiableCredential bitStringStatusListCredential;
             if (response == null || response.body() == null)
-                throw new CredentialStatusProcessingException("No response received from statusListCredential WEB HTTP endpoint " + url);
+                throw new CredentialStatusProcessingException(Constants.INVALID_RESPONSE_BODY, Constants.ERROR_RESPONSE_BODY_IS_NULL);
             bitStringStatusListCredential = objectMapper.readValue(response.body(), VerifiableCredential.class);
             logger.debug("fetched successfully! {}", bitStringStatusListCredential);
             return bitStringStatusListCredential;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             logger.error(e.getMessage());
-            throw new CredentialStatusProcessingException(Constants.ERROR_CALLING_STATUS_LIST_CREDENTIAL);
+            throw new CredentialStatusProcessingException(Constants.INVALID_STATUS_LIST_CREDENTIAL, Constants.ERROR_CALLING_STATUS_LIST_CREDENTIAL);
         } catch (IOException e) {
             logger.error(e.getMessage());
-            throw new CredentialStatusProcessingException(Constants.ERROR_CALLING_STATUS_LIST_CREDENTIAL);
+            throw new CredentialStatusProcessingException(Constants.INVALID_STATUS_LIST_CREDENTIAL, Constants.ERROR_CALLING_STATUS_LIST_CREDENTIAL);
         }
     }
 }

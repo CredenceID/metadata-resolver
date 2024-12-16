@@ -59,15 +59,15 @@ public class StatusVerifierService {
             String statusListCredential = (String) credentialStatusMap.get("statusListCredential");
             int statusSize = credentialStatusMap.get("statusSize") != null ? Integer.parseInt((String) credentialStatusMap.get("statusSize")) : 1;  //indicates the size of the status entry in bits
             if (validateStatusListIndex(statusListIndex)) {
-                logger.error(Constants.STATUS_LIST_INDEX_VERIFICATION_ERROR);
-                throw new CredentialStatusProcessingException(Constants.STATUS_LIST_INDEX_VERIFICATION_ERROR);
+                logger.error(Constants.ERROR_STATUS_LIST_INDEX);
+                throw new CredentialStatusProcessingException(Constants.INVALID_STATUS_LIST_INDEX, Constants.ERROR_STATUS_LIST_INDEX);
             }
             //fetch BitstringStatusListCredential.
             bitStringStatusListCredential = StatusListClient.fetchStatusListCredential(statusListCredential);
             //validation of statusPurpose of credentialStatus and credentialSubject
             if (!validateStatusPurpose(statusPurpose, (String) bitStringStatusListCredential.getCredentialSubject().getJsonObject().get("statusPurpose"))) {
-                logger.error(Constants.STATUS_VERIFICATION_ERROR);
-                throw new CredentialStatusProcessingException(Constants.STATUS_VERIFICATION_ERROR);
+                logger.error(Constants.INVALID_STATUS_PURPOSE);
+                throw new CredentialStatusProcessingException(Constants.INVALID_STATUS_PURPOSE, Constants.ERROR_STATUS_PURPOSE_COMPARISON);
             }
             //encodedList
             String encodedList = (String) bitStringStatusListCredential.getCredentialSubject().getJsonObject().get("encodedList");
