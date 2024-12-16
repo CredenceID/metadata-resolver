@@ -29,7 +29,7 @@ It also offers APIs to manage the Trusted Issuer Registry.
 #### Check if Issuer domain is trusted    
     GET /metadata-resolver/registry/{issuerDomain}
     
-    curl --location 'http://localhost:8084/metadata-resolver/registry/dhs-svip.github.io'
+    curl 'http://localhost:8084/metadata-resolver/registry/dhs-svip.github.io'
 
 #### Remove Issuer domain from trusted registry    
     DELETE /metadata-resolver/registry/{issuerDomain}
