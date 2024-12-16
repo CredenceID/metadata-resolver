@@ -35,7 +35,7 @@ public class StatusListVerifierService {
      */
     public List<StatusVerificationResult> verifyStatus(List<@Valid CredentialStatus> listOfCredentialStatus) {
         try {
-            List<com.credenceid.credentialstatuscheck.dto.StatusVerificationResult> statusVerificationResults = StatusVerifierService.verifyStatus(CredentialStatusUtility.convertToCredentialStatusCheckCredentialStatus(listOfCredentialStatus));
+            List<com.credenceid.credentialstatuscheck.dto.StatusVerificationResult> statusVerificationResults = StatusVerifierService.verifyStatus(CredentialStatusUtility.convertToCredentialStatusCheckModel(listOfCredentialStatus));
             return CredentialStatusUtility.convertToMetadataResolverStatusVerificationResult(statusVerificationResults);
         } catch (IOException | CredentialStatusProcessingException e) {
             throw new ServerException(e.getMessage());

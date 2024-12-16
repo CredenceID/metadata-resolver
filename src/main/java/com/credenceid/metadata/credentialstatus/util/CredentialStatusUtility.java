@@ -24,20 +24,20 @@ public class CredentialStatusUtility {
      * @param listOfCredentialStatus the list of `CredentialStatus` objects from the `com.credenceid.metadata.statuslist.openapi.model` package
      * @return a list of `CredentialStatus` objects in the credential-status-check model
      */
-    public static List<CredentialStatus> convertToCredentialStatusCheckCredentialStatus(
+    public static List<CredentialStatus> convertToCredentialStatusCheckModel(
             List<com.credenceid.metadata.statuslist.openapi.model.CredentialStatus> listOfCredentialStatus
     ) {
-        List<CredentialStatus> listOfCredentialStatusCheckCredentialStatus = new ArrayList<>();
+        List<CredentialStatus> listOfCredentialStatusCheckModel = new ArrayList<>();
         for (com.credenceid.metadata.statuslist.openapi.model.CredentialStatus status : listOfCredentialStatus) {
-            CredentialStatus credentialStatusCheckCredentialStatus = new CredentialStatus();
-            credentialStatusCheckCredentialStatus.setJsonObjectKeyValue("type", status.getType());
-            credentialStatusCheckCredentialStatus.setJsonObjectKeyValue("id", status.getId());
-            credentialStatusCheckCredentialStatus.setJsonObjectKeyValue("statusPurpose", status.getStatusPurpose());
-            credentialStatusCheckCredentialStatus.setJsonObjectKeyValue("statusListIndex", status.getStatusListIndex());
-            credentialStatusCheckCredentialStatus.setJsonObjectKeyValue("statusListCredential", status.getStatusListCredential());
-            listOfCredentialStatusCheckCredentialStatus.add(credentialStatusCheckCredentialStatus);
+            CredentialStatus credentialStatusCheckModelCredentialStatus = new CredentialStatus();
+            credentialStatusCheckModelCredentialStatus.setJsonObjectKeyValue("type", status.getType());
+            credentialStatusCheckModelCredentialStatus.setJsonObjectKeyValue("id", status.getId());
+            credentialStatusCheckModelCredentialStatus.setJsonObjectKeyValue("statusPurpose", status.getStatusPurpose());
+            credentialStatusCheckModelCredentialStatus.setJsonObjectKeyValue("statusListIndex", status.getStatusListIndex());
+            credentialStatusCheckModelCredentialStatus.setJsonObjectKeyValue("statusListCredential", status.getStatusListCredential());
+            listOfCredentialStatusCheckModel.add(credentialStatusCheckModelCredentialStatus);
         }
-        return listOfCredentialStatusCheckCredentialStatus;
+        return listOfCredentialStatusCheckModel;
     }
 
 

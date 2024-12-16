@@ -40,7 +40,7 @@ class StatusVerifierServiceTest {
     @BeforeEach
     void init() {
         when(credentialStatus.getJsonObject()).thenReturn(jsonObjectMock);
-        when(jsonObjectMock.get("statusListCredential")).thenReturn("https://signatory.ssikit.walt.id/v1/credentials/status/revocation");
+        when(jsonObjectMock.get("statusListCredential")).thenReturn("https://dhs-svip.github.io/ns/uscis/status/3");
     }
 
 
