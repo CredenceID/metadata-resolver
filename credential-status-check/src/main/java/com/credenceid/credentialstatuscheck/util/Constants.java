@@ -26,7 +26,7 @@ public class Constants {
             "A provided value is outside of the expected range of an associated value, such as a given index value for an array being larger than the current size of the array.";
     public static final String ENCODED_LIST_IS_EMPTY_OR_NULL_ERROR_DETAIL = "Encoded string cannot be null or empty";
     public static final String ENCODED_LIST_ERROR_TITLE = "ENCODED_LIST_ERROR";
-    public static final String ENCODED_LIST_STARTS_WITH_U_ERROR_DETAIL = "the received encoded list doesn't start with 'u'. the encoded list must start with the letter 'u'";
+    public static final String ENCODED_LIST_STARTS_WITH_U_ERROR_DETAIL = "The received encoded list doesn't start with 'u'. the encoded list must start with the letter 'u'";
     public static final String BASE64URL_ERROR_TITLE = "BASE64URL_ERROR";
     public static final String BASE64_URL_ERROR_DETAIL = "The provided string is not a valid Base64URL-encoded string";
 

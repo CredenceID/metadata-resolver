@@ -119,6 +119,7 @@ public class Utils {
                 return decompressedStream.toByteArray();
             }
         } catch (IOException e) {
+            logger.error(e.getMessage());
             throw new CredentialStatusProcessingException("IO_EXCEPTION", e.getMessage());
         }
     }
