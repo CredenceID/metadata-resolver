@@ -80,17 +80,12 @@ public class Utils {
             logger.error(Constants.RANGE_ERROR);
             throw new CredentialStatusCheckException(Constants.RANGE_ERROR);
         }
-
         // Step 3: Access the bit at the specified index
         int byteIndex = index / 8;          // Find the byte index
         int bitPosition = index % 8;        // Find the bit within the byte
         byte byteValue = decompressedBytes[byteIndex];
-        logger.info("byteIndex: {} bitPosition: {} byteValue: {}", byteIndex, bitPosition, byteValue);
-
         // Calculate the mask for the bit we are interested in
         int bitMask = 1 << (7 - bitPosition);  // Left-to-right indexing (MSB is 0th bit)
-        logger.info("bitMask: {}", bitMask);
-
         // Check if the bit is set (non-zero value)
         return (byteValue & bitMask) != 0;
     }
