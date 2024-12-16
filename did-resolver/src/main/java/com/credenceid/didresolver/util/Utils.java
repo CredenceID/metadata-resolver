@@ -9,13 +9,13 @@ import java.nio.charset.StandardCharsets;
 /**
  * This class contains methods to convert DID:web identifiers to URLs that point to Issuer DID Web Endpoints.
  */
-public class Util {
-    private static final Logger logger = LoggerFactory.getLogger(Util.class);
+public class Utils {
+    private static final Logger logger = LoggerFactory.getLogger(Utils.class);
 
     /**
      * Private constructor to prevent instantiation of the Util class.
      */
-    private Util() {
+    private Utils() {
     }
 
     /**

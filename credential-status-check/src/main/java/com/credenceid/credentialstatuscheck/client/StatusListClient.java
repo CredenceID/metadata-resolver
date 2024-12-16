@@ -1,6 +1,6 @@
 package com.credenceid.credentialstatuscheck.client;
 
-import com.credenceid.credentialstatuscheck.exception.ServerException;
+import com.credenceid.credentialstatuscheck.exception.CredentialStatusNetworkException;
 import com.credenceid.credentialstatuscheck.util.Constants;
 import com.danubetech.verifiablecredentials.VerifiableCredential;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,9 +32,9 @@ public class StatusListClient {
      *
      * @param url statusListCredential from credentialStatus.
      * @return BitstringStatusListCredential
-     * @throws ServerException If there is an issue during the HTTP call or if the response body is null or empty.
+     * @throws CredentialStatusNetworkException If there is an issue during the HTTP call or if the response body is null or empty.
      */
-    public static VerifiableCredential fetchStatusListCredential(final String url) throws ServerException {
+    public static VerifiableCredential fetchStatusListCredential(final String url) throws CredentialStatusNetworkException {
         try {
             //objectMapper to deserialize json into StatusVerifiableResult object.
             ObjectMapper objectMapper = new ObjectMapper();
@@ -48,16 +48,20 @@ public class StatusListClient {
                 response = client.send(request, HttpResponse.BodyHandlers.ofString());
             }
             VerifiableCredential bitStringStatusListCredential;
-            if (response == null || response.body() == null)
-                throw new ServerException("No response received from statusListCredential WEB HTTP endpoint " + url);
+            if (response == null || response.body() == null) {
+                logger.error("Response received from credential endpoint is null or empty");
+                throw new CredentialStatusNetworkException(Constants.STATUS_LIST_NETWORK_ERROR_TITLE, Constants.STATUS_LIST_NETWORK_ERROR_DETAIL);
+            }
             bitStringStatusListCredential = objectMapper.readValue(response.body(), VerifiableCredential.class);
             logger.debug("fetched successfully! {}", bitStringStatusListCredential);
             return bitStringStatusListCredential;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new ServerException(Constants.ERROR_CALLING_STATUS_LIST_CREDENTIAL);
+            logger.error(e.getMessage());
+            throw new CredentialStatusNetworkException(Constants.STATUS_LIST_NETWORK_ERROR_TITLE, Constants.STATUS_LIST_NETWORK_ERROR_DETAIL);
         } catch (IOException e) {
-            throw new ServerException(Constants.ERROR_CALLING_STATUS_LIST_CREDENTIAL);
+            logger.error(e.getMessage());
+            throw new CredentialStatusNetworkException(Constants.STATUS_LIST_NETWORK_ERROR_TITLE, Constants.STATUS_LIST_NETWORK_ERROR_DETAIL);
         }
     }
 }

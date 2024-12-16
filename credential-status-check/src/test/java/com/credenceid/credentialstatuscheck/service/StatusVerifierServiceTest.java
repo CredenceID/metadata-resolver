@@ -2,7 +2,8 @@ package com.credenceid.credentialstatuscheck.service;
 
 import com.credenceid.credentialstatuscheck.client.StatusListClient;
 import com.credenceid.credentialstatuscheck.dto.StatusVerificationResult;
-import com.credenceid.credentialstatuscheck.exception.ServerException;
+import com.credenceid.credentialstatuscheck.exception.CredentialStatusNetworkException;
+import com.credenceid.credentialstatuscheck.exception.CredentialStatusProcessingException;
 import com.credenceid.credentialstatuscheck.util.Constants;
 import com.danubetech.verifiablecredentials.VerifiableCredential;
 import com.danubetech.verifiablecredentials.credentialstatus.CredentialStatus;
@@ -34,20 +35,20 @@ class StatusVerifierServiceTest {
     @Mock
     private CredentialStatus credentialStatus;
 
+    @Mock
     private Map<String, Object> jsonObjectMock;
 
     @BeforeEach
     void init() {
-        this.jsonObjectMock = Mockito.mock(Map.class);
         when(credentialStatus.getJsonObject()).thenReturn(jsonObjectMock);
-        when(jsonObjectMock.get("statusListCredential")).thenReturn("mockurl");
+        when(jsonObjectMock.get("statusListCredential")).thenReturn("https://dhs-svip.github.io/ns/uscis/status/3");
     }
 
 
     @Test
     @DisplayName("testVerifyStatus_RevocationTrue will return the revocation status as True")
-    void testVerifyStatus_RevocationTrue() throws IOException {
-        String mockResource = "test_data/VC.json";
+    void testVerifyStatus_RevocationTrue() throws IOException, CredentialStatusProcessingException, CredentialStatusNetworkException {
+        String mockResource = "test_data/BitstringStatusListCredential.json";
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(Objects.requireNonNull(classLoader.getResource(mockResource), "Resource not found: " + mockResource).getFile());
         String mockStatusJSON = Files.readString(file.toPath());
@@ -70,7 +71,7 @@ class StatusVerifierServiceTest {
 
     @Test
     void testVerifyStatus_StatusPurposeCompareFailure() throws IOException {
-        String mockResource = "test_data/invalidVC.json";
+        String mockResource = "test_data/InvalidBitstringStatusListCredential.json";
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(Objects.requireNonNull(classLoader.getResource(mockResource), "Resource not found: " + mockResource).getFile());
         String mockStatusJSON = Files.readString(file.toPath());
@@ -81,11 +82,12 @@ class StatusVerifierServiceTest {
         List<CredentialStatus> listOfCredentialStatus = List.of(credentialStatus);
         try (var mockClient = Mockito.mockStatic(StatusListClient.class)) {
             mockClient.when(() -> StatusListClient.fetchStatusListCredential(any())).thenReturn(bitStringStatusListCredential);
-            ServerException exception = assertThrows(ServerException.class, () ->
+            CredentialStatusProcessingException exception = assertThrows(CredentialStatusProcessingException.class, () ->
                     StatusVerifierService.verifyStatus(listOfCredentialStatus)
             );
 
-            assertEquals(Constants.STATUS_VERIFICATION_ERROR, exception.getMessage());
+            assertEquals(Constants.STATUS_PURPOSE_COMPARISON_ERROR_TITLE, exception.getTitle());
+            assertEquals(Constants.STATUS_PURPOSE_COMPARISON_ERROR_DETAIL, exception.getDetail());
         }
     }
 
@@ -94,10 +96,11 @@ class StatusVerifierServiceTest {
         when(jsonObjectMock.get("statusListIndex")).thenReturn("-1");
         when(jsonObjectMock.get("statusPurpose")).thenReturn("revocation");
         List<CredentialStatus> listOfCredentialStatus = List.of(credentialStatus);
-        ServerException exception = assertThrows(ServerException.class, () ->
+        CredentialStatusProcessingException exception = assertThrows(CredentialStatusProcessingException.class, () ->
                 StatusVerifierService.verifyStatus(listOfCredentialStatus)
         );
 
-        assertEquals(Constants.STATUS_LIST_INDEX_VERIFICATION_ERROR, exception.getMessage());
+        assertEquals(Constants.STATUS_LIST_INDEX_ERROR_TITLE, exception.getTitle());
+        assertEquals(Constants.STATUS_LIST_INDEX_ERROR_DETAIL, exception.getDetail());
     }
 }

@@ -1,6 +1,7 @@
 package com.credenceid.didresolver.client;
 
-import com.credenceid.didresolver.exception.ServerException;
+import com.credenceid.didresolver.exception.DidResolverNetworkException;
+import com.credenceid.didresolver.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,8 +11,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
-
-import static com.credenceid.didresolver.util.Constants.ERROR_CALLING_DID_ENDPOINT;
 
 /**
  * This class implements the HTTP client to download DID document from an Issuer DID WEB Endpoint
@@ -28,8 +27,9 @@ public class IssuerWebDidClient {
      *
      * @param url Issuer DID WEB Endpoint URL
      * @return DID Document
+     * @throws DidResolverNetworkException If there is an issue during the HTTP call or if the response body is null or empty.
      */
-    public static Object downloadDidDocument(final String url) {
+    public static Object downloadDidDocument(final String url) throws DidResolverNetworkException {
         try {
             logger.trace("Downloading DID Document from {}", url);
             HttpResponse<String> response;
@@ -40,16 +40,20 @@ public class IssuerWebDidClient {
                 response = client.send(request, HttpResponse.BodyHandlers.ofString());
             }
             String didDocument;
-            if (response == null || response.body() == null)
-                throw new ServerException("No response received from Issuer DID WEB HTTP endpoint " + url);
+            if (response == null || response.body() == null) {
+                logger.error("Response received from credential endpoint is null or empty");
+                throw new DidResolverNetworkException(Constants.DID_ENDPOINT_NETWORK_ERROR_TITLE, Constants.DID_ENDPOINT_NETWORK_ERROR_DETAIL);
+            }
             didDocument = response.body();
             logger.debug("DID Document downloaded successfully! {}", didDocument);
             return response.body();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new ServerException(ERROR_CALLING_DID_ENDPOINT, e);
+            logger.error(e.getMessage());
+            throw new DidResolverNetworkException(Constants.DID_ENDPOINT_NETWORK_ERROR_TITLE, Constants.DID_ENDPOINT_NETWORK_ERROR_DETAIL);
         } catch (IOException e) {
-            throw new ServerException(ERROR_CALLING_DID_ENDPOINT, e);
+            logger.error(e.getMessage());
+            throw new DidResolverNetworkException(Constants.DID_ENDPOINT_NETWORK_ERROR_TITLE, Constants.DID_ENDPOINT_NETWORK_ERROR_DETAIL);
         }
     }
 }

@@ -1,7 +1,7 @@
 package com.credenceid.metadata.resolver;
 
-import com.credenceid.didresolver.exception.BadRequestException;
 import com.credenceid.didresolver.service.DidResolverService;
+import com.credenceid.metadata.exception.BadRequestException;
 import com.credenceid.metadata.openapi.model.ResolutionResult;
 import com.credenceid.metadata.registry.service.RegistryService;
 import com.credenceid.metadata.resolver.service.ResolverService;

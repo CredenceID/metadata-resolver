@@ -52,7 +52,7 @@ class StatusListVerifierServiceTest {
         List<CredentialStatus> listOfCredentialStatus = new ArrayList<>();
         try (var mockClient = Mockito.mockStatic(StatusVerifierService.class)) {
             mockClient.when(() -> StatusVerifierService.verifyStatus(any()))
-                    .thenThrow(new IOException("Network Failure"));
+                    .thenThrow(new ServerException("Network Failure"));
             StatusListVerifierService statusListVerifierService = new StatusListVerifierService();
             assertThrows(ServerException.class, () ->
                     statusListVerifierService.verifyStatus(listOfCredentialStatus));

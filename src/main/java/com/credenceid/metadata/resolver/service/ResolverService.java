@@ -1,5 +1,9 @@
 package com.credenceid.metadata.resolver.service;
 
+import com.credenceid.didresolver.exception.DidResolverNetworkException;
+import com.credenceid.didresolver.exception.DidResolverProcessingException;
+import com.credenceid.metadata.exception.BadRequestException;
+import com.credenceid.metadata.exception.ServerException;
 import com.credenceid.metadata.openapi.model.ResolutionResult;
 import com.credenceid.metadata.registry.service.RegistryService;
 import com.credenceid.metadata.registry.util.RegistryUtility;
@@ -35,9 +39,15 @@ public class ResolverService {
      * @return ResolutionResult containing DID document, DID Document metadata and Resolution metadata
      */
     public ResolutionResult resolve(String identifier, String accept) {
-        ResolutionResult resolutionResult = ResolverUtility.convertToMetadataResolverResolutionResult(resolveDID(identifier));
-        registryService.isIssuerTrusted(RegistryUtility.extractDomainFromDidWebIdentifier(identifier));
-        logger.debug("Resolution result for {} is {}", identifier, resolutionResult);
-        return resolutionResult;
+        try {
+            ResolutionResult resolutionResult = ResolverUtility.convertToMetadataResolverResolutionResult(resolveDID(identifier));
+            registryService.isIssuerTrusted(RegistryUtility.extractDomainFromDidWebIdentifier(identifier));
+            logger.debug("Resolution result for {} is {}", identifier, resolutionResult);
+            return resolutionResult;
+        } catch (DidResolverNetworkException e) {
+            throw new ServerException(e.getDetail());
+        } catch (DidResolverProcessingException e) {
+            throw new BadRequestException(e.getDetail());
+        }
     }
 }

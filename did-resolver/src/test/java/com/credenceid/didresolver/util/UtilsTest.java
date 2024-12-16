@@ -11,8 +11,8 @@ class UtilsTest {
         String didIdentifier = "did:web:w3c-ccg.github.io";
         String url = "https://w3c-ccg.github.io/.well-known/did.json";
 
-        String returnedURL = Util.convertDidToUrl(didIdentifier);
-        assertEquals(returnedURL, url);
+        String returnedURL = Utils.convertDidToUrl(didIdentifier);
+        assertEquals(url, returnedURL);
     }
 
     @Test
@@ -20,8 +20,8 @@ class UtilsTest {
         String didIdentifier = "did:web:w3c-ccg.github.io:user:alice";
         String url = "https://w3c-ccg.github.io/user/alice/did.json";
 
-        String returnedURL = Util.convertDidToUrl(didIdentifier);
-        assertEquals(returnedURL, url);
+        String returnedURL = Utils.convertDidToUrl(didIdentifier);
+        assertEquals(url, returnedURL);
     }
 
     @Test
@@ -29,8 +29,8 @@ class UtilsTest {
         String didIdentifier = "did:web:example.com%3A3000";
         String url = "https://example.com:3000/.well-known/did.json";
 
-        String returnedURL = Util.convertDidToUrl(didIdentifier);
-        assertEquals(returnedURL, url);
+        String returnedURL = Utils.convertDidToUrl(didIdentifier);
+        assertEquals(url, returnedURL);
     }
 
     @Test
@@ -38,7 +38,7 @@ class UtilsTest {
         String didIdentifier = "did:web:example.com%3A3000:user:alice";
         String url = "https://example.com:3000/user/alice/did.json";
 
-        String returnedURL = Util.convertDidToUrl(didIdentifier);
-        assertEquals(returnedURL, url);
+        String returnedURL = Utils.convertDidToUrl(didIdentifier);
+        assertEquals(url, returnedURL);
     }
 }

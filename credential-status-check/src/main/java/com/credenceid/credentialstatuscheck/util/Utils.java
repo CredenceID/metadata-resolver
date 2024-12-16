@@ -1,7 +1,9 @@
 package com.credenceid.credentialstatuscheck.util;
 
-import com.credenceid.credentialstatuscheck.exception.ServerException;
+import com.credenceid.credentialstatuscheck.exception.CredentialStatusProcessingException;
 import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -17,6 +19,7 @@ import java.util.zip.GZIPInputStream;
  * used in status list processing. It is not intended to be instantiated.
  */
 public class Utils {
+    private static final Logger logger = LoggerFactory.getLogger(Utils.class);
 
     // Private constructor to prevent instantiation
     private Utils() {
@@ -31,22 +34,24 @@ public class Utils {
      * @param index          The index of the status to extract.
      * @param statusSize     The size of each status in bits.
      * @return boolean indicating whether the bit at the specified index is set (true) or not (false).
-     * @throws IllegalArgumentException If the encoded string is null, empty, or improperly formatted.
-     * @throws IOException              If there are issues during the decoding or decompression process.
+     * @throws CredentialStatusProcessingException If the encoded string is null or empty and is improperly formatted.
      */
-    public static boolean decodeStatusList(String encodedListStr, int index, int statusSize) throws IOException {
+    public static boolean decodeStatusList(String encodedListStr, int index, int statusSize) throws CredentialStatusProcessingException {
         if (encodedListStr == null || encodedListStr.isEmpty()) {
-            throw new IllegalArgumentException("Encoded string cannot be null or empty");
+            logger.error("Encoded list is null or empty");
+            throw new CredentialStatusProcessingException(Constants.ENCODED_LIST_ERROR_TITLE, Constants.ENCODED_LIST_IS_EMPTY_OR_NULL_ERROR_DETAIL);
         }
 
         if (!encodedListStr.startsWith("u")) {
-            throw new IllegalArgumentException("encoded list must start with 'u' ");
+            logger.error("Encoded list does not start with 'u': {}", encodedListStr);
+            throw new CredentialStatusProcessingException(Constants.ENCODED_LIST_ERROR_TITLE, Constants.ENCODED_LIST_STARTS_WITH_U_ERROR_DETAIL);
         }
         String encodedList = encodedListStr.substring(1);
 
         // Validate if the string is Base64URL
         if (!isValidBase64Url(encodedList)) {
-            throw new IllegalArgumentException("The provided string is not a valid Base64URL-encoded string");
+            logger.error("The provided string is not a valid Base64URL-encoded string: {}", encodedList);
+            throw new CredentialStatusProcessingException(Constants.BASE64URL_ERROR_TITLE, Constants.BASE64_URL_ERROR_DETAIL);
         }
 
         return getBitAtIndex(encodedList, index, statusSize);
@@ -61,29 +66,24 @@ public class Utils {
      * @param credentialIndex The index of the credential to retrieve the bit for.
      * @param statusSize      The size of each status in bits.
      * @return boolean indicating whether the bit at the specified index is set (true) or not (false).
-     * @throws IOException              If there are issues with decoding or decompression.
-     * @throws IllegalArgumentException If the index is out of bounds of the decompressed data.
+     * @throws CredentialStatusProcessingException If the index is out of bounds of the decompressed data.
      */
-    public static boolean getBitAtIndex(String encodedString, int credentialIndex, int statusSize) throws IOException {
+    public static boolean getBitAtIndex(String encodedString, int credentialIndex, int statusSize) throws CredentialStatusProcessingException {
         //Decode the base64url encoded string
         byte[] decodedBytes = decodeBase64Url(encodedString);
-
         //Decompress the decodedBytes[]
         byte[] decompressedBytes = decompressGzip(decodedBytes);
-
         int index = credentialIndex * statusSize;
         if (index >= decompressedBytes.length) {
-            throw new ServerException(Constants.RANGE_ERROR);
+            logger.error(Constants.RANGE_ERROR_DETAIL);
+            throw new CredentialStatusProcessingException(Constants.RANGE_ERROR_TITLE, Constants.RANGE_ERROR_DETAIL);
         }
-
         // Step 3: Access the bit at the specified index
         int byteIndex = index / 8;          // Find the byte index
         int bitPosition = index % 8;        // Find the bit within the byte
         byte byteValue = decompressedBytes[byteIndex];
-
         // Calculate the mask for the bit we are interested in
         int bitMask = 1 << (7 - bitPosition);  // Left-to-right indexing (MSB is 0th bit)
-
         // Check if the bit is set (non-zero value)
         return (byteValue & bitMask) != 0;
     }
@@ -106,9 +106,8 @@ public class Utils {
      *
      * @param compressedData The GZIP-compressed byte array.
      * @return A byte array containing the decompressed data.
-     * @throws IOException If an error occurs during decompression.
      */
-    public static byte[] decompressGzip(byte[] compressedData) throws IOException {
+    public static byte[] decompressGzip(byte[] compressedData) throws CredentialStatusProcessingException {
         try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(compressedData);
              GZIPInputStream gzipInputStream = new GZIPInputStream(byteArrayInputStream)) {
             byte[] buffer = new byte[1024];
@@ -119,6 +118,9 @@ public class Utils {
                 }
                 return decompressedStream.toByteArray();
             }
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+            throw new CredentialStatusProcessingException("IO_EXCEPTION", e.getMessage());
         }
     }
 
