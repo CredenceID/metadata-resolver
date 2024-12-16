@@ -3,7 +3,7 @@ package com.credenceid.credentialstatuscheck.service;
 
 import com.credenceid.credentialstatuscheck.client.StatusListClient;
 import com.credenceid.credentialstatuscheck.dto.StatusVerificationResult;
-import com.credenceid.credentialstatuscheck.exception.CredentialStatusCheckException;
+import com.credenceid.credentialstatuscheck.exception.CredentialStatusProcessingException;
 import com.credenceid.credentialstatuscheck.util.Constants;
 import com.danubetech.verifiablecredentials.VerifiableCredential;
 import com.danubetech.verifiablecredentials.credentialstatus.CredentialStatus;
@@ -46,10 +46,10 @@ public class StatusVerifierService {
      *
      * @param listOfCredentialStatus list of CredentialStatus of the Verifiable Credential.
      * @return A List of {@link StatusVerificationResult}.
-     * @throws IOException                    If an I/O error occurs during status verification.
-     * @throws CredentialStatusCheckException If an error occurs during statusListIndex or statusPurpose verification.
+     * @throws IOException                         If an I/O error occurs during status verification.
+     * @throws CredentialStatusProcessingException If an error occurs during statusListIndex or statusPurpose verification.
      */
-    public static List<StatusVerificationResult> verifyStatus(final List<CredentialStatus> listOfCredentialStatus) throws IOException, CredentialStatusCheckException {
+    public static List<StatusVerificationResult> verifyStatus(final List<CredentialStatus> listOfCredentialStatus) throws IOException, CredentialStatusProcessingException {
         List<StatusVerificationResult> statusVerificationResults = new ArrayList<>();
         for (CredentialStatus credentialStatus : listOfCredentialStatus) {
             Map<String, Object> credentialStatusMap = credentialStatus.getJsonObject();
@@ -60,14 +60,14 @@ public class StatusVerifierService {
             int statusSize = credentialStatusMap.get("statusSize") != null ? Integer.parseInt((String) credentialStatusMap.get("statusSize")) : 1;  //indicates the size of the status entry in bits
             if (validateStatusListIndex(statusListIndex)) {
                 logger.error(Constants.STATUS_LIST_INDEX_VERIFICATION_ERROR);
-                throw new CredentialStatusCheckException(Constants.STATUS_LIST_INDEX_VERIFICATION_ERROR);
+                throw new CredentialStatusProcessingException(Constants.STATUS_LIST_INDEX_VERIFICATION_ERROR);
             }
             //fetch BitstringStatusListCredential.
             bitStringStatusListCredential = StatusListClient.fetchStatusListCredential(statusListCredential);
             //validation of statusPurpose of credentialStatus and credentialSubject
             if (!validateStatusPurpose(statusPurpose, (String) bitStringStatusListCredential.getCredentialSubject().getJsonObject().get("statusPurpose"))) {
                 logger.error(Constants.STATUS_VERIFICATION_ERROR);
-                throw new CredentialStatusCheckException(Constants.STATUS_VERIFICATION_ERROR);
+                throw new CredentialStatusProcessingException(Constants.STATUS_VERIFICATION_ERROR);
             }
             //encodedList
             String encodedList = (String) bitStringStatusListCredential.getCredentialSubject().getJsonObject().get("encodedList");

@@ -1,6 +1,6 @@
 package com.credenceid.credentialstatuscheck.util;
 
-import com.credenceid.credentialstatuscheck.exception.CredentialStatusCheckException;
+import com.credenceid.credentialstatuscheck.exception.CredentialStatusProcessingException;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,26 +34,25 @@ public class Utils {
      * @param index          The index of the status to extract.
      * @param statusSize     The size of each status in bits.
      * @return boolean indicating whether the bit at the specified index is set (true) or not (false).
-     * @throws IllegalArgumentException If the encoded string is improperly formatted.
-     * @throws NullPointerException     If the encoded string is null or empty.
-     * @throws IOException              If there are issues during the decoding or decompression process.
+     * @throws CredentialStatusProcessingException If the encoded string is null or empty and is improperly formatted.
+     * @throws IOException                         If there are issues during the decoding or decompression process.
      */
-    public static boolean decodeStatusList(String encodedListStr, int index, int statusSize) throws IOException, CredentialStatusCheckException {
+    public static boolean decodeStatusList(String encodedListStr, int index, int statusSize) throws IOException, CredentialStatusProcessingException {
         if (encodedListStr == null || encodedListStr.isEmpty()) {
             logger.error("Encoded string is null or empty");
-            throw new NullPointerException("Encoded string cannot be null or empty");
+            throw new CredentialStatusProcessingException("Encoded string cannot be null or empty");
         }
 
         if (!encodedListStr.startsWith("u")) {
             logger.error("Encoded list does not start with 'u': {}", encodedListStr);
-            throw new IllegalArgumentException("encoded list must start with 'u' ");
+            throw new CredentialStatusProcessingException("encoded list must start with 'u' ");
         }
         String encodedList = encodedListStr.substring(1);
 
         // Validate if the string is Base64URL
         if (!isValidBase64Url(encodedList)) {
             logger.error("The provided string is not a valid Base64URL-encoded string: {}", encodedList);
-            throw new IllegalArgumentException("The provided string is not a valid Base64URL-encoded string");
+            throw new CredentialStatusProcessingException("The provided string is not a valid Base64URL-encoded string");
         }
 
         return getBitAtIndex(encodedList, index, statusSize);
@@ -68,10 +67,10 @@ public class Utils {
      * @param credentialIndex The index of the credential to retrieve the bit for.
      * @param statusSize      The size of each status in bits.
      * @return boolean indicating whether the bit at the specified index is set (true) or not (false).
-     * @throws IOException              If there are issues with decoding or decompression.
-     * @throws IllegalArgumentException If the index is out of bounds of the decompressed data.
+     * @throws IOException                         If there are issues with decoding or decompression.
+     * @throws CredentialStatusProcessingException If the index is out of bounds of the decompressed data.
      */
-    public static boolean getBitAtIndex(String encodedString, int credentialIndex, int statusSize) throws IOException, CredentialStatusCheckException {
+    public static boolean getBitAtIndex(String encodedString, int credentialIndex, int statusSize) throws IOException, CredentialStatusProcessingException {
         //Decode the base64url encoded string
         byte[] decodedBytes = decodeBase64Url(encodedString);
         //Decompress the decodedBytes[]
@@ -79,7 +78,7 @@ public class Utils {
         int index = credentialIndex * statusSize;
         if (index >= decompressedBytes.length) {
             logger.error(Constants.RANGE_ERROR);
-            throw new CredentialStatusCheckException(Constants.RANGE_ERROR);
+            throw new CredentialStatusProcessingException(Constants.RANGE_ERROR);
         }
         // Step 3: Access the bit at the specified index
         int byteIndex = index / 8;          // Find the byte index

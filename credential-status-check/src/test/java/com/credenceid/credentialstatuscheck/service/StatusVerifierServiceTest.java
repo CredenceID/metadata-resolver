@@ -2,7 +2,7 @@ package com.credenceid.credentialstatuscheck.service;
 
 import com.credenceid.credentialstatuscheck.client.StatusListClient;
 import com.credenceid.credentialstatuscheck.dto.StatusVerificationResult;
-import com.credenceid.credentialstatuscheck.exception.CredentialStatusCheckException;
+import com.credenceid.credentialstatuscheck.exception.CredentialStatusProcessingException;
 import com.credenceid.credentialstatuscheck.util.Constants;
 import com.danubetech.verifiablecredentials.VerifiableCredential;
 import com.danubetech.verifiablecredentials.credentialstatus.CredentialStatus;
@@ -46,7 +46,7 @@ class StatusVerifierServiceTest {
 
     @Test
     @DisplayName("testVerifyStatus_RevocationTrue will return the revocation status as True")
-    void testVerifyStatus_RevocationTrue() throws IOException, CredentialStatusCheckException {
+    void testVerifyStatus_RevocationTrue() throws IOException, CredentialStatusProcessingException {
         String mockResource = "test_data/BitstringStatusListCredential.json";
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(Objects.requireNonNull(classLoader.getResource(mockResource), "Resource not found: " + mockResource).getFile());
@@ -81,7 +81,7 @@ class StatusVerifierServiceTest {
         List<CredentialStatus> listOfCredentialStatus = List.of(credentialStatus);
         try (var mockClient = Mockito.mockStatic(StatusListClient.class)) {
             mockClient.when(() -> StatusListClient.fetchStatusListCredential(any())).thenReturn(bitStringStatusListCredential);
-            CredentialStatusCheckException exception = assertThrows(CredentialStatusCheckException.class, () ->
+            CredentialStatusProcessingException exception = assertThrows(CredentialStatusProcessingException.class, () ->
                     StatusVerifierService.verifyStatus(listOfCredentialStatus)
             );
 
@@ -94,7 +94,7 @@ class StatusVerifierServiceTest {
         when(jsonObjectMock.get("statusListIndex")).thenReturn("-1");
         when(jsonObjectMock.get("statusPurpose")).thenReturn("revocation");
         List<CredentialStatus> listOfCredentialStatus = List.of(credentialStatus);
-        CredentialStatusCheckException exception = assertThrows(CredentialStatusCheckException.class, () ->
+        CredentialStatusProcessingException exception = assertThrows(CredentialStatusProcessingException.class, () ->
                 StatusVerifierService.verifyStatus(listOfCredentialStatus)
         );
 
