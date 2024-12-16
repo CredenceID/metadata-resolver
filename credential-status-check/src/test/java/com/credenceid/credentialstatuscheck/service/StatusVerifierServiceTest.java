@@ -40,7 +40,7 @@ class StatusVerifierServiceTest {
     @BeforeEach
     void init() {
         when(credentialStatus.getJsonObject()).thenReturn(jsonObjectMock);
-        when(jsonObjectMock.get("statusListCredential")).thenReturn("https://mock_statusListCredential_url.com");
+        when(jsonObjectMock.get("statusListCredential")).thenReturn("https://signatory.ssikit.walt.id/v1/credentials/status/revocation");
     }
 
 
@@ -70,7 +70,7 @@ class StatusVerifierServiceTest {
 
     @Test
     void testVerifyStatus_StatusPurposeCompareFailure() throws IOException {
-        String mockResource = "test_data/invalidBitstringStatusListCredential.json";
+        String mockResource = "test_data/InvalidBitstringStatusListCredential.json";
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(Objects.requireNonNull(classLoader.getResource(mockResource), "Resource not found: " + mockResource).getFile());
         String mockStatusJSON = Files.readString(file.toPath());

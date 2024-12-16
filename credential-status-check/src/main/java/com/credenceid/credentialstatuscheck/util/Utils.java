@@ -34,13 +34,14 @@ public class Utils {
      * @param index          The index of the status to extract.
      * @param statusSize     The size of each status in bits.
      * @return boolean indicating whether the bit at the specified index is set (true) or not (false).
-     * @throws IllegalArgumentException If the encoded string is null, empty, or improperly formatted.
+     * @throws IllegalArgumentException If the encoded string is improperly formatted.
+     * @throws NullPointerException     If the encoded string is null or empty.
      * @throws IOException              If there are issues during the decoding or decompression process.
      */
     public static boolean decodeStatusList(String encodedListStr, int index, int statusSize) throws IOException, CredentialStatusCheckException {
         if (encodedListStr == null || encodedListStr.isEmpty()) {
             logger.error("Encoded string is null or empty");
-            throw new IllegalArgumentException("Encoded string cannot be null or empty");
+            throw new NullPointerException("Encoded string cannot be null or empty");
         }
 
         if (!encodedListStr.startsWith("u")) {
