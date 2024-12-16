@@ -1,0 +1,65 @@
+openapi: 3.1.0
+servers:
+  - url: "/1.0/"
+info:
+  title: VC Status Verification
+  description: VC Status Verification
+  version: 1.0.0
+paths:
+  "/credential/status/verify":
+    post:
+      summary: Verifies the status of a Verifiable Credential
+      operationId: verifyVCStatus
+      tags:
+        - status_list
+      requestBody:
+        description: Credential Status object in a VC
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CredentialStatus'
+      responses:
+        "200":
+          description: Successfully verified
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StatusVerificationResult'
+        "400":
+          description: Bad input
+        "500":
+          description: Internal Error.
+components:
+  schemas:
+    CredentialStatus:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the credential status
+        type:
+          type: string
+          description: Type of the credential status
+        statusPurpose:
+          type: string
+          description: Purpose of the status, revoked or suspended
+        statusListIndex:
+          type: string
+          description: Index in the status list
+        statusListCredential:
+          type: string
+          description: Credential associated with the status list
+    StatusVerificationResult:
+      type: object
+      properties:
+        statusPurpose:
+          type: string
+          description: revoked or suspended
+        status:
+          type: boolean
+          description: true if revoked or suspended

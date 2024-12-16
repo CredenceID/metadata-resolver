@@ -14,7 +14,7 @@ label {
     margin-top: 0.75rem;
 }
 
-.input-field {
+.input-field,.input-area {
     width: 100%;
     height: 54px;
     line-height: 1;
@@ -24,7 +24,6 @@ label {
     padding: 0 1.5rem;
     color: black;
     background-color: #f9f9f9;
-
     display: flex;
     align-items: center;
     justify-content: center;
@@ -41,8 +40,12 @@ label {
     font-size: 1.25rem;
     border-radius: 5px;
     background-color: #1472FF;
-
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.input-area{
+    height: auto;
+    padding-top: 2.5rem;
 }

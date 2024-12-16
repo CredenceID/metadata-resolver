@@ -3,34 +3,9 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>com.credenceid</groupId>
     <artifactId>metadata-resolver</artifactId>
     <version>0.1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
-
-
-    <repositories>
-        <repository>
-            <id>danubetech-maven-public</id>
-            <url>https://repo.danubetech.com/repository/maven-public/</url>
-        </repository>
-    </repositories>
-
-
-    <modules>
-        <module>did-web-resolver</module>
-        <module>trusted-issuer-registry</module>
-        <module>metadata-coordinator</module>
-    </modules>
-
-    <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <springboot.version>3.3.1</springboot.version>
-        <springdoc-openapi-ui.version>1.7.0</springdoc-openapi-ui.version>
-    </properties>
 
     <dependencyManagement>
         <dependencies>
@@ -44,5 +19,211 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <properties>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <springboot.version>3.3.1</springboot.version>
+        <springdoc-openapi-ui.version>1.7.0</springdoc-openapi-ui.version>
+        <maven-surefire.version>3.3.1</maven-surefire.version>
+        <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
+        <did-common-java.version>1.13.0</did-common-java.version>
+        <verifiable-credentials-java.version>1.12.0</verifiable-credentials-java.version>
+        <uni-resolver-core.version>0.20.0</uni-resolver-core.version>
+        <jackson-databind-nullable.version>0.2.6</jackson-databind-nullable.version>
+        <openapi-generator-maven-plugin.version>7.10.0</openapi-generator-maven-plugin.version>
+        <verifiable-credential-status.version>0.1.0</verifiable-credential-status.version>
+        <web-did-resolver.version>0.1.0</web-did-resolver.version>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>CredenceID-maven-snapshot</id>
+            <url>https://nexus.credenceid.com/repository/maven-snapshots/</url>
+        </repository>
+        <repository>
+            <id>CredenceID-maven-release</id>
+            <url>https://nexus.credenceid.com/repository/maven-releases/</url>
+        </repository>
+        <repository>
+            <id>danubetech-maven-public</id>
+            <url>https://repo.danubetech.com/repository/maven-public/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
+
+        <!-- openAPI dependencies-->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc-openapi-ui.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>${jackson-databind-nullable.version}</version>
+        </dependency>
+        <!-- DIF -->
+        <dependency>
+            <groupId>decentralized-identity</groupId>
+            <artifactId>uni-resolver-core</artifactId>
+            <version>${uni-resolver-core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>decentralized-identity</groupId>
+            <artifactId>did-common-java</artifactId>
+            <version>${did-common-java.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.danubetech</groupId>
+            <artifactId>verifiable-credentials-java</artifactId>
+            <version>${verifiable-credentials-java.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- Credence ID -->
+        <dependency>
+            <groupId>com.credenceid</groupId>
+            <artifactId>verifiable-credential-status</artifactId>
+            <version>${verifiable-credential-status.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.credenceid</groupId>
+            <artifactId>web-did-resolver</artifactId>
+            <version>${web-did-resolver.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${springboot.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>${openapi-generator-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>resolver</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>
+                                ${project.basedir}/src/main/resources/openapi/did-resolver.yaml
+                            </inputSpec>
+                            <skipValidateSpec>true</skipValidateSpec>
+                            <generatorName>spring</generatorName>
+                            <apiPackage>com.credenceid.metadata.openapi.api</apiPackage>
+                            <modelPackage>com.credenceid.metadata.openapi.model</modelPackage>
+                            <supportingFilesToGenerate>
+                                ApiUtil.java
+                            </supportingFilesToGenerate>
+                            <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
+                                <useTags>true</useTags>
+                                <delegatePattern>true</delegatePattern>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>trusted-issuer-registry</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>
+                                ${project.basedir}/src/main/resources/openapi/trusted-issuer-registry.yaml
+                            </inputSpec>
+                            <skipValidateSpec>true</skipValidateSpec>
+                            <generatorName>spring</generatorName>
+                            <apiPackage>com.credenceid.metadata.registry.openapi.api</apiPackage>
+                            <modelPackage>com.credenceid.metadata.registry.openapi.model</modelPackage>
+                            <supportingFilesToGenerate>
+                                ApiUtil.java
+                            </supportingFilesToGenerate>
+                            <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
+                                <useTags>true</useTags>
+                                <delegatePattern>true</delegatePattern>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>bitstring-status-list</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>
+                                ${project.basedir}/src/main/resources/openapi/status-list.yaml
+                            </inputSpec>
+                            <skipValidateSpec>true</skipValidateSpec>
+                            <generatorName>spring</generatorName>
+                            <apiPackage>com.credenceid.metadata.statuslist.openapi.api</apiPackage>
+                            <modelPackage>com.credenceid.metadata.statuslist.openapi.model</modelPackage>
+                            <supportingFilesToGenerate>
+                                ApiUtil.java
+                            </supportingFilesToGenerate>
+                            <configOptions>
+                                <useJakartaEe>true</useJakartaEe>
+                                <useTags>true</useTags>
+                                <delegatePattern>true</delegatePattern>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

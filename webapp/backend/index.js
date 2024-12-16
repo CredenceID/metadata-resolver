@@ -108,6 +108,25 @@ app.get("/identifiers", async (req, res) => {
   }
 })
 
+app.post("/status/verify",  async (req, res) => {
+  try {
+    const URL = `${BASE_URL}/credential/status/verify`;
+    console.log("URL: ", URL);
+    const responseData = await axios.post(URL, req.body);
+    console.log("This is the response data: ", responseData.status);
+    return res.status(responseData.status).json(responseData.data); 
+
+  } catch (error) {
+    console.log("The error: ", error)
+
+    if (error.response) {
+      return res.status(error.response.status).json(error.response.data)
+    } else {
+      return res.status(error.status).json(error.message)
+    }
+  }
+})
+
 app.get("*", (req, res) => {
     res.sendFile(
       path.resolve(__dirname, "../frontend", "dist", "index.html")
