@@ -2,4 +2,4 @@
 
 Metadata Resolver for SVIP 
 
-![Metadata_Resolver_Solution_Arch_v3](https://github.com/user-attachments/assets/4ff735a4-b059-4258-9787-f28ce791121b)
+![Metadata_Resolver_Solution_Arch_v4](https://github.com/user-attachments/assets/9715fc86-df05-40d9-a472-fddcffcaa71e)
