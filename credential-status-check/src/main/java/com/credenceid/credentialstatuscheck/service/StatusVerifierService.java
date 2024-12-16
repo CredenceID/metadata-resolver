@@ -58,10 +58,6 @@ public class StatusVerifierService {
             int statusListIndex = Integer.parseInt((String) credentialStatusMap.get("statusListIndex"));
             String statusListCredential = (String) credentialStatusMap.get("statusListCredential");
             int statusSize = credentialStatusMap.get("statusSize") != null ? Integer.parseInt((String) credentialStatusMap.get("statusSize")) : 1;  //indicates the size of the status entry in bits
-            logger.info("statusPurpose: {}", statusPurpose);
-            logger.info("statusListIndex: {}", statusListIndex);
-            logger.info("statusListCredential: {}", statusListCredential);
-            logger.info("statusSize: {}", statusSize);
             if (validateStatusListIndex(statusListIndex)) {
                 logger.error(Constants.STATUS_LIST_INDEX_VERIFICATION_ERROR);
                 throw new CredentialStatusCheckException(Constants.STATUS_LIST_INDEX_VERIFICATION_ERROR);
@@ -75,9 +71,7 @@ public class StatusVerifierService {
             }
             //encodedList
             String encodedList = (String) bitStringStatusListCredential.getCredentialSubject().getJsonObject().get("encodedList");
-            logger.info("encodedList: {}", encodedList);
             boolean decodedIndexValue = decodeStatusList(encodedList, statusListIndex, statusSize);
-            logger.info("decodedIndexValue: {}", decodedIndexValue);
             statusVerificationResults.add(new StatusVerificationResult(statusPurpose, decodedIndexValue));
         }
         return statusVerificationResults;
