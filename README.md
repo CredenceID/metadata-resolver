@@ -16,23 +16,27 @@ It also offers APIs to manage the Trusted Issuer Registry.
 
 ## API Endpoints
 
-### Resolve a did:web
+#### Resolve a did:web
     GET /metadata-resolver/identifiers/{didIdentifier}
+    
     curl 'http://localhost:8084/metadata-resolver/identifiers/did:web:dhs-svip.github.io:ns:uscis:oidp'
 
-### Add Issuer domain to trusted registry
+#### Add Issuer domain to trusted registry
     POST /metadata-resolver/registry/{issuerDomain}
+    
     curl --request POST 'http://localhost:8084/metadata-resolver/registry/dhs-svip.github.io'
 
-### Check if Issuer domain is trusted    
+#### Check if Issuer domain is trusted    
     GET /metadata-resolver/registry/{issuerDomain}
+    
     curl --location 'http://localhost:8084/metadata-resolver/registry/dhs-svip.github.io'
 
-### Remove Issuer domain from trusted registry    
+#### Remove Issuer domain from trusted registry    
     DELETE /metadata-resolver/registry/{issuerDomain}
+    
     curl --request DELETE 'http://localhost:8084/metadata-resolver/registry/dhs-svip.github.io'
 
-### Check the status of a Verifiable Credential
+#### Check the status of a Verifiable Credential
     POST /metadata-resolver/credential/status/verify
     
     curl 'http://localhost:8084/metadata-resolver/credential/status/verify' \
