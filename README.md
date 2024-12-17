@@ -107,6 +107,12 @@ The response follows [Decentralized Identifiers (DIDs) v1.0 specification] (http
     -- Response
         Success:
         HTTP 200 OK
+        [
+            {
+                "statusPurpose": "revocation",  // revocation or suspension
+                "status": false                 // true or false
+            }
+        ]
 
         Error:
         HTTP 500
