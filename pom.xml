@@ -35,6 +35,7 @@
         <openapi-generator-maven-plugin.version>7.10.0</openapi-generator-maven-plugin.version>
         <verifiable-credential-status.version>0.1.0</verifiable-credential-status.version>
         <web-did-resolver.version>0.1.0</web-did-resolver.version>
+        <spring-webmvc.version>6.2.1</spring-webmvc.version>
     </properties>
 
     <repositories>
@@ -98,7 +99,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>6.2.1</version>
+            <version>${spring-webmvc.version}</version>
         </dependency>
 
         <!-- Credence ID -->
