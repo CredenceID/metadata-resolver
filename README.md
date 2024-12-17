@@ -3,6 +3,8 @@
 Metadata Resolver is a REST service that offers APIs for verifiers to perform did:web resolution and check the status of Verifiable Credentials.
 It also offers APIs to manage the Trusted Issuer Registry.
 
+The source for the did:web resolver library can be found [here](https://github.com/CredenceID/web-did-resolver) and for Verifiable Credentials Status Library [here](https://github.com/CredenceID/verifiable-credential-status)
+
 ## Logical Architecture
 
 ![Metadata_Resolver_Solution_Arch_v4](https://github.com/user-attachments/assets/9715fc86-df05-40d9-a472-fddcffcaa71e)
