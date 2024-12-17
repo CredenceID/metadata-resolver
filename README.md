@@ -37,9 +37,9 @@ It also offers APIs to manage the Trusted Issuer Registry.
     curl --request DELETE 'http://localhost:8084/metadata-resolver/registry/dhs-svip.github.io'
 
 #### Check the status of a Verifiable Credential
-    POST /metadata-resolver/credential/status/verify
+    POST /metadata-resolver/credential/status
     
-    curl 'http://localhost:8084/metadata-resolver/credential/status/verify' \
+    curl 'http://localhost:8084/metadata-resolver/credential/status' \
     --header 'Content-Type: application/json' \
     --data '[
         {
