@@ -24,8 +24,8 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <springboot.version>3.3.1</springboot.version>
-        <springdoc-openapi-ui.version>1.7.0</springdoc-openapi-ui.version>
+        <springboot.version>3.4.0</springboot.version>
+        <springdoc-openapi-ui.version>1.8.0</springdoc-openapi-ui.version>
         <maven-surefire.version>3.3.1</maven-surefire.version>
         <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
         <did-common-java.version>1.13.0</did-common-java.version>
@@ -135,7 +135,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                ${project.basedir}/src/main/resources/openapi/did-resolver.yaml
+                                src/main/resources/openapi/did-resolver.yaml
                             </inputSpec>
                             <skipValidateSpec>true</skipValidateSpec>
                             <generatorName>spring</generatorName>
@@ -158,7 +158,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                ${project.basedir}/src/main/resources/openapi/trusted-issuer-registry.yaml
+                                src/main/resources/openapi/trusted-issuer-registry.yaml
                             </inputSpec>
                             <skipValidateSpec>true</skipValidateSpec>
                             <generatorName>spring</generatorName>
@@ -181,7 +181,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>
-                                ${project.basedir}/src/main/resources/openapi/status-list.yaml
+                               src/main/resources/openapi/status-list.yaml
                             </inputSpec>
                             <skipValidateSpec>true</skipValidateSpec>
                             <generatorName>spring</generatorName>
