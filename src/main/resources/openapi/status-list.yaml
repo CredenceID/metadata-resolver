@@ -6,7 +6,7 @@ info:
   description: VC Status Verification
   version: 1.0.0
 paths:
-  "/credential/status/verify":
+  "/credential/status":
     post:
       summary: Verifies the status of a Verifiable Credential
       operationId: verifyVCStatus
