@@ -18,37 +18,101 @@ The source for the did:web resolver library can be found [here](https://github.c
 
 ## API Endpoints
 
-#### Resolve a did:web
-    GET /metadata-resolver/identifiers/{didIdentifier}
-    
-    curl 'http://localhost:8084/metadata-resolver/identifiers/did:web:dhs-svip.github.io:ns:uscis:oidp'
+### Resolve a did:web
+    -- Request
+        GET /metadata-resolver/identifiers/{didIdentifier}
+        curl 'http://localhost:8084/metadata-resolver/identifiers/did:web:dhs-svip.github.io:ns:uscis:oidp'
 
-#### Add Issuer domain to trusted registry
-    POST /metadata-resolver/registry/{issuerDomain}
-    
-    curl --request POST 'http://localhost:8084/metadata-resolver/registry/dhs-svip.github.io'
-
-#### Check if Issuer domain is trusted    
-    GET /metadata-resolver/registry/{issuerDomain}
-    
-    curl 'http://localhost:8084/metadata-resolver/registry/dhs-svip.github.io'
-
-#### Remove Issuer domain from trusted registry    
-    DELETE /metadata-resolver/registry/{issuerDomain}
-    
-    curl --request DELETE 'http://localhost:8084/metadata-resolver/registry/dhs-svip.github.io'
-
-#### Check the status of a Verifiable Credential
-    POST /metadata-resolver/credential/status
-    
-    curl 'http://localhost:8084/metadata-resolver/credential/status' \
-    --header 'Content-Type: application/json' \
-    --data '[
+    -- Response
+        Success:
+        HTTP 200 OK
         {
-            "id": "https://dhs-svip.github.io/ns/uscis/status/3#1000",
-            "type": "BitstringStatusListEntry",
-            "statusListIndex": "1000",
-            "statusListCredential": "https://dhs-svip.github.io/ns/uscis/status/3",
-            "statusPurpose": "revocation"
+        "didDocument": {},
+        "didResolutionMetadata": {},
+        "didDocumentMetadata": {}
         }
-    ]'
+        
+        Error:
+        HTTP 500
+        {
+            "errorCode": "",
+            "errorMessage": ""
+        }
+
+The response follows [Decentralized Identifiers (DIDs) v1.0 specification] (https://www.w3.org/TR/did-core/)
+
+### Add Issuer domain to trusted registry
+    -- Request
+        POST /metadata-resolver/registry/{issuerDomain}    
+        curl --request POST 'http://localhost:8084/metadata-resolver/registry/dhs-svip.github.io'
+
+    -- Response
+        Success:
+        HTTP 200 OK
+
+        Error:
+        HTTP 500
+        {
+            "errorCode": "",
+            "errorMessage": ""
+        }
+
+### Check if Issuer domain is trusted    
+    -- Request
+        GET /metadata-resolver/registry/{issuerDomain}    
+        curl 'http://localhost:8084/metadata-resolver/registry/dhs-svip.github.io'
+   
+    -- Response
+        Success:
+        HTTP 200 OK
+
+        Error:
+        HTTP 500
+        {
+            "errorCode": "",
+            "errorMessage": ""
+        }        
+
+### Remove Issuer domain from trusted registry    
+    -- Request
+        DELETE /metadata-resolver/registry/{issuerDomain}
+        curl --request DELETE 'http://localhost:8084/metadata-resolver/registry/dhs-svip.github.io'
+
+    -- Response
+        Success:
+        HTTP 200 OK
+
+        Error:
+        HTTP 500
+        {
+            "errorCode": "",
+            "errorMessage": ""
+        }           
+
+### Check the status of a Verifiable Credential
+    -- Request
+        POST /metadata-resolver/credential/status    
+        curl 'http://localhost:8084/metadata-resolver/credential/status' \
+        --header 'Content-Type: application/json' \
+        --data '[
+            {
+                "id": "https://dhs-svip.github.io/ns/uscis/status/3#1000",
+                "type": "BitstringStatusListEntry",
+                "statusListIndex": "1000",
+                "statusListCredential": "https://dhs-svip.github.io/ns/uscis/status/3",
+                "statusPurpose": "revocation"
+            }
+        ]'
+
+    -- Response
+        Success:
+        HTTP 200 OK
+
+        Error:
+        HTTP 500
+        {
+            "errorCode": "",
+            "errorMessage": ""
+        }       
+
+    
